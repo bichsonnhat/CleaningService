@@ -16,7 +16,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider appearance={{
+      layout: {
+        unsafe_disableDevelopmentModeWarnings: true,
+      },
+      elements: {
+        footerPagesLink__terms: {
+          display: "none"
+        }
+      }
+    }}>
       <html lang="en">
         <body className={inter.className}>{children}</body>
       </html>
