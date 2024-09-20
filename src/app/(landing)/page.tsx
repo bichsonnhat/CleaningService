@@ -1,5 +1,5 @@
-import Footer from "@/components/landing/footer"
-import Header from "@/components/landing/header"
+import Footer from "@/components/footer/footer"
+import Header from "@/components/header/header"
 
 const LandingPage = () => {
   return (
