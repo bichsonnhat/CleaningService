@@ -3,10 +3,12 @@ import Header from "@/components/header/header"
 
 const LandingPage = () => {
   return (
-    <div>
+    <div className="flex min-h-screen flex-col justify-between">
       <Header />
       LandingPage
-      <Footer />
+      <div className="mt-auto">
+        <Footer />
+      </div>
     </div>
   )
 }
