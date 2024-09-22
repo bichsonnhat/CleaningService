@@ -6,9 +6,8 @@ import SocialIcons from './SocialIcons'
 
 const Footer = () => {
   return (
-    
-    <footer className="flex flex-col pb-[40px] pt[80px] bg-[#F7DBA7] rounded-t-[40px] justify-center items-center md:w-auto">
-    <div className="flex flex-col w-full max-w-[1180px] max-md:max-w-full">
+    <footer className="flex flex-col pb-[40px] pt[80px] bg-[#F7DBA7] rounded-t-[40px] justify-center items-center">
+    <div className="flex flex-col w-full max-w-[1200px] max-md:max-w-full">
       <div className="flex flex-col pb-10 border-b border-solid border-b-neutral-300 max-md:max-w-full mt-[80px]">
         <SubscriptionForm />
         <div className="flex flex-wrap gap-10 items-start justify-between mt-10 max-md:max-w-full">
