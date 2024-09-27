@@ -10,8 +10,33 @@ body,
 }
 
 @font-face {
-  font-family: 'myfont';
-  src: url('/fonts/Gilroy-Black.ttf');
+  font-family: 'Averta-Bold';
+  src: url('/fonts/averta/TW-Averta-Bold.eot');
+  src: local('Averta Bold'), local('Averta-Bold'),
+      url('/fonts/averta/TW-Averta-Bold.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/averta/TW-Averta-Bold.woff2') format('woff2'),
+      url('/fonts/averta/TW-Averta-Bold.woff') format('woff'),
+      url('/fonts/averta/TW-Averta-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Averta-Regular';
+  src: url('/fonts/averta/TW-Averta-Regular.eot');
+  src: local('Averta Regular'), local('Averta-Regular'),
+      url('/fonts/averta/TW-Averta-Regular.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/averta/TW-Averta-Regular.woff2') format('woff2'),
+      url('/fonts/averta/TW-Averta-Regular.woff') format('woff'),
+      url('/fonts/averta/TW-Averta-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Averta-Semibold';
+  src: url('/fonts/averta/TW-Averta-Semibold.eot');
+  src: local('Averta Semibold'), local('Averta-Semibold'),
+      url('/fonts/averta/TW-Averta-Semibold.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/averta/TW-Averta-Semibold.woff2') format('woff2'),
+      url('/fonts/averta/TW-Averta-Semibold.woff') format('woff'),
+      url('/fonts/averta/TW-Averta-Semibold.ttf') format('truetype');
 }
 
 @font-face {

@@ -93,6 +93,9 @@ const config = {
         'gilroy-heavy': ['Gilroy-Heavy'],
         'gilroy-thin': ['Gilroy-Thin'],
         'gilroy-thinItalic': ['Gilroy-ThinItalic'],
+        'Averta-Bold': ['Averta-Bold'],
+        'Averta-Regular': ['Averta-Regular'],
+        'Averta-Semibold': ['Averta-Semibold'],
       }
     },
   },

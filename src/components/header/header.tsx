@@ -1,35 +1,24 @@
-import Link from 'next/link'
 import React from 'react'
-import MonitoLogo from '../img/logo'
-import SearchInput from '../searchbar/SearchInput'
-import JoinCommunityButton from '../button/JoinCommunityButton'
-import CurrencySelector from '../currency/CurrencySelector'
+
 
 const Header = () => {
+  const links = ['Residential', 'Office', 'Commercial', 'FAQ\'s'];
   return (
-    <div className='flex flex-row bg-[#F7DBA7] justify-center items-center'>
-      <div className='flex flex-row gap-[48px] items-center py-[28px] max-w-[1200px]'>
-        <MonitoLogo/>
-        <Link href={'/dashboard'} className="text-[#103559] font-gilroy-bold">Home</Link>
-        <Link href={'/dashboard'} className="text-[#103559] font-gilroy-bold">Category</Link>
-        <Link href={'/dashboard'} className="text-[#103559] font-gilroy-bold">About</Link>
-        <Link href={'/dashboard'} className="text-[#103559] font-gilroy-bold">Contact</Link>
-        <div className='flex gap-[14px]'>
-          <SearchInput
-            placeholder="Search something here!"
-            iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/9e8b0553000d029c767494dd0ec2799fe356489cc07e03b3567dc6ac3c217a36?placeholderIfAbsent=true&apiKey=8d1a3048ff904e58908bc27809a01dd6"
-          />
-          <section className="community-section">
-            <JoinCommunityButton text="Join the community" />
-          </section>
-        </div>
-        <div className='flex ml-[-20px]'>
-          <CurrencySelector 
-            currencies= {[{ code: 'VND', icon: './img/VND.svg' }]}
-          />
-        </div>
+    <header className='flex justify-center w-full bg-transparent'>
+      <div className='flex flex-row w-full max-w-[1170px] justify-between items-end mt-[20px]'>
+        <img src='/img/Logo.svg' alt='Clean' className='h-8' /> {/* Adjust height as needed */}
+        <nav className='flex gap-[31px] items-end'>
+          {links.map((link) => (
+            <a href={`#${link.toLowerCase()}`} key={link} className='text-gray-700 hover:text-gray-900 py-3 font-Averta-Semibold'>
+              {link}
+            </a>
+          ))}
+          <button className=" text-center text-blue-600 rounded-xl border-[3px] px-6 py-2 border-blue-600 border-solid font-Averta-Semibold">
+            Login
+          </button>
+        </nav>
       </div>
-    </div>  
+    </header>
   )
 }
 
