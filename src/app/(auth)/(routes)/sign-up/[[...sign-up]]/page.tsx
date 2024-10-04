@@ -9,4 +9,8 @@ const SignOutPage = () => {
   )
 }
 
+export function generateStaticParams() {
+  return [ { slug: [""] } ]
+}
+
 export default SignOutPage

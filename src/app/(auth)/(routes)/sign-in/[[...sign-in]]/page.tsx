@@ -9,4 +9,8 @@ const SignInPage = () => {
   )
 }
 
+export function generateStaticParams() {
+  return [ { slug: [""] } ]
+}
+
 export default SignInPage
