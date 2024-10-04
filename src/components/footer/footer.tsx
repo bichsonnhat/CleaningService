@@ -22,10 +22,10 @@ const Footer = () => {
         <div className='flex flex-col md:flex-row justify-between items-start gap-8'>
           <div className='w-full md:w-auto'>
             <div className='flex gap-8'>
-              <img src='/img/Facebook.svg' alt='Facebook' className='w-8 h-8' />
-              <img src='/img/Twitter.svg' alt='Twitter' className='w-8 h-8' />
-              <img src='/img/Instagram.svg' alt='Instagram' className='w-8 h-8' />
-              <img src='/img/Youtube.svg' alt='Youtube' className='w-8 h-8' />
+              <img src='/images/Footer/Facebook.svg' alt='Facebook' className='w-8 h-8' />
+              <img src='/images/Footer/Twitter.svg' alt='Twitter' className='w-8 h-8' />
+              <img src='/images/Footer/Instagram.svg' alt='Instagram' className='w-8 h-8' />
+              <img src='/images/Footer/Youtube.svg' alt='Youtube' className='w-8 h-8' />
             </div>
           </div>
           <div className='flex flex-wrap gap-8 md:gap-16'>
@@ -42,7 +42,7 @@ const Footer = () => {
           </div>
         </div>
         <div className='mt-8 pt-8 flex items-baseline row gap-2'>
-          <img src='/img/Logo_Gray.svg' alt='Copyright Logo' className='h-6' />
+          <img src='/images/Footer/Logo_Gray.svg' alt='Copyright Logo' className='h-6' />
           <p className='text-gray-600 font-Averta-Regular'>© Clean Co. All rights reserved  .  <a href='#' className='hover:underline'>Terms of Service</a>  .  <a href='#' className='hover:underline'>Privacy Policy</a></p>
         </div>
       </div>
