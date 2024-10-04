@@ -71,6 +71,15 @@ jobs:
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
+      - name: Create .env.local
+        run: 
+          touch .env.local
+          echo NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_YWNjdXJhdGUta2lsbGRlZXItOTIuY2xlcmsuYWNjb3VudHMuZGV2JA >> .env.local
+          echo CLERK_SECRET_KEY=sk_test_XVlyGPg5E2oyGm6trX5IO0kNvkYyCQnBiLvtw1Fnww >> .env.local
+          
+          echo NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in >> .env.local
+          echo NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up >> .env.local
+          cat .env.local
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
