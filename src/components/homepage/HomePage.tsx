@@ -21,7 +21,7 @@ const HomePage = () => {
     return (
         <div className='flex flex-col justify-center items-center'>
             <div className='relative'>
-                <img src='/images/HomePage/HeroIllustration.svg' alt='HeroIllustration' />
+                <Image src='/images/HomePage/HeroIllustration.svg' alt='HeroIllustration' width={0} height={0} sizes="100vw" style={{ width: '100%', height: 'auto' }} />
                 <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                     <div className='font-Averta-Bold text-center text-6xl mt-10'>
                         <p>Your One Stop Cleaning</p>
@@ -57,13 +57,13 @@ const HomePage = () => {
             </div>
             <div className='relative mt-[147px] mb-[147px]'>
                 <div className='flex flex-row gap-[135px] ml-[7%]'>
-                    <img src='/images/HomePage/Line.svg' alt='Line' />
-                    <img src='/images/HomePage/Line.svg' alt='Line' />
+                    <Image src='/images/HomePage/Line.svg' alt='Line' width={0} height={0} sizes="100vw" style={{ width: '100%', height: 'auto' }} />
+                    <Image src='/images/HomePage/Line.svg' alt='Line' width={0} height={0} sizes="100vw" style={{ width: '100%', height: 'auto' }} />
                 </div>
                 <div className='flex flex-row -top-10 -left-52 absolute gap-[143px]'>
-                    <img src='/images/HomePage/Book.svg' alt='WhyChooseShield' />
-                    <img src='/images/HomePage/Clean.svg' alt='WhyChooseShield' />
-                    <img src='/images/HomePage/Freedom.svg' alt='WhyChooseShield' />
+                    <Image src='/images/HomePage/Book.svg' alt='WhyChooseShield' width={0} height={0} sizes="100vw" style={{ width: '100%', height: 'auto' }} />
+                    <Image src='/images/HomePage/Clean.svg' alt='WhyChooseShield' width={0} height={0} sizes="100vw" style={{ width: '100%', height: 'auto' }} />
+                    <Image src='/images/HomePage/Freedom.svg' alt='WhyChooseShield' width={0} height={0} sizes="100vw" style={{ width: '100%', height: 'auto' }} />
                 </div>
             </div>
 

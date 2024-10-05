@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import React from 'react'
 
 const LandingLayout = (props: {
