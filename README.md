@@ -1,17 +1,5 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Set up environment 
-
-Create `.env.local` file with content:
-
-```bash
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_YWNjdXJhdGUta2lsbGRlZXItOTIuY2xlcmsuYWNjb3VudHMuZGV2JA
-CLERK_SECRET_KEY=sk_test_XVlyGPg5E2oyGm6trX5IO0kNvkYyCQnBiLvtw1Fnww
-
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-```
-
 ## Getting Started
 
 First, run the development server:
