@@ -1,3 +1,5 @@
+import { Check } from 'lucide-react';
+import Image from 'next/image';
 import { title } from 'process'
 import React from 'react'
 
@@ -25,22 +27,35 @@ const HomePage = () => {
                         <p>Your One Stop Cleaning</p>
                         <p>Centre For All Needs</p>
                         <button className="px-7 py-2 mt-[7%] bg-[#1b78f2] rounded-xl text-lg font-Averta-Semibold tracking-normal leading-loose text-center text-white">
-                            Book now
+                            Booking from 80$
                         </button>
                     </div>
                 </div>
             </div>
-            <div className='flex flex-row max-w-[60%] pt-[8%]'>
-                <div className='font-Averta-Bold text-5xl w-full'>
-                    <p>Why Choose</p>
-                    <p>Shield ?</p>
+            <div className='flex flex-row max-w-[1000px] pt-[112px] items-center justify-center'>
+                <div className='font-Averta-Bold text-5xl w-full flex flex-col gap-5'>
+                    <p>Why Choose Us?</p>
+                    <div className='flex flex-col max-w-[400px] gap-3'>
+                        <li className='flex gap-1.5 '>
+                            <Check className='h-5 w-5 shrink-0 text-green-600'/>
+                            <p className='font-Averta-Regular text-[15px]'><a className='font-Averta-Bold'>Sparkling clean home:</a> Sit back and relax while professionals deep clean every nook and cranny, leaving your home spotless.</p>                   
+                        </li>
+                        <li className='flex gap-1.5 '>
+                            <Check className='h-5 w-5 shrink-0 text-green-600'/>
+                            <p className='font-Averta-Regular text-[15px]'><a className='font-Averta-Bold'>More time for you:</a> Reclaim your weekends! Skip the scrubbing and spend your time on hobbies, family, and fun.</p>                   
+                        </li>
+                        <li className='flex gap-1.5 '>
+                            <Check className='h-5 w-5 shrink-0 text-green-600'/>
+                            <p className='font-Averta-Regular text-[15px]'><a className='font-Averta-Bold'>Healthy living:</a> A professional clean reduces allergens and germs, creating a healthier environment for you and your loved ones.</p>                   
+                        </li>
+                    </div>
                 </div>
                 <div className='m-auto font-Averta-Regular max-w-[40%] w-full'>
                     We understand your home is important to you. That's why we focus on the quality of the clean. Our cleaners aren't contract workers - they are full-time employees.
                     They care as much as we do.
                 </div>
             </div>
-            <div className='relative mt-[7%] mb-[7%]'>
+            <div className='relative mt-[147px] mb-[147px]'>
                 <div className='flex flex-row gap-[135px] ml-[7%]'>
                     <img src='/images/HomePage/Line.svg' alt='Line' />
                     <img src='/images/HomePage/Line.svg' alt='Line' />
@@ -52,15 +67,27 @@ const HomePage = () => {
                 </div>
             </div>
 
-            <div className='flex flex-row gap-[10%] max-w-[60%] w-full'>
-            {HomePageData.map((data, index) => (
-              <div key={index} className='flex flex-col gap-4'>
-                <p className='font-Averta-Bold uppercase text-[#1b78f2]'>{data.title}</p>
-                <div className='flex flex-col gap-2'>
-                    <p className="text-gray-600 font-Averta-Regular" key={index}>{data.description}</p>
+            <div className='flex flex-row gap-[10%] max-w-[1000px] w-full'>
+                {HomePageData.map((data, index) => (
+                <div key={index} className='flex flex-col gap-4'>
+                    <p className='font-Averta-Bold uppercase text-[#1b78f2]'>{data.title}</p>
+                    <div className='flex flex-col gap-2'>
+                        <p className="text-gray-600 font-Averta-Regular" key={index}>{data.description}</p>
+                    </div>
                 </div>
-              </div>
-            ))}      
+                ))}      
+            </div>
+            <div className='mt-[140px] w-full h-[700px] relative'>
+                <Image src='/images/HomePage/Background_feedback.svg' alt='Logo_Grat' width={0} height={0} sizes="100vw" layout='fill' objectFit='cover' className='absolute inset-0' />
+                {/* style={{ width: '100%', height: 'auto' } */}
+                <div className='absolute inset-0 flex items-center justify-center'>
+                    <h1 className='text-white text-4xl font-Averta-Bold z-10'>
+                        <p>What our customers say?</p>
+                    </h1>
+                    <div className='flex flex-row'>
+
+                    </div>
+                </div>
             </div>
         </div>
     )
