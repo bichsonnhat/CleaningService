@@ -52,7 +52,7 @@ const OtherServices = () => {
                     : "border-[#D3D8DD] text-[#4F6071] hover:border-[#1A78F2] hover:text-[#1A78F2]"
                 }`}
               >
-                <span className="text-base font-Averta-Semibold text-[20px] leading-[26px]">
+                <span className="font-Averta-Semibold text-[20px] leading-[26px]">
                   {item}
                 </span>
               </div>
@@ -76,7 +76,7 @@ const OtherServices = () => {
                       : "border-[#D3D8DD] text-[#4F6071] hover:border-[#1A78F2] hover:text-[#1A78F2]"
                   }`}
                 >
-                  <span className="text-base font-Averta-Semibold text-[20px] leading-[26px]">
+                  <span className="font-Averta-Semibold text-[20px] leading-[26px]">
                     {item.time}
                   </span>
                 </div>
