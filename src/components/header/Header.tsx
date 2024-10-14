@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React from 'react'
 
 
@@ -7,7 +6,7 @@ const Header = () => {
   return (
     <header className='flex justify-center bg-transparent'>
       <div className='flex flex-row w-full max-w-[1170px] h-[38px] justify-between items-end mt-[20px]'>
-        <Image src='/images/Header/Logo.svg' alt='Clean' width={0} height={0} sizes="100vw" style={{ width: 'auto', height: '38px' }} />
+        <img src='/images/Header/Logo.svg' alt='Clean' className='h-[38px]' />
         <nav className='flex flex-wrap gap-8 items-center'>
           {links.map((link) => (
             <a href={`#${link.toLowerCase()}`} key={link} className='text-gray-700 font-Averta-Semibold mt-1'>
