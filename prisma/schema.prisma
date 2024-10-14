@@ -13,8 +13,132 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model services {
-  service_id    String      @id @default(cuid())
-  service_name  String
-  description   String
+model User {
+  id              String   @id @default(uuid())
+  userType        UserType
+  gender          Gender
+  profilePicture  String?
+  fullName        String
+  dateOfBirth     DateTime
+  identifyCard    String
+  address         String
+  phoneNumber     String
+  email           String   @unique
+  createdAt       DateTime @default(now())
+  status          UserStatus
+
+  helper          Helper?
+  customerBookings Booking[] @relation("CustomerBookings")
+  helperBookings   Booking[] @relation("HelperBookings")
+  restrictedAsCustomer RestrictedList[] @relation("RestrictedCustomer")
+  restrictedAsHelper   RestrictedList[] @relation("RestrictedHelper")
+  blacklisted     CustomerBlackList[]
+
+  @@map("users")
+}
+
+model Helper {
+  userId               String  @id
+  experienceDescription String
+  servicesOffered      String
+  proposedPrice        Decimal @db.Decimal(10, 2)
+  averageRating        Decimal @db.Decimal(3, 2)
+  completedJobs        Int
+  cancelledJobs        Int
+  user                 User    @relation(fields: [userId], references: [id])
+
+  @@map("helpers")
+}
+
+model Service {
+  id          String    @id @default(uuid())
+  serviceName String
+  description String
+  bookings    Booking[]
+
+  @@map("services")
+}
+
+model Booking {
+  id                 String        @id @default(uuid())
+  customerId         String
+  helperId           String
+  serviceId          String
+  location           String
+  startTime          DateTime
+  endTime            DateTime
+  status             BookingStatus
+  cancellationReason String?
+  price              Decimal       @db.Decimal(10, 2)
+  paymentMethod      String
+  rating             Int?
+  feedback           String?
+
+  customer           User          @relation("CustomerBookings", fields: [customerId], references: [id])
+  helper             User          @relation("HelperBookings", fields: [helperId], references: [id])
+  service            Service       @relation(fields: [serviceId], references: [id])
+  contract           Contract?
+  restrictedList     RestrictedList?
+  customerBlackList  CustomerBlackList?
+
+  @@map("bookings")
+}
+
+model Contract {
+  id        String   @id @default(uuid())
+  bookingId String   @unique
+  content   String
+  createdAt DateTime @default(now())
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+
+  @@map("contracts")
+}
+
+model RestrictedList {
+  id         String  @id @default(uuid())
+  bookingId  String  @unique
+  customerId String
+  helperId   String
+  booking    Booking @relation(fields: [bookingId], references: [id])
+  customer   User    @relation("RestrictedCustomer", fields: [customerId], references: [id])
+  helper     User    @relation("RestrictedHelper", fields: [helperId], references: [id])
+
+  @@map("restricted_list")
+}
+
+model CustomerBlackList {
+  id         String  @id @default(uuid())
+  customerId String
+  bookingId  String  @unique
+  reason     String
+  customer   User    @relation(fields: [customerId], references: [id])
+  booking    Booking @relation(fields: [bookingId], references: [id])
+
+  @@map("customer_black_list")
+}
+
+enum UserType {
+  customer
+  helper
+  admin
+}
+
+enum Gender {
+  male
+  female
+  other
+}
+
+enum UserStatus {
+  active
+  in_active
+  blocked
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  in_progress
+  completed
+  cancelled
 }
