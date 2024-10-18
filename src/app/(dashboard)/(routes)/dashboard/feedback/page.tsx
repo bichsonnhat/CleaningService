@@ -7,7 +7,7 @@ import React from 'react'
 const FeedbackPage = () => {
   return (
     <div>
-      {/* <SearchAndFilter /> */}
+      <SearchAndFilter />
       <FeedbackTable />
       <Pagination />
     </div>
