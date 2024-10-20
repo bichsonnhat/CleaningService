@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Table from "./Table";
 import Pagination from "./Pagination";
-import Top from "./Top"; // Import Top component
+import SearhBar from "./SearchBar";
 
 type Customer = {
   id: string;
@@ -16,32 +16,34 @@ const columns = [
   {
     header: "ID",
     accessor: "id",
-    className: "p-4 hidden md:table-cell w-[80px]",
+    className: "p-4 w-[80px] sm:w-[60px] md:w-[80px] lg:w-[100px]", // Thêm class responsive
   },
   {
     header: "NAME",
     accessor: "name",
-    className: "hidden md:table-cell w-[177px]",
+    className: "w-[177px] sm:w-[150px] md:w-[177px] lg:w-[200px]",
   },
   {
     header: "ADDRESS",
     accessor: "address",
-    className: "hidden md:table-cell w-[342px]",
+    className:
+      "hidden md:table-cell w-[342px] sm:w-[250px] md:w-[342px] lg:w-[400px]",
   },
   {
     header: "PHONE NUMBER",
     accessor: "phone",
-    className: "hidden md:table-cell w-[170px]",
+    className:
+      "hidden md:table-cell w-[170px] sm:w-[150px] md:w-[170px] lg:w-[200px]",
   },
   {
     header: "EMAIL",
     accessor: "email",
-    className: "hidden lg:table-cell w-[180px]",
+    className: "w-[180px] sm:w-[150px] md:w-[180px] lg:w-[200px]",
   },
   {
     header: "",
     accessor: "",
-    className: "hidden lg:table-cell w-[100px]",
+    className: "hidden lg:table-cell w-[100px] sm:w-[80px] lg:w-[100px]",
   },
 ];
 
@@ -130,16 +132,29 @@ const CustomerTable = () => {
       key={item.id}
       className="border-b border-gray-200 bg-white text-sm h-[80px] "
     >
-      <td className="p-4 text-[#202224] font-semibold mr-1">{item.id}</td>
-      <td className="text-[#202224] font-semibold mr-1">{item.name}</td>
-      <td className="text-[#202224] font-semibold mr-1">{item.address}</td>
-      <td className="text-[#202224cc] mr-1 ">{item.phone}</td>
-      <td className="text-[#202224cc] mr-1 ">{item.email}</td>
-      <td>
-        <button
-          className="px-4 py-1.5 bg-[#6896d1] text-[#12153a] bg-opacity-20 text-xs rounded-[4.5px] font-semibold hover:bg-opacity-50"
-          //   onClick
-        >
+      <td className="p-4 text-[#202224] font-semibold mr-1" data-label="ID">
+        {item.id}
+      </td>
+      <td className="text-[#202224] font-semibold mr-1" data-label="Name">
+        {item.name}
+      </td>
+      <td
+        className="hidden md:table-cell text-[#202224] font-semibold mr-1"
+        data-label="Address"
+      >
+        {item.address}
+      </td>
+      <td
+        className="hidden md:table-cell text-[#202224cc] mr-1"
+        data-label="Phone"
+      >
+        {item.phone}
+      </td>
+      <td className="text-[#202224cc] mr-1" data-label="Email">
+        {item.email}
+      </td>
+      <td data-label="Actions">
+        <button className="px-4 py-1.5 bg-[#6896d1] text-[#12153a] bg-opacity-20 text-xs rounded-[4.5px] font-semibold hover:bg-opacity-50">
           More Info
         </button>
       </td>
@@ -148,7 +163,7 @@ const CustomerTable = () => {
 
   return (
     <>
-      <Top setSearchTerm={setSearchTerm} />
+      <SearhBar setSearchTerm={setSearchTerm} />
 
       <Table columns={columns} renderRow={renderRow} data={currentData} />
 
