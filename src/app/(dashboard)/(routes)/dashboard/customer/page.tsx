@@ -1,11 +1,12 @@
-import React from 'react'
+import CustomerTable from "@/components/customer/CustomerTable";
+import React from "react";
 
 const CustomerPage = () => {
   return (
-    <div>
-      CustomerPage
-    </div>
-  )
-}
+    <>
+      <CustomerTable />
+    </>
+  );
+};
 
-export default CustomerPage
+export default CustomerPage;
