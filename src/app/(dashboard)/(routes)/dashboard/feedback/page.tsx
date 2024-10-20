@@ -1,17 +1,20 @@
 "use client"
 import FeedbackTable from '@/components/feedback/FeedbackTable'
-import Pagination from '@/components/feedback/Pagination'
+import PaginationControls from '@/components/feedback/PaginationControls'
+//import Pagination from '@/components/feedback/Pagination'
 import SearchAndFilter from '@/components/feedback/SearchAndFilter'
 import React from 'react'
 
-const FeedbackPage = () => {
+export default function FeedbackPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+
   return (
     <div>
       <SearchAndFilter />
-      <FeedbackTable />
-      <Pagination />
+      <FeedbackTable searchParams={searchParams} />
     </div>
   )
 }
-
-export default FeedbackPage
