@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import Table from "./Table";
 import Pagination from "./Pagination";
 import SearhBar from "./SearchBar";
+import CustomerRow from "./CustomerRow";
 
 type Customer = {
   id: string;
@@ -15,35 +15,27 @@ type Customer = {
 const columns = [
   {
     header: "ID",
-    accessor: "id",
-    className: "p-4 w-[80px] sm:w-[60px] md:w-[80px] lg:w-[100px]", // Thêm class responsive
+    className: "w-[80px] pl-2.5 hidden md:table-cell ",
   },
   {
     header: "NAME",
-    accessor: "name",
-    className: "w-[177px] sm:w-[150px] md:w-[177px] lg:w-[200px]",
+    className: "w-[177px] pl-2.5 hidden md:table-cell ",
   },
   {
     header: "ADDRESS",
-    accessor: "address",
-    className:
-      "hidden md:table-cell w-[342px] sm:w-[250px] md:w-[342px] lg:w-[400px]",
+    className: "w-[342px] pl-2.5 hidden md:table-cell ",
   },
   {
     header: "PHONE NUMBER",
-    accessor: "phone",
-    className:
-      "hidden md:table-cell w-[170px] sm:w-[150px] md:w-[170px] lg:w-[200px]",
+    className: "w-[170px] pl-2.5 hidden md:table-cell ",
   },
   {
     header: "EMAIL",
-    accessor: "email",
-    className: "w-[180px] sm:w-[150px] md:w-[180px] lg:w-[200px]",
+    className: "w-[250px] pl-2.5 hidden md:table-cell ",
   },
   {
     header: "",
-    accessor: "",
-    className: "hidden lg:table-cell w-[100px] sm:w-[80px] lg:w-[100px]",
+    className: "w-[100px] pl-2.5 hidden md:table-cell ",
   },
 ];
 
@@ -165,7 +157,24 @@ const CustomerTable = () => {
     <>
       <SearhBar setSearchTerm={setSearchTerm} />
 
-      <Table columns={columns} renderRow={renderRow} data={currentData} />
+      {/* title column */}
+      <div className="flex w-full bg-[#f5f5f5] h-[48px] items-center mt-4">
+        {columns.map((col, index) => (
+          <div
+            key={index}
+            className={`${col.className} text-left text-[#202224] text-sm font-Averta-Bold`}
+          >
+            {col.header}
+          </div>
+        ))}
+      </div>
+
+      {/* table */}
+      <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
+        {currentData.map((customer, index) => (
+          <CustomerRow key={customer.id} {...customer} />
+        ))}
+      </div>
 
       <Pagination
         currentPage={currentPage}
