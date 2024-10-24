@@ -96,9 +96,170 @@ const customersData: Customer[] = [
     phone: "09890123456",
     email: "laura.brown@example.com",
   },
+  {
+    id: "00009",
+    name: "George Miller",
+    address: "101 Maple Boulevard Apt. 909",
+    phone: "09901234567",
+    email: "george.miller@example.com",
+  },
+  {
+    id: "00010",
+    name: "Alice Thompson",
+    address: "202 Pine Street Suite 1010",
+    phone: "09012345678",
+    email: "alice.thompson@example.com",
+  },
+  {
+    id: "00011",
+    name: "Robert Johnson",
+    address: "303 Birch Avenue Apt. 1111",
+    phone: "09134567890",
+    email: "robert.johnson@example.com",
+  },
+  {
+    id: "00012",
+    name: "Emma Roberts",
+    address: "404 Oak Lane Suite 1212",
+    phone: "09245678901",
+    email: "emma.roberts@example.com",
+  },
+  {
+    id: "00013",
+    name: "Lucas Green",
+    address: "505 Cedar Road Apt. 1313",
+    phone: "09356789012",
+    email: "lucas.green@example.com",
+  },
+  {
+    id: "00014",
+    name: "Lily Evans",
+    address: "606 Maple Avenue Suite 1414",
+    phone: "09467890123",
+    email: "lily.evans@example.com",
+  },
+  {
+    id: "00015",
+    name: "James Carter",
+    address: "707 Pine Boulevard Apt. 1515",
+    phone: "09578901234",
+    email: "james.carter@example.com",
+  },
+  {
+    id: "00016",
+    name: "Olivia Lewis",
+    address: "808 Birch Street Suite 1616",
+    phone: "09689012345",
+    email: "olivia.lewis@example.com",
+  },
+  {
+    id: "00017",
+    name: "Henry Young",
+    address: "909 Oak Avenue Apt. 1717",
+    phone: "09790123456",
+    email: "henry.young@example.com",
+  },
+  {
+    id: "00018",
+    name: "Isabella Wright",
+    address: "1010 Cedar Lane Suite 1818",
+    phone: "09801234567",
+    email: "isabella.wright@example.com",
+  },
+  {
+    id: "00019",
+    name: "Alexander Hall",
+    address: "111 Maple Street Apt. 1919",
+    phone: "09912345678",
+    email: "alexander.hall@example.com",
+  },
+  {
+    id: "00020",
+    name: "Sophia Adams",
+    address: "222 Oak Boulevard Apt. 2020",
+    phone: "09023456789",
+    email: "sophia.adams@example.com",
+  },
+  {
+    id: "00021",
+    name: "Mason Harris",
+    address: "333 Pine Avenue Suite 2121",
+    phone: "09134567890",
+    email: "mason.harris@example.com",
+  },
+  {
+    id: "00022",
+    name: "Charlotte King",
+    address: "444 Birch Lane Apt. 2222",
+    phone: "09245678901",
+    email: "charlotte.king@example.com",
+  },
+  {
+    id: "00023",
+    name: "Benjamin Scott",
+    address: "555 Maple Road Suite 2323",
+    phone: "09356789012",
+    email: "benjamin.scott@example.com",
+  },
+  {
+    id: "00024",
+    name: "Amelia Martin",
+    address: "666 Oak Street Apt. 2424",
+    phone: "09467890123",
+    email: "amelia.martin@example.com",
+  },
+  {
+    id: "00025",
+    name: "Elijah Walker",
+    address: "777 Pine Boulevard Suite 2525",
+    phone: "09578901234",
+    email: "elijah.walker@example.com",
+  },
+  {
+    id: "00026",
+    name: "Harper Robinson",
+    address: "888 Birch Avenue Apt. 2626",
+    phone: "09689012345",
+    email: "harper.robinson@example.com",
+  },
+  {
+    id: "00027",
+    name: "Logan Perez",
+    address: "999 Maple Lane Suite 2727",
+    phone: "09790123456",
+    email: "logan.perez@example.com",
+  },
+  {
+    id: "00028",
+    name: "Ava White",
+    address: "1010 Oak Street Apt. 2828",
+    phone: "09801234567",
+    email: "ava.white@example.com",
+  },
+  {
+    id: "00029",
+    name: "Daniel Thompson",
+    address: "1111 Cedar Road Suite 2929",
+    phone: "09912345678",
+    email: "daniel.thompson@example.com",
+  },
+  {
+    id: "00030",
+    name: "Mia Moore",
+    address: "1234 Pine Lane Suite 3030",
+    phone: "09023456789",
+    email: "mia.moore@example.com",
+  },
+  {
+    id: "00031",
+    name: "Giang Phan",
+    address: "1234 Pine Lane Suite 3030",
+    phone: "09023456789",
+    email: "mia.moore@example.com",
+  },
 ];
 
-const itemsPerPage = 5;
+const itemsPerPage = 10;
 
 const CustomerTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -118,40 +279,6 @@ const CustomerTable = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
-
-  const renderRow = (item: Customer) => (
-    <tr
-      key={item.id}
-      className="border-b border-gray-200 bg-white text-sm h-[80px] "
-    >
-      <td className="p-4 text-[#202224] font-semibold mr-1" data-label="ID">
-        {item.id}
-      </td>
-      <td className="text-[#202224] font-semibold mr-1" data-label="Name">
-        {item.name}
-      </td>
-      <td
-        className="hidden md:table-cell text-[#202224] font-semibold mr-1"
-        data-label="Address"
-      >
-        {item.address}
-      </td>
-      <td
-        className="hidden md:table-cell text-[#202224cc] mr-1"
-        data-label="Phone"
-      >
-        {item.phone}
-      </td>
-      <td className="text-[#202224cc] mr-1" data-label="Email">
-        {item.email}
-      </td>
-      <td data-label="Actions">
-        <button className="px-4 py-1.5 bg-[#6896d1] text-[#12153a] bg-opacity-20 text-xs rounded-[4.5px] font-semibold hover:bg-opacity-50">
-          More Info
-        </button>
-      </td>
-    </tr>
-  );
 
   return (
     <>

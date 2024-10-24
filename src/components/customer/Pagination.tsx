@@ -14,10 +14,15 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }) => {
+  const startItem = (currentPage - 1) * 10 + 1;
+  const endItem = Math.min(currentPage * 10, totalItems);
+
   return (
     <div className="flex flex-wrap gap-10 justify-between items-center mt-3.5 w-full max-md:max-w-full">
       <div className="self-stretch my-auto text-sm font-Averta-Regular text-[#202224] opacity-60">
-        Showing 1 - 12 of 1234
+        {startItem === endItem
+          ? `Showing ${startItem} of ${totalItems} items`
+          : `Showing ${startItem} - ${endItem} of ${totalItems} items`}
       </div>
       <div className="flex justify-center items-center self-stretch my-auto min-h-[38px]">
         <div className="flex border border-[#D5D5D5] rounded-lg">
@@ -29,7 +34,9 @@ const Pagination: React.FC<PaginationProps> = ({
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className={`h-5 w-5 text-[#202224] ${
-                currentPage === 1 ? "opacity-60" : "opacity-90"
+                currentPage === 1
+                  ? "opacity-60"
+                  : "opacity-90 hover:text-[#1b78f2]"
               }`}
               fill="none"
               viewBox="0 0 24 24"
@@ -53,8 +60,10 @@ const Pagination: React.FC<PaginationProps> = ({
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className={`h-5 w-5 text-[#202224] ${
-                currentPage === totalPages ? "opacity-60" : "opacity-90"
+              className={`h-5 w-5 text-[#202224]  ${
+                currentPage === totalPages
+                  ? "opacity-60"
+                  : "opacity-90 hover:text-[#1b78f2]"
               }`}
               fill="none"
               viewBox="0 0 24 24"
