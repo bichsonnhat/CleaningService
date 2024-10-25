@@ -20,7 +20,9 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex flex-wrap gap-10 justify-between items-center mt-3.5 w-full max-md:max-w-full">
       <div className="self-stretch my-auto text-sm font-Averta-Regular text-[#202224] opacity-60">
-        {startItem === endItem
+        {totalItems === 0
+          ? "Showing 0 items"
+          : startItem === endItem
           ? `Showing ${startItem} of ${totalItems} items`
           : `Showing ${startItem} - ${endItem} of ${totalItems} items`}
       </div>
