@@ -16,7 +16,7 @@ const CustomerRow: React.FC<CustomerRowProps> = ({
   email,
 }) => {
   return (
-    <div className="flex flex-wrap w-full border-b border-gray-200 bg-white h-auto md:h-[80px] items-start md:items-center p-2.5">
+    <div className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto md:h-[80px] items-start md:items-center p-2.5 cursor-pointer">
       <div className="w-full md:w-[80px] flex items-center justify-start  md:pl-0 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-Averta-Semibold">
           <span className="md:hidden font-bold">ID: </span>
@@ -46,7 +46,7 @@ const CustomerRow: React.FC<CustomerRowProps> = ({
       </div>
 
       <div className="w-full md:w-[250px] flex items-center justify-start md:pl-0 mb-2 md:mb-0">
-        <div className="text-sm text-[#202224cc] font-Averta-Regular">
+        <div className="text-sm text-[#202224cc] font-Averta-Regular truncate">
           <span className="md:hidden font-bold">EMAIL: </span>
           {email}
         </div>

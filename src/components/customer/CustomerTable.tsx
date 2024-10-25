@@ -285,7 +285,7 @@ const CustomerTable = () => {
       <SearhBar setSearchTerm={setSearchTerm} />
 
       {/* title column */}
-      <div className="flex w-full bg-[#f5f5f5] h-[48px] items-center mt-4">
+      <div className="flex gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4">
         {columns.map((col, index) => (
           <div
             key={index}
