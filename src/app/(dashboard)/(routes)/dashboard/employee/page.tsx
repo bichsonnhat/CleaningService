@@ -1,11 +1,13 @@
-import React from 'react'
+import EmployeeTable from "@/components/employee/EmployeeTable";
+import Star from "@/components/employee/Star";
+import React from "react";
 
 const EmployeePage = () => {
   return (
     <div>
-      EmployeePage
+      <EmployeeTable />
     </div>
-  )
-}
+  );
+};
 
-export default EmployeePage
+export default EmployeePage;
