@@ -1,13 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 
-type TopProps = {
+type SearchBarProps = {
   setSearchTerm: (term: string) => void;
+  setSearchBy: (field: string) => void;
 };
 
-const Top: React.FC<TopProps> = ({ setSearchTerm }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  setSearchTerm,
+  setSearchBy,
+}) => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
+
+  const [selectedSearchBy, setSelectedSearchBy] = useState("Name");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // đóng - mở của search by
+
+  const handleSearchByChange = (field: string) => {
+    setSelectedSearchBy(field);
+    setSearchBy(field);
+    setIsDropdownOpen(false);
+  };
+
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
+  };
+
+  const searchByOptions = ["Id", "Name", "Address", "Phone", "Email"];
 
   return (
     <>
@@ -34,8 +53,30 @@ const Top: React.FC<TopProps> = ({ setSearchTerm }) => {
                 />
               </div>
 
-              <div className="text-sm text-[#202224] font-Averta-Regular opacity-50 flex items-center justify-center border border-solid border-[#d5d5d5]  bg-[#eceaea] rounded-r-lg h-[38px] w-[105px]">
-                Search By
+              {/* search by */}
+              <div className="relative" onMouseLeave={closeDropdown}>
+                <div
+                  className="text-sm text-[#202224] font-Averta-Regular opacity-50 flex items-center justify-center border border-solid border-[#d5d5d5]  bg-[#eceaea] rounded-r-lg h-[38px] w-[105px] cursor-pointer"
+                  onClick={() => setIsDropdownOpen((prev) => !prev)}
+                >
+                  {selectedSearchBy}
+                </div>
+
+                {isDropdownOpen && (
+                  <div className="absolute bg-white border border-gray-300 rounded-lg shadow-lg w-full z-10">
+                    <ul className="text-sm text-[#2b3034e6] font-Averta-Regular py-1">
+                      {searchByOptions.map((option, index) => (
+                        <li
+                          key={index}
+                          className="hover:bg-gray-100 px-4 py-2 cursor-pointer"
+                          onClick={() => handleSearchByChange(option)}
+                        >
+                          {option}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           </form>
@@ -45,4 +86,4 @@ const Top: React.FC<TopProps> = ({ setSearchTerm }) => {
   );
 };
 
-export default Top;
+export default SearchBar;

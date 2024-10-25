@@ -259,17 +259,34 @@ const customersData: Customer[] = [
   },
 ];
 
-const itemsPerPage = 10;
-
 const CustomerTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchBy, setSearchBy] = useState("Name");
 
-  const totalPages = Math.ceil(customersData.length / itemsPerPage);
+  // search by
+  const filteredData = customersData.filter((Customer: Customer) => {
+    switch (searchBy) {
+      case "Id":
+        return Customer.id.toLowerCase().includes(searchTerm.toLowerCase());
+      case "Name":
+        return Customer.name.toLowerCase().includes(searchTerm.toLowerCase());
+      case "Address":
+        return Customer.address
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      case "Phone":
+        return Customer.phone.toLowerCase().includes(searchTerm.toLowerCase());
+      case "Email":
+        return Customer.email?.toLowerCase().includes(searchTerm.toLowerCase());
+      default:
+        return Customer.name.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+  });
 
-  const filteredData = customersData.filter((customer) =>
-    customer.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // pagination
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const currentData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
@@ -282,7 +299,7 @@ const CustomerTable = () => {
 
   return (
     <>
-      <SearhBar setSearchTerm={setSearchTerm} />
+      <SearhBar setSearchTerm={setSearchTerm} setSearchBy={setSearchBy} />
 
       {/* title column */}
       <div className="flex gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4">
@@ -298,7 +315,7 @@ const CustomerTable = () => {
 
       {/* table */}
       <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
-        {currentData.map((customer, index) => (
+        {currentData.map((customer: Customer, index: any) => (
           <CustomerRow key={customer.id} {...customer} />
         ))}
       </div>
