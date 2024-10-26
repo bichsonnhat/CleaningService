@@ -13,30 +13,12 @@ type Customer = {
 };
 
 const columns = [
-  {
-    header: "ID",
-    className: "w-[80px] pl-2.5 hidden md:table-cell ",
-  },
-  {
-    header: "NAME",
-    className: "w-[177px] pl-2.5 hidden md:table-cell ",
-  },
-  {
-    header: "ADDRESS",
-    className: "w-[342px] pl-2.5 hidden md:table-cell ",
-  },
-  {
-    header: "PHONE NUMBER",
-    className: "w-[170px] pl-2.5 hidden md:table-cell ",
-  },
-  {
-    header: "EMAIL",
-    className: "w-[250px] pl-2.5 hidden md:table-cell ",
-  },
-  {
-    header: "",
-    className: "w-[100px] pl-2.5 hidden md:table-cell ",
-  },
+  { header: "ID", className: "w-[8%] hidden md:table-cell" },
+  { header: "NAME", className: "w-[20%] hidden md:table-cell" },
+  { header: "ADDRESS", className: "w-[26%] hidden md:table-cell" },
+  { header: "PHONE", className: "w-[11%] hidden md:table-cell" },
+  { header: "EMAIL", className: "w-[20%] hidden md:table-cell" },
+  { header: "", className: "w-[10%] hidden md:table-cell" },
 ];
 
 const customersData: Customer[] = [
@@ -264,30 +246,28 @@ const CustomerTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchBy, setSearchBy] = useState("Name");
 
-  // search by
-  const filteredData = customersData.filter((Customer: Customer) => {
-    switch (searchBy) {
-      case "Id":
-        return Customer.id.toLowerCase().includes(searchTerm.toLowerCase());
-      case "Name":
-        return Customer.name.toLowerCase().includes(searchTerm.toLowerCase());
-      case "Address":
-        return Customer.address
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      case "Phone":
-        return Customer.phone.toLowerCase().includes(searchTerm.toLowerCase());
-      case "Email":
-        return Customer.email?.toLowerCase().includes(searchTerm.toLowerCase());
-      default:
-        return Customer.name.toLowerCase().includes(searchTerm.toLowerCase());
-    }
+  // Search
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  };
+
+  const filteredData = customersData.filter((customer) => {
+    const term = searchTerm.toLowerCase();
+    if (searchBy === "Id") return customer.id.toLowerCase().includes(term);
+    if (searchBy === "Name") return customer.name.toLowerCase().includes(term);
+    if (searchBy === "Address")
+      return customer.address.toLowerCase().includes(term);
+    if (searchBy === "Phone")
+      return customer.phone.toLowerCase().includes(term);
+    if (searchBy === "Email")
+      return customer.email?.toLowerCase().includes(term);
+    return customer.name.toLowerCase().includes(term);
   });
 
-  // pagination
+  // Pagination
   const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
   const currentData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -299,10 +279,10 @@ const CustomerTable = () => {
 
   return (
     <>
-      <SearhBar setSearchTerm={setSearchTerm} setSearchBy={setSearchBy} />
+      <SearhBar setSearchTerm={handleSearch} setSearchBy={setSearchBy} />
 
       {/* title column */}
-      <div className="flex gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4">
+      <div className="flex gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
         {columns.map((col, index) => (
           <div
             key={index}
