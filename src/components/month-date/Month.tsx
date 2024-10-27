@@ -39,7 +39,7 @@ export default function MonthCarousel() {
         );
     };
 
-    const getMonth = (index) => {
+    const getMonth = (index: any) => {
         return months[(index + months.length) % months.length];
     };
 

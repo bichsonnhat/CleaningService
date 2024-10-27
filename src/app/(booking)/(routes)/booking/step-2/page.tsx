@@ -39,105 +39,105 @@ const page = () => {
                     </div>
                 </div>
                 <div className="mt-[5px] font-Averta-Regular text-[20px] flex flex-row justify-start items-center w-[966p]">
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         1
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         2
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         3
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         4
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         5
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         6
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         7
                     </div>
                 </div>
                 <div className="font-Averta-Regular text-[20px] flex flex-row justify-start items-center w-[966px]">
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         8
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         9
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         10
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         11
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         12
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         13
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         14
                     </div>
                 </div>
                 <div className="font-Averta-Regular text-[20px] flex flex-row justify-start items-center w-[966px]">
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         15
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         16
                     </div>
                     <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-blue-600 shadow-lg">
                         17
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         18
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         19
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         20
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         21
                     </div>
                 </div>
                 <div className="font-Averta-Regular text-[20px] flex flex-row justify-start items-center w-[966px]">
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         22
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         23
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         24
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         25
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         26
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         27
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         28
                     </div>
                 </div>
                 <div className="font-Averta-Regular text-[20px] flex flex-row justify-start items-center w-[966px]">
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] rounded-[10px] text-[#DADDE1] border-[2px] border-[#DADDE1]">
                         29
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         30
                     </div>
-                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[1px] border-[#DADDE1]">
+                    <div className="w-[132px] text-center h-[55px] p-2 pt-[11px] m-[3px] text-[#5e6976] rounded-[10px] border-[2px] border-[#DADDE1]">
                         31
                     </div>
                 </div>
