@@ -11,15 +11,15 @@ interface FeedbackRowProps {
 
 const FeedbackRow: React.FC<FeedbackRowProps> = ({ name, sentiment, message, date, isEven }) => {
   const bgColor = isEven ? 'bg-white' : 'bg-[#f5f7ff]';
-  const sentimentColor = sentiment === 'Positive' ? 'bg-[#ccf0eb] text-[#00b69b]' : 
-                         sentiment === 'Negative' ? 'bg-[#fcd7d4] text-[#ef3826]' : 
-                         'bg-[#ccd0d9] text-[#2b3641]';
+  const sentimentColor = sentiment === 'Positive' ? 'bg-[#ccf0eb] text-[#00b69b]' :
+    sentiment === 'Negative' ? 'bg-[#fcd7d4] text-[#ef3826]' :
+      'bg-[#ccd0d9] text-[#2b3641]';
 
   return (
     <div className={`flex overflow-hidden flex-wrap w-full ${bgColor} bg-opacity-0 min-h-[63px] max-md:max-w-full`}>
       <div className={`flex flex-col grow shrink justify-center pl-6 ${bgColor} border-b border-zinc-600 border-opacity-20 w-[66px]`}>
         <div className="flex overflow-hidden items-center pl-px w-full min-h-[48px]">
-          <Checkbox onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined}/>
+          <Checkbox onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
         </div>
       </div>
       <div className={`flex flex-col grow shrink justify-center pl-2.5 text-sm font-bold ${bgColor} border-b border-zinc-600 border-opacity-20 text-neutral-800 w-[103px]`}>

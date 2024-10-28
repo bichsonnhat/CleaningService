@@ -74,8 +74,10 @@ const Career = () => {
                                         <Image
                                             src={accredition.logo}
                                             alt='ClientLogo'
-                                            fill
-                                            className='object-contain filter grayscale'
+                                            width={40}
+                                            height={40}
+                                            sizes="100vw"
+                                            className='object-contain filter grayscale h[40px]'
                                         />
                                     </div>
                                 </div>
