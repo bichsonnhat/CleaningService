@@ -30,7 +30,9 @@ const page = () => {
         "December",
     ];
 
-    const [currentIndex, setCurrentIndex] = useState(11);
+    const today = new Date();
+
+    const [currentIndex, setCurrentIndex] = useState(today.getMonth() + 1);
 
     const handleNext = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % months.length);
@@ -43,7 +45,7 @@ const page = () => {
     };
 
     const getMonth = (index: any) => {
-        return months[(index + months.length) % months.length];
+        return months[(index + months.length - 1) % months.length];
     };
 
     return (
