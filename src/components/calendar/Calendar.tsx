@@ -65,6 +65,7 @@ const Calendar: React.FC<CalendarProps> = ({
                     (year === today.getFullYear() &&
                         month < today.getMonth() + 1);
 
+                        
                 return (
                     <div
                         key={day}
