@@ -31,23 +31,6 @@ enum UserStatus {
   blocked
 }
 
-enum ServiceType {
-  Home_Cleaning
-  Other_Service
-}
-
-enum RoomType {
-  bedroom
-  bathroom
-}
-
-enum DurationType {
-  ONE_TO_THREE_HOURS @map("1-3 hours")
-  THREE_TO_FIVE_HOURS @map("3-5 hours")
-  HALF_A_DAY @map("Half a day")
-  A_DAY @map("A day")
-}
-
 enum BookingStatus {
   pending
   confirmed
@@ -56,168 +39,191 @@ enum BookingStatus {
   cancelled
 }
 
+enum PaymentStatus {
+  pending
+  paid
+  refunded
+}
+
+enum RoomType {
+  bedroom
+  bathroom
+  kitchen
+  living_room
+  other
+}
+
+enum ComplaintStatus {
+  pending
+  investigating
+  resolved
+  dismissed
+}
+
 model User {
-  id              String         @id @map("user_id")
-  userType        UserType      @map("user_type")
-  gender          Gender
-  profilePicture  String?       @map("profile_picture")
-  fullName        String        @map("full_name")
-  dateOfBirth     DateTime      @map("date_of_birth")
-  identifyCard    String        @map("identify_card")
-  address         String
-  phoneNumber     String        @map("phone_number")
-  email           String        @unique
-  createdAt       DateTime      @map("created_at")
-  status          UserStatus
-  helper          Helper?
-  customerBookings Booking[]     @relation("CustomerBookings")
-  blackLists      BlackList[]
-  complaints      ComplaintList[] @relation("UserComplaints")
+  id               String           @id @default(uuid()) @db.Uuid
+  userType         UserType         @map("user_type")
+  gender           Gender?
+  profilePicture   String?          @map("profile_picture")
+  fullName         String           @map("full_name") @db.VarChar(150)
+  dateOfBirth      DateTime         @map("date_of_birth") @db.Date
+  identifyCard     String?          @map("identify_card") @db.Text
+  address          String?          @db.Text
+  phoneNumber      String           @map("phone_number") @db.VarChar(20)
+  email            String           @unique @db.VarChar(255)
+  createdAt        DateTime         @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+  status           UserStatus       @default(active)
+  helper           Helper?
+  customerBookings Booking[]        @relation("CustomerBookings")
+  reportedBy       Complaint[]      @relation("ReportedByUser")
+  reportedUser     Complaint[]      @relation("ReportedUser")
+  blacklistedUser  BlacklistedUser? @relation("BlacklistedUser")
+  blacklistedBy    BlacklistedUser[] @relation("BlacklistedByAdmin")
 
   @@map("users")
 }
 
 model Helper {
-  helperId              String    @id @map("helper_id")
-  experienceDescription String    @map("experience_description") @db.Text
-  servicesOffered       String    @map("services_offered")
-  proposedPrice         Decimal   @map("proposed_price") @db.Decimal(10, 2)
-  averageRating         Decimal   @map("average_rating") @db.Decimal(3, 2)
-  completedJobs         Int       @map("completed_jobs")
-  cancelledJobs         Int       @map("cancelled_jobs")
-  user                  User      @relation(fields: [helperId], references: [id])
-  helperBookings        Booking[] @relation("HelperBookings")
-  complaints            ComplaintList[] @relation("HelperComplaints")
+  id                   String    @id @default(uuid()) @db.Uuid
+  user                 User      @relation(fields: [id], references: [id])
+  experienceDescription String?  @map("experience_description") @db.Text
+  resumeUploaded       String?   @map("resume_uploaded") @db.Text
+  servicesOffered      String[]  @map("services_offered") @db.Uuid
+  hourlyRate           Decimal   @map("hourly_rate") @db.Decimal(10, 2)
+  averageRating        Decimal?  @map("average_rating") @default(0) @db.Decimal(2, 1)
+  completedJobs        Int       @default(0) @map("completed_jobs")
+  cancelledJobs        Int       @default(0) @map("cancelled_jobs")
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt            DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+  bookings             Booking[] @relation("HelperBookings")
 
   @@map("helpers")
 }
 
-model HomeCleaningType {
-  typeId          String    @id @map("type_id")
-  name        String
-  description String    @db.Text
-  basePrice   Decimal   @map("base_price") @db.Decimal(10, 2)
-  cleaningDetails HomeCleaningDetail[]
+model ServiceCategory {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String        @unique @db.VarChar(50)
+  description String?       @db.Text
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamp()
+  isActive    Boolean      @default(true) @map("is_active")
+  serviceTypes ServiceType[]
 
-  @@map("home_cleaning_types")
+  @@map("service_categories")
 }
 
-model OtherServiceType {
-  typeId          String    @id @map("type_id")
-  name        String
-  description String    @db.Text
-  basePrice   Decimal   @map("base_price") @db.Decimal(10, 2)
-  serviceDetails OtherServiceDetail[]
+model ServiceType {
+  id          String          @id @default(uuid()) @db.Uuid
+  categoryId  String          @map("category_id") @db.Uuid
+  name        String          @db.VarChar(100)
+  description String?         @db.Text
+  basePrice   Decimal         @map("base_price")
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamp()
+  isActive    Boolean        @default(true) @map("is_active")
+  category    ServiceCategory @relation(fields: [categoryId], references: [id])
+  roomPricing RoomPricing[]
+  duration    DurationPrice[]
+  bookings    Booking[]
 
-  @@map("other_service_types")
+  @@unique([categoryId, name])
+  @@map("service_types")
 }
 
-model RoomPrice {
-  roomPriceId     String    @id @map("room_price_id")
-  roomType        RoomType  @map("room_type")
-  roomCount       Int       @map("room_count")
-  additionalPrice Decimal   @map("additional_price") @db.Decimal(10, 2)
+model RoomPricing {
+  id             String      @id @default(uuid()) @db.Uuid
+  serviceTypeId  String      @map("service_type_id") @db.Uuid
+  roomType       RoomType    @map("room_type")
+  roomCount      Int?        @map("room_count")
+  additionalPrice Decimal    @default(0) @map("additional_price") @db.Decimal(10, 2)
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamp()
+  serviceType    ServiceType @relation(fields: [serviceTypeId], references: [id])
 
-  @@unique([roomType, roomCount])
-  @@map("room_price")
+  @@unique([serviceTypeId, roomType, roomCount])
+  @@map("room_pricing")
 }
 
 model DurationPrice {
-  durationPriceId String       @id @map("duration_price_id")
-  durationType    DurationType @map("duration_type")
-  price           Decimal      @db.Decimal(10, 2)
+  id              String      @id @default(uuid()) @db.Uuid
+  serviceTypeId   String      @map("service_type_id") @db.Uuid
+  durationHours   Int         @map("duration_hours")
+  priceMultiplier Decimal     @default(1.00) @map("price_multiplier") @db.Decimal(3, 2)
+  createdAt       DateTime    @default(now()) @map("created_at") @db.Timestamp()
+  serviceType     ServiceType @relation(fields: [serviceTypeId], references: [id])
 
-  @@unique([durationType])
+  @@unique([serviceTypeId, durationHours])
   @@map("duration_price")
 }
 
-model BookingDetail {
-  bookingDetailId       String      @id @map("booking_detail_id")
-  bookingId            String      @map("booking_id")
-  serviceType          ServiceType @map("service_type")
-  homeCleaningDetailId String?     @map("home_cleaning_detail_id")
-  otherServiceDetailId String?     @map("other_service_detail_id")
-  booking              Booking     @relation(fields: [bookingId], references: [bookingId])
-  homeCleaningDetail   HomeCleaningDetail? @relation(fields: [homeCleaningDetailId], references: [homeCleaningDetailId])
-  otherServiceDetail   OtherServiceDetail? @relation(fields: [otherServiceDetailId], references: [otherServiceDetailId])
-
-  @@map("booking_detail")
-}
-
-model HomeCleaningDetail {
-  homeCleaningDetailId String           @id @map("home_cleaning_detail_id")
-  homeCleaningTypeId  String          @map("home_cleaning_types_id")
-  numberOfBedrooms    Int             @map("number_of_bedrooms")
-  numberOfBathrooms   Int             @map("number_of_bathrooms")
-  homeCleaningType    HomeCleaningType @relation(fields: [homeCleaningTypeId], references: [typeId])
-  bookingDetails      BookingDetail[]
-
-  @@map("home_cleaning_detail")
-}
-
-model OtherServiceDetail {
-  otherServiceDetailId String          @id @map("other_service_detail_id")
-  otherServiceTypeId  String          @map("other_service_types_id")
-  otherServiceType    String          @map("other_service_type")
-  durationType        DurationType    @map("duration_type")
-  serviceType         OtherServiceType @relation(fields: [otherServiceTypeId], references: [typeId])
-  bookingDetails      BookingDetail[]
-
-  @@map("other_service_detail")
-}
-
 model Booking {
-  bookingId           String        @id @map("booking_id")
-  customerId          String        @map("customer_id")
-  helperId           String        @map("helper_id")
+  id                 String        @id @default(uuid()) @db.Uuid
+  customerId         String        @map("customer_id") @db.Uuid
+  helperId          String?       @map("helper_id") @db.Uuid
+  serviceTypeId     String        @map("service_type_id") @db.Uuid
   location          String        @db.Text
-  startTime         DateTime      @map("start_time")
-  endTime           DateTime      @map("end_time")
-  status            BookingStatus
+  scheduledStartTime DateTime     @map("scheduled_start_time") @db.Timestamp()
+  scheduledEndTime  DateTime     @map("scheduled_end_time") @db.Timestamp()
+  actualStartTime   DateTime?    @map("actual_start_time") @db.Timestamp()
+  actualEndTime     DateTime?    @map("actual_end_time") @db.Timestamp()
+  status            BookingStatus @default(pending)
   cancellationReason String?      @map("cancellation_reason") @db.Text
-  price             Decimal       @db.Decimal(10, 2)
-  paymentMethod     String        @map("payment_method")
-  rating            Int?
-  feedback          String?       @db.Text
-  customer          User          @relation("CustomerBookings", fields: [customerId], references: [id])
-  helper            Helper        @relation("HelperBookings", fields: [helperId], references: [helperId])
-  contract          Contract?
-  bookingDetails    BookingDetail[]
-  complaints        ComplaintList[]
+  totalPrice        Decimal      @map("total_price") @db.Decimal(10, 2)
+  paymentStatus     PaymentStatus @default(pending) @map("payment_status")
+  paymentMethod     String?      @map("payment_method") @db.VarChar(50)
+  helperRating      Decimal?     @map("helper_rating") @db.Decimal(2, 1)
+  customerFeedback  String?      @map("customer_feedback") @db.Text
+  helperFeedback    String?      @map("helper_feedback") @db.Text
+  createdAt         DateTime     @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt         DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamp()
+  customer          User         @relation("CustomerBookings", fields: [customerId], references: [id])
+  helper            Helper?      @relation("HelperBookings", fields: [helperId], references: [id])
+  serviceType       ServiceType  @relation(fields: [serviceTypeId], references: [id])
+  bookingDetails    BookingDetail?
+  complaints        Complaint[]
 
   @@map("bookings")
 }
 
-model Contract {
-  contractId  String   @id @map("contract_id")
-  bookingId   String   @map("booking_id")
-  content     String   @db.Text
-  createdAt   DateTime @map("created_at")
-  booking     Booking  @relation(fields: [bookingId], references: [bookingId])
+model BookingDetail {
+  id                 String   @id @default(uuid()) @db.Uuid
+  bookingId          String   @unique @map("booking_id") @db.Uuid
+  bedroomCount       Int      @default(0) @map("bedroom_count")
+  bathroomCount      Int      @default(0) @map("bathroom_count")
+  kitchenCount       Int      @default(0) @map("kitchen_count")
+  livingRoomCount    Int      @default(0) @map("living_room_count")
+  specialRequirements String? @map("special_requirements") @db.Text()
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamp()
+  booking            Booking  @relation(fields: [bookingId], references: [id])
 
-  @@unique([bookingId]) 
-  @@map("contracts")
+  @@map("booking_details")
 }
 
-model ComplaintList {
-  complaintListId String   @id @map("complaint_list_id")
-  bookingId       String   @map("booking_id")
-  customerId      String   @map("customer_id")
-  helperId        String   @map("helper_id")
-  userType        UserType @map("user_type")
-  reason          String   @db.Text
-  booking         Booking  @relation(fields: [bookingId], references: [bookingId])
-  customer        User     @relation("UserComplaints", fields: [customerId], references: [id])
-  helper          Helper   @relation("HelperComplaints", fields: [helperId], references: [helperId])
+model Complaint {
+  id             String         @id @default(uuid()) @db.Uuid
+  bookingId      String         @map("booking_id") @db.Uuid
+  reportedById   String         @map("reported_by_id") @db.Uuid
+  reportedUserId String         @map("reported_user_id") @db.Uuid
+  reason         String         @db.Text
+  status         ComplaintStatus @default(pending)
+  resolution     String?        @db.Text
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamp()
+  resolvedAt     DateTime?     @map("resolved_at") @db.Timestamp()
+  booking        Booking       @relation(fields: [bookingId], references: [id])
+  reportedBy     User          @relation("ReportedByUser", fields: [reportedById], references: [id])
+  reportedUser   User          @relation("ReportedUser", fields: [reportedUserId], references: [id])
 
-  @@map("complaint_list")
+  @@map("complaints")
 }
 
-model BlackList {
-  blackListId String @id @map("black_list_id")
-  userId      String @map("user_id")
-  reason      String @db.Text
-  user        User   @relation(fields: [userId], references: [id])
+model BlacklistedUser {
+  id            String    @id @default(uuid()) @db.Uuid
+  userId        String    @unique @map("user_id") @db.Uuid
+  reason        String    @db.Text
+  blacklistedAt DateTime  @default(now()) @map("blacklisted_at") @db.Timestamp()
+  blacklistedBy String    @map("blacklisted_by") @db.Uuid
+  isPermanent   Boolean   @default(false) @map("is_permanent")
+  expiryDate    DateTime? @map("expiry_date") @db.Timestamp()
+  user          User      @relation("BlacklistedUser", fields: [userId], references: [id])
+  admin         User      @relation("BlacklistedByAdmin", fields: [blacklistedBy], references: [id])
 
-  @@map("black_list")
+  @@map("blacklisted_users")
 }
