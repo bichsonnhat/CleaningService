@@ -1,8 +1,15 @@
+//
 import React, { useState } from "react";
 
 interface CalendarProps {
+    month: number; // tháng từ 1 đến 12
+    year?: number; // năm tùy chọn, nếu không sẽ dùng năm hiện tại
+}
+
+interface SelectedDay {
+    day: number;
     month: number;
-    year?: number;
+    year: number;
 }
 
 const Calendar: React.FC<CalendarProps> = ({
@@ -14,14 +21,33 @@ const Calendar: React.FC<CalendarProps> = ({
     const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
     const blankDays = Array.from({ length: startDay }, (_, i) => i);
 
-    const [selectedDays, setSelectedDays] = useState<number[]>([]);
+    const today = new Date();
+    const isCurrentMonth =
+        today.getMonth() + 1 === month && today.getFullYear() === year;
+    const currentDay = isCurrentMonth ? today.getDate() : null;
 
+    const [selectedDay, setSelectedDay] = useState<SelectedDay | null>(null);
+
+    // Hàm xử lý khi click vào ngày
     const handleDayClick = (day: number) => {
-        setSelectedDays((prevSelectedDays) =>
-            prevSelectedDays.includes(day)
-                ? prevSelectedDays.filter((d) => d !== day)
-                : [...prevSelectedDays, day]
-        );
+        const selectedDate: SelectedDay = { day, month, year };
+
+        if (
+            (isCurrentMonth && day >= currentDay) ||
+            (!isCurrentMonth &&
+                (year > today.getFullYear() ||
+                    (year === today.getFullYear() &&
+                        month > today.getMonth() + 1)))
+        ) {
+            setSelectedDay(
+                selectedDay &&
+                    selectedDay.day === day &&
+                    selectedDay.month === month &&
+                    selectedDay.year === year
+                    ? null
+                    : selectedDate
+            );
+        }
     };
 
     return (
@@ -33,19 +59,44 @@ const Calendar: React.FC<CalendarProps> = ({
                 ></div>
             ))}
 
-            {daysArray.map((day) => (
-                <div
-                    key={day}
-                    onClick={() => handleDayClick(day)}
-                    className={`flex items-center justify-center w-[132px] h-[55px] p-2 text-center  rounded-[10px] border-2 cursor-pointer font-Averta-Semibold ${selectedDays.includes(day)
-                        ? "border-blue-600 shadow-lg"
-                        : "border-[#DADDE1]"
+            {daysArray.map((day) => {
+                const isPastMonth =
+                    year < today.getFullYear() ||
+                    (year === today.getFullYear() &&
+                        month < today.getMonth() + 1);
+
+                return (
+                    <div
+                        key={day}
+                        onClick={() => handleDayClick(day)}
+                        className={`w-[132px] h-[55px] p-2 text-center rounded-[10px] border-2 cursor-pointer font-Averta-Semibold pt-[10px] ${
+                            selectedDay?.day === day &&
+                            selectedDay?.month === month &&
+                            selectedDay?.year === year
+                                ? "border-blue-600 shadow-lg"
+                                : "border-[#DADDE1]"
+                        } ${
+                            (isCurrentMonth &&
+                                currentDay !== null &&
+                                day < currentDay) ||
+                            isPastMonth
+                                ? "text-gray-400 cursor-not-allowed" // Ngày của các tháng trước và ngày đã qua trong tháng hiện tại không chọn được
+                                : "text-[#5e6976]"
                         }`}
-                    style={{ color: day > 15 ? "#5e6976" : "#DADDE1" }}
-                >
-                    {day}
-                </div>
-            ))}
+                        style={{
+                            pointerEvents:
+                                (isCurrentMonth &&
+                                    currentDay !== null &&
+                                    day < currentDay) ||
+                                isPastMonth
+                                    ? "none"
+                                    : "auto",
+                        }}
+                    >
+                        {day}
+                    </div>
+                );
+            })}
         </div>
     );
 };
