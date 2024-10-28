@@ -37,11 +37,10 @@ const Calendar: React.FC<CalendarProps> = ({
                 <div
                     key={day}
                     onClick={() => handleDayClick(day)}
-                    className={`w-[132px] h-[55px] p-2 text-center rounded-[10px] border-2 cursor-pointer ${
-                        selectedDays.includes(day)
-                            ? "border-blue-600 shadow-lg"
-                            : "border-[#DADDE1]"
-                    }`}
+                    className={`w-[132px] h-[55px] p-2 text-center rounded-[10px] border-2 cursor-pointer font-Averta-Semibold ${selectedDays.includes(day)
+                        ? "border-blue-600 shadow-lg"
+                        : "border-[#DADDE1]"
+                        }`}
                     style={{ color: day > 15 ? "#5e6976" : "#DADDE1" }}
                 >
                     {day}
