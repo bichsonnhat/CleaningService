@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 
 interface CalendarProps {
-    month: number; // tháng từ 1 đến 12
-    year?: number; // năm tùy chọn, nếu không sẽ dùng năm hiện tại
+    month: number;
+    year?: number;
 }
 
 interface SelectedDay {
@@ -16,7 +16,7 @@ const Calendar: React.FC<CalendarProps> = ({
     month,
     year = new Date().getFullYear(),
 }) => {
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInMonth = new Date(year, month, 0).getDate();
     const startDay = new Date(year, month - 1, 1).getDay();
     const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
     const blankDays = Array.from({ length: startDay }, (_, i) => i);
@@ -24,11 +24,13 @@ const Calendar: React.FC<CalendarProps> = ({
     const today = new Date();
     const isCurrentMonth =
         today.getMonth() + 1 === month && today.getFullYear() === year;
+
     const currentDay = isCurrentMonth ? today.getDate() : null;
 
     const [selectedDay, setSelectedDay] = useState<SelectedDay | null>(null);
 
-    // Hàm xử lý khi click vào ngày
+    if (month === 0) month = 12;
+
     const handleDayClick = (day: number) => {
         const selectedDate: SelectedDay = { day, month, year };
 
@@ -65,7 +67,6 @@ const Calendar: React.FC<CalendarProps> = ({
                     (year === today.getFullYear() &&
                         month < today.getMonth() + 1);
 
-                        
                 return (
                     <div
                         key={day}
