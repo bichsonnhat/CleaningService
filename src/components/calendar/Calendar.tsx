@@ -16,7 +16,7 @@ const Calendar: React.FC<CalendarProps> = ({
     month,
     year = new Date().getFullYear(),
 }) => {
-    const daysInMonth = new Date(year, month, 0).getDate();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
     const startDay = new Date(year, month - 1, 1).getDay();
     const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
     const blankDays = Array.from({ length: startDay }, (_, i) => i);
