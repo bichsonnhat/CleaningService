@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FeedbackRow from './FeedbackRow';
 import PaginationControls from './PaginationControls';
+import Pagination from '../employee/Pagination';
+import SearchBarAndFilter from './SearchBarAndFilter';
 
-const feedbackData = [
+type Feedback = {
+  id: number;
+  name: string;
+  sentiment: "Positive" | "Negative" | "Neutral";
+  message: string;
+  date: string;
+}
+
+const feedbackData: Feedback[] = [
   { id: 1, name: "Jullu Jalal", sentiment: "Positive" as "Positive", message: "Get Best Advertiser In Your Side Pocket", date: "OCT 15 - 8:13 AM" },
   { id: 2, name: "Jullu Jalal", sentiment: "Positive" as "Positive", message: "Free Classifieds Using Them To Promote Your Stuff Online", date: "OCT 15 - 8:13 AM" },
   { id: 3, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Vacation Home Rental Success", date: "OCT 15 - 8:13 AM" },
@@ -32,40 +42,94 @@ const feedbackData = [
   { id: 27, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", date: "OCT 15 - 8:13 AM" },
 ];
 
-export default function FeedbackTable({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
-  const page = searchParams['page'] ?? '1'
-  const per_page = searchParams['per_page'] ?? '12'
+export default function FeedbackTable() {
 
-  // mocked, skipped and limited in the real app
-  const start = (Number(page) - 1) * Number(per_page) // 0, 5, 10 ...
-  const end = (start + Number(per_page)) > feedbackData.length ? feedbackData.length : (start + Number(per_page)) // 5, 10, 15 ...
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState("Filter by");
+  const [searchBy, setSearchBy] = useState("Name");
 
-  const entries = feedbackData.slice(start, end)
+  // filter
+  const applyFilter = (data: any) => {
+    switch (filter) {
+      case "Name":
+        return [...data].sort(
+          (a, b) =>
+            b.completedJobs / b.totalJobs - a.completedJobs / a.totalJobs
+        );
+      case "Status":
+        return [...data].sort(
+          (a, b) =>
+            a.completedJobs / a.totalJobs - b.completedJobs / b.totalJobs
+        );
+      case "Date":
+        return [...data].sort(
+          (a, b) =>
+            a.completedJobs / a.totalJobs - b.completedJobs / b.totalJobs
+        );
+      default:
+        return data;
+    }
+  };
+
+  // search by
+  const filteredData = feedbackData.filter((Feedback) => {
+    switch (searchBy) {
+      case "Name":
+        return Feedback.name.toLowerCase().includes(searchTerm.toLowerCase());
+      case "Sentiment":
+        const check = Feedback.sentiment.toLowerCase().includes(searchTerm.toLowerCase());
+        console.log(check);
+        return Feedback.sentiment
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      case "Message":
+        return Feedback.message.toLowerCase().includes(searchTerm.toLowerCase());
+      case "Date":
+        return Feedback.date.toLowerCase().includes(searchTerm.toLowerCase());
+      default:
+        return Feedback.name.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+  });
+
+  const finalData = applyFilter(filteredData);
+
+  // pagination
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const currentData = finalData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
+  };
+
   return (
     <>
-      <div className='flex flex-row items-center justify-between my-4'>
-        <div className='self-stretch my-auto text-[15px] font-Averta-Semibold bg-blend-normal text-neutral-800'>
-          Showing {start + 1}-{end} of {feedbackData.length}
-        </div>
-        <PaginationControls
-          hasNextPage={end < feedbackData.length}
-          hasPrevPage={start > 0}
-        />
-      </div>
+      <SearchBarAndFilter
+        setSearchTerm={setSearchTerm}
+        setSearchBy={setSearchBy}
+        onFilterChange={setFilter}
+      />
+
       <div className="flex flex-col justify-center px-8 py-7 mt-3.5 w-full bg-white rounded max-md:px-5 max-md:max-w-full">
         <div className="flex flex-col w-full rounded max-md:max-w-full">
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 max-md:max-w-full">
-            {entries.map((feedback, index) => (
+            {currentData.map((feedback: Feedback, index: any) => (
               <FeedbackRow key={feedback.id} {...feedback} isEven={index % 2 === 0} />
             ))}
           </div>
         </div>
       </div>
 
+      <Pagination
+        currentPage={currentPage}
+        totalItems={filteredData.length}
+        totalPages={totalPages}
+        onPageChange={handlePageChange} />
 
     </>
 
