@@ -15,34 +15,13 @@ type Employee = {
 };
 
 const columns = [
-  {
-    header: "ID",
-    className: "w-[80px] pl-2.5 hidden md:table-cell ",
-  },
-  {
-    header: "NAME",
-    className: "w-[177px] pl-2.5 hidden md:table-cell ",
-  },
-  {
-    header: "ADDRESS",
-    className: "w-[185px] pl-2.5 hidden md:table-cell mr-2",
-  },
-  {
-    header: "EVALUATE",
-    className: "w-[185px] pl-2.5 hidden md:table-cell ",
-  },
-  {
-    header: "PHONE NUMBER",
-    className: "w-[150px] pl-2.5 hidden md:table-cell ",
-  },
-  {
-    header: "EMAIL",
-    className: "w-[220px] pl-2.5 hidden md:table-cell ",
-  },
-  {
-    header: "",
-    className: "w-[100px] pl-2.5 hidden md:table-cell ",
-  },
+  { header: "ID", className: "w-[8%] hidden md:table-cell" },
+  { header: "NAME", className: "w-[12%] hidden md:table-cell" },
+  { header: "ADDRESS", className: "w-[20%] hidden md:table-cell" },
+  { header: "EVALUATE", className: "w-[15%] hidden md:table-cell " },
+  { header: "PHONE", className: "w-[11%] hidden md:table-cell" },
+  { header: "EMAIL", className: "w-[20%] hidden md:table-cell" },
+  { header: "", className: "w-[8%] hidden md:table-cell" },
 ];
 
 const employeesData: Employee[] = [
@@ -333,8 +312,8 @@ const EmployeeTable = () => {
   const [filter, setFilter] = useState("Filter by");
   const [searchBy, setSearchBy] = useState("Name");
 
-  // filter
-  const applyFilter = (data: any) => {
+  // Filter
+  const applyFilter = (data: Employee[]) => {
     switch (filter) {
       case "Best Rating":
         return [...data].sort(
@@ -351,32 +330,30 @@ const EmployeeTable = () => {
     }
   };
 
-  // search by
-  const filteredData = employeesData.filter((Employee) => {
-    switch (searchBy) {
-      case "Id":
-        return Employee.id.toLowerCase().includes(searchTerm.toLowerCase());
-      case "Name":
-        return Employee.name.toLowerCase().includes(searchTerm.toLowerCase());
-      case "Address":
-        return Employee.address
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      case "Phone":
-        return Employee.phone.toLowerCase().includes(searchTerm.toLowerCase());
-      case "Email":
-        return Employee.email?.toLowerCase().includes(searchTerm.toLowerCase());
-      default:
-        return Employee.name.toLowerCase().includes(searchTerm.toLowerCase());
-    }
+  // Search
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  };
+
+  const filteredData = employeesData.filter((employee) => {
+    const term = searchTerm.toLowerCase();
+    if (searchBy === "Id") return employee.id.toLowerCase().includes(term);
+    if (searchBy === "Name") return employee.name.toLowerCase().includes(term);
+    if (searchBy === "Address")
+      return employee.address.toLowerCase().includes(term);
+    if (searchBy === "Phone")
+      return employee.phone.toLowerCase().includes(term);
+    if (searchBy === "Email")
+      return employee.email?.toLowerCase().includes(term);
+    return employee.name.toLowerCase().includes(term);
   });
 
   const finalData = applyFilter(filteredData);
 
-  // pagination
+  // Pagination
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
+  const totalPages = Math.ceil(finalData.length / itemsPerPage);
   const currentData = finalData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -389,13 +366,13 @@ const EmployeeTable = () => {
   return (
     <>
       <SearhBarAndFilter
-        setSearchTerm={setSearchTerm}
+        setSearchTerm={handleSearch}
         setSearchBy={setSearchBy}
         onFilterChange={setFilter}
       />
 
       {/* title column */}
-      <div className="flex w-full bg-[#f5f5f5] h-[48px] items-center mt-4 gap-3">
+      <div className="flex w-full bg-[#f5f5f5] h-[48px] items-center mt-4 gap-3 p-2.5">
         {columns.map((col, index) => (
           <div
             key={index}
@@ -406,7 +383,7 @@ const EmployeeTable = () => {
         ))}
       </div>
 
-      {/* table */}
+      {/* employee table */}
       <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
         {currentData.map((Employee: Employee, index: any) => (
           <EmployeeRow key={Employee.id} {...Employee} />
