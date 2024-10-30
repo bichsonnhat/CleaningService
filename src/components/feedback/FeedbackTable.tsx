@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import FeedbackRow from './FeedbackRow';
-import PaginationControls from './PaginationControls';
 import Pagination from '../employee/Pagination';
 import SearchBarAndFilter from './SearchBarAndFilter';
 
