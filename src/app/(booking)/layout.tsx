@@ -1,10 +1,11 @@
 import React from 'react'
-
-const BookingLayout = (props : {
-    children: React.ReactNode
+import ProgressBar from '@/components/progressbar/ProgressBar'
+const BookingLayout = (props: {
+  children: React.ReactNode
 }) => {
   return (
     <div>
+      <ProgressBar />
       {props.children}
     </div>
   )
