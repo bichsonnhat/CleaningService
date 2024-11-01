@@ -14,72 +14,72 @@ datasource db {
 }
 
 // Enums
-enum UserType {
-  customer
-  helper
-  admin
-}
+// enum UserType {
+//   customer
+//   helper
+//   admin
+// }
 
-enum Gender {
-  male
-  female
-  other
-}
+// enum Gender {
+//   male
+//   female
+//   other
+// }
 
-enum UserStatus {
-  active
-  in_active
-  blocked
-}
+// enum UserStatus {
+//   active
+//   in_active
+//   blocked
+// }
 
-enum AvailabilityType {
-  vacation
-  sick_leave
-  personal_leave
-  unavailable
-}
+// enum AvailabilityType {
+//   vacation
+//   sick_leave
+//   personal_leave
+//   unavailable
+// }
 
-enum AvailabilityStatus {
-  pending
-  approved
-  rejected
-  cancelled
-}
+// enum AvailabilityStatus {
+//   pending
+//   approved
+//   rejected
+//   cancelled
+// }
 
-enum RoomType {
-  bedroom
-  bathroom
-  kitchen
-  living_room
-  other
-}
+// enum RoomType {
+//   bedroom
+//   bathroom
+//   kitchen
+//   living_room
+//   other
+// }
 
-enum BookingStatus {
-  pending
-  confirmed
-  in_progress
-  completed
-  cancelled
-}
+// enum BookingStatus {
+//   pending
+//   confirmed
+//   in_progress
+//   completed
+//   cancelled
+// }
 
-enum PaymentStatus {
-  pending
-  paid
-  refunded
-}
+// enum PaymentStatus {
+//   pending
+//   paid
+//   refunded
+// }
 
-enum ComplaintStatus {
-  pending
-  investigating
-  resolved
-  dismissed
-}
+// enum ComplaintStatus {
+//   pending
+//   investigating
+//   resolved
+//   dismissed
+// }
 
 // Models
 model User {
   id              String       @id @default(uuid()) @db.Uuid
-  userType        UserType
-  gender          Gender?
+  userType        String       @db.VarChar(50)
+  gender          String?      @db.VarChar(10)
   profilePicture  String?      @db.VarChar(512)
   fullName        String       @db.VarChar(150)
   dateOfBirth     DateTime     @db.Date
@@ -89,7 +89,7 @@ model User {
   email           String?      @unique @db.VarChar(255)
   createdAt       DateTime     @default(now()) @db.Timestamp()
   updatedAt       DateTime     @default(now()) @updatedAt @db.Timestamp()
-  status          UserStatus   @default(active)
+  status          String       @default("active") @db.VarChar(50)
 
   // Relations
   helper                    Helper?
@@ -101,12 +101,12 @@ model User {
   blacklisted              BlacklistedUser?     @relation("BlacklistedUser")
 }
 
-model Helper {
+model Helper { 
   id                   String    @id @db.Uuid
   experienceDescription String?
   resumeUploaded       String?
   servicesOffered      String[]  @db.Uuid // Array of service_type_ids
-  hourlyRate           Decimal   @db.Decimal(10, 2)
+  salaryExpectation    Decimal   @db.Decimal(10, 2)
   averageRating        Decimal?  @default(0) @db.Decimal(2, 1)
   completedJobs        Int       @default(0)
   cancelledJobs        Int       @default(0)
@@ -124,8 +124,8 @@ model HelperAvailability {
   helperId         String             @db.Uuid
   startDatetime    DateTime           @db.Timestamp()
   endDatetime      DateTime           @db.Timestamp()
-  availabilityType AvailabilityType
-  status           AvailabilityStatus @default(pending)
+  availabilityType String             @db.VarChar(50)
+  status           String             @default("pending") @db.VarChar(50)
   requestReason    String?
   rejectionReason  String?
   approvedById     String?            @db.Uuid
@@ -173,7 +173,7 @@ model ServiceType {
 model RoomPricing {
   id              String    @id @default(uuid()) @db.Uuid
   serviceTypeId   String    @db.Uuid
-  roomType        RoomType
+  roomType        String    @db.VarChar(50)
   roomCount       Int?
   additionalPrice Decimal   @default(0) @db.Decimal(10, 2)
   createdAt       DateTime  @default(now()) @db.Timestamp()
@@ -205,10 +205,10 @@ model Booking {
   location          String
   scheduledStartTime DateTime      @db.Timestamp()
   scheduledEndTime  DateTime      @db.Timestamp()
-  status            BookingStatus @default(pending)
+  status            String        @default("pending") @db.VarChar(50)
   cancellationReason String?
   totalPrice        Decimal       @db.Decimal(10, 2)
-  paymentStatus     PaymentStatus @default(pending)
+  paymentStatus     String        @default("pending") @db.VarChar(50)
   paymentMethod     String?       @db.VarChar(50)
   helperRating      Decimal?      @db.Decimal(2, 1)
   customerFeedback  String?
@@ -255,7 +255,7 @@ model Complaint {
   reportedById    String          @db.Uuid
   reportedUserId  String          @db.Uuid
   reason          String
-  status          ComplaintStatus @default(pending)
+  status          String          @default("pending") @db.VarChar(50)
   resolution      String?
   createdAt       DateTime        @default(now()) @db.Timestamp()
   resolvedAt      DateTime?       @db.Timestamp()
