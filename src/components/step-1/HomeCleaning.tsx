@@ -1,4 +1,5 @@
 "use client";
+import { addBookingDetail, addServiceCategory } from "@/actions/actions";
 import React, { useState } from "react";
 
 const HomeCleaning = () => {
@@ -39,6 +40,11 @@ const HomeCleaning = () => {
     } else {
       setSelectedCleanType(index);
     }
+  };
+
+  const handleNext = () => {
+    addBookingDetail(selectedNumberOfBed, selectedNumberOfBathroom)
+    // addServiceCategory();
   };
 
   const renderOptions = (
@@ -115,7 +121,7 @@ const HomeCleaning = () => {
             ))}
           </div>
 
-          <button className="px-16 py-2 bg-[#1b78f2] rounded-[8px] text-lg font-Averta-Semibold tracking-normal leading-loose text-center text-white">
+          <button className="px-16 py-2 bg-[#1b78f2] rounded-[8px] text-lg font-Averta-Semibold tracking-normal leading-loose text-center text-white" onClick={handleNext}>
             Next
           </button>
         </div>

@@ -1,13 +1,50 @@
+"use client";
 import { InputWithLabel } from "@/components/input/inputwithlabel";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-// import TagInput from "@/components/input/taginput";
-// import { Tag } from "lucide-react";
+import { addHelper } from "@/actions/actions";
 
 const genderOptions = ["Female", "Male", "Other"];
 
 const UpdateStaffInfo = () => {
+  const [formData, setFormData] = useState({
+    fullName: "aaa",
+    dateOfBirth: "",
+    gender: "",
+    phoneNumber: "",
+    email: "",
+    salaryExpectation: "",
+    cityOrProvince: "",
+    ward: "",
+    postalCode: "",
+    houseNumber: "",
+    streetName: "",
+  })
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setFormData((prevData) => ({
+      ...prevData,
+    }));
+  };
+
+  const handleSubmit = () => {
+    addHelper(
+      formData.fullName,
+      new Date(formData.dateOfBirth),
+      formData.gender,
+      formData.phoneNumber,
+      formData.email,
+      parseFloat(formData.salaryExpectation),
+      "",
+      "",
+      [],
+      `${formData.houseNumber} ${formData.streetName}, ${formData.ward}, ${formData.cityOrProvince}, ${formData.postalCode}`
+    );
+  };
+
   return (
     <div className="flex flex-col md:flex-row h-full relative min-h-screen">
       {/* Section-Left */}
@@ -35,6 +72,7 @@ const UpdateStaffInfo = () => {
               inputPlaceholder="Enter Full Name"
               inputId="name"
               inputWidth="25vw"
+              defaulValue={formData.fullName}
             />
             <div className="md:ml-2 md:mt-0">
               <InputWithLabel
@@ -214,7 +252,8 @@ const UpdateStaffInfo = () => {
         </div>
 
         <div className="flex justify-center items-center mt-[2vw] pb-[2vw]">
-          <Button className="md:w-1/3 h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">
+          <Button className="md:w-1/3 h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]" 
+            onClick={handleSubmit}>
             Verify
           </Button>
         </div>

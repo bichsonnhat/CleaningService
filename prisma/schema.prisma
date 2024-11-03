@@ -13,8 +13,269 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model services {
-  service_id    String      @id @default(cuid())
-  service_name  String
-  description   String
+// Enums
+// enum UserType {
+//   customer
+//   helper
+//   admin
+// }
+
+// enum Gender {
+//   male
+//   female
+//   other
+// }
+
+// enum UserStatus {
+//   active
+//   in_active
+//   blocked
+// }
+
+// enum AvailabilityType {
+//   vacation
+//   sick_leave
+//   personal_leave
+//   unavailable
+// }
+
+// enum AvailabilityStatus {
+//   pending
+//   approved
+//   rejected
+//   cancelled
+// }
+
+// enum RoomType {
+//   bedroom
+//   bathroom
+//   kitchen
+//   living_room
+//   other
+// }
+
+// enum BookingStatus {
+//   pending
+//   confirmed
+//   in_progress
+//   completed
+//   cancelled
+// }
+
+// enum PaymentStatus {
+//   pending
+//   paid
+//   refunded
+// }
+
+// enum ComplaintStatus {
+//   pending
+//   investigating
+//   resolved
+//   dismissed
+// }
+
+// Models
+model User {
+  id              String       @id @default(uuid()) @db.Uuid
+  userType        String       @db.VarChar(50)
+  gender          String?      @db.VarChar(10)
+  profilePicture  String?      @db.VarChar(512)
+  fullName        String       @db.VarChar(150)
+  dateOfBirth     DateTime     @db.Date
+  identifyCard    String?
+  address         String?
+  phoneNumber     String       @db.VarChar(20)
+  email           String?      @unique @db.VarChar(255)
+  createdAt       DateTime     @default(now()) @db.Timestamp()
+  updatedAt       DateTime     @default(now()) @updatedAt @db.Timestamp()
+  status          String       @default("active") @db.VarChar(50)
+
+  // Relations
+  helper                    Helper?
+  approvedAvailabilities    HelperAvailability[] @relation("ApprovedBy")
+  bookingsAsCustomer        Booking[]            @relation("CustomerBookings")
+  complaintsReportedBy      Complaint[]          @relation("ReportedBy")
+  complaintsReportedAgainst Complaint[]          @relation("ReportedAgainst")
+  blacklistsCreated        BlacklistedUser[]    @relation("BlacklistedBy")
+  blacklisted              BlacklistedUser?     @relation("BlacklistedUser")
+}
+
+model Helper { 
+  id                   String    @id @db.Uuid
+  experienceDescription String?
+  resumeUploaded       String?
+  servicesOffered      String[]  @db.Uuid // Array of service_type_ids
+  salaryExpectation    Decimal   @db.Decimal(10, 2)
+  averageRating        Decimal?  @default(0) @db.Decimal(2, 1)
+  completedJobs        Int       @default(0)
+  cancelledJobs        Int       @default(0)
+  createdAt            DateTime  @default(now()) @db.Timestamp()
+  updatedAt            DateTime  @default(now()) @updatedAt @db.Timestamp()
+
+  // Relations
+  user           User                @relation(fields: [id], references: [id])
+  availabilities HelperAvailability[]
+  bookings       Booking[]
+}
+
+model HelperAvailability {
+  id               String             @id @default(uuid()) @db.Uuid
+  helperId         String             @db.Uuid
+  startDatetime    DateTime           @db.Timestamp()
+  endDatetime      DateTime           @db.Timestamp()
+  availabilityType String             @db.VarChar(50)
+  status           String             @default("pending") @db.VarChar(50)
+  requestReason    String?
+  rejectionReason  String?
+  approvedById     String?            @db.Uuid
+  createdAt        DateTime           @default(now()) @db.Timestamp()
+  updatedAt        DateTime           @default(now()) @updatedAt @db.Timestamp()
+
+  // Relations
+  helper      Helper  @relation(fields: [helperId], references: [id])
+  approvedBy  User?   @relation("ApprovedBy", fields: [approvedById], references: [id])
+
+  @@index([helperId, startDatetime, endDatetime])
+  @@index([status])
+  @@unique([helperId, startDatetime, endDatetime], name: "no_overlapping_approved_time", map: "no_overlapping_approved_time_where_status_approved")
+}
+
+model ServiceCategory {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String        @unique @db.VarChar(50)
+  description String?
+  createdAt   DateTime      @default(now()) @db.Timestamp()
+  isActive    Boolean       @default(true)
+  
+  // Relations
+  serviceTypes ServiceType[]
+}
+
+model ServiceType {
+  id          String    @id @default(uuid()) @db.Uuid
+  categoryId  String    @db.Uuid
+  name        String    @db.VarChar(100)
+  description String?
+  basePrice   Decimal
+  createdAt   DateTime  @default(now()) @db.Timestamp()
+  isActive    Boolean   @default(true)
+
+  // Relations
+  category      ServiceCategory  @relation(fields: [categoryId], references: [id])
+  roomPricing   RoomPricing[]
+  durationPrice DurationPrice[]
+  bookings      Booking[]
+
+  @@unique([categoryId, name])
+}
+
+model RoomPricing {
+  id              String    @id @default(uuid()) @db.Uuid
+  serviceTypeId   String    @db.Uuid
+  roomType        String    @db.VarChar(50)
+  roomCount       Int?
+  additionalPrice Decimal   @default(0) @db.Decimal(10, 2)
+  createdAt       DateTime  @default(now()) @db.Timestamp()
+
+  // Relations
+  serviceType     ServiceType @relation(fields: [serviceTypeId], references: [id])
+
+  @@unique([serviceTypeId, roomType, roomCount])
+}
+
+model DurationPrice {
+  id              String    @id @default(uuid()) @db.Uuid
+  serviceTypeId   String    @db.Uuid
+  durationHours   Int
+  priceMultiplier Decimal   @default(1.00) @db.Decimal(3, 2)
+  createdAt       DateTime  @default(now()) @db.Timestamp()
+
+  // Relations
+  serviceType     ServiceType @relation(fields: [serviceTypeId], references: [id])
+
+  @@unique([serviceTypeId, durationHours])
+}
+
+model Booking {
+  id                 String        @id @default(uuid()) @db.Uuid
+  customerId         String        @db.Uuid
+  helperId          String?       @db.Uuid
+  serviceTypeId     String        @db.Uuid
+  location          String
+  scheduledStartTime DateTime      @db.Timestamp()
+  scheduledEndTime  DateTime      @db.Timestamp()
+  status            String        @default("pending") @db.VarChar(50)
+  cancellationReason String?
+  totalPrice        Decimal       @db.Decimal(10, 2)
+  paymentStatus     String        @default("pending") @db.VarChar(50)
+  paymentMethod     String?       @db.VarChar(50)
+  helperRating      Decimal?      @db.Decimal(2, 1)
+  customerFeedback  String?
+  helperFeedback    String?
+  createdAt         DateTime      @default(now()) @db.Timestamp()
+  updatedAt         DateTime      @default(now()) @updatedAt @db.Timestamp()
+
+  // Relations
+  customer          User          @relation("CustomerBookings", fields: [customerId], references: [id])
+  helper           Helper?        @relation(fields: [helperId], references: [id])
+  serviceType      ServiceType    @relation(fields: [serviceTypeId], references: [id])
+  bookingDetails   BookingDetail?
+  contract         Contract?
+  complaints       Complaint[]
+}
+
+model BookingDetail {
+  id                  String    @id @default(uuid()) @db.Uuid
+  bookingId           String    @unique @db.Uuid
+  bedroomCount        Int       @default(0)
+  bathroomCount       Int       @default(0)
+  kitchenCount        Int       @default(0)
+  livingRoomCount     Int       @default(0)
+  specialRequirements String?
+  createdAt           DateTime  @default(now()) @db.Timestamp()
+
+  // Relations
+  booking             Booking   @relation(fields: [bookingId], references: [id])
+}
+
+model Contract {
+  id        String    @id @default(uuid()) @db.Uuid
+  bookingId String    @unique @db.Uuid
+  content   String
+  createdAt DateTime  @db.Timestamp()
+
+  // Relations
+  booking   Booking   @relation(fields: [bookingId], references: [id])
+}
+
+model Complaint {
+  id              String          @id @default(uuid()) @db.Uuid
+  bookingId       String          @db.Uuid
+  reportedById    String          @db.Uuid
+  reportedUserId  String          @db.Uuid
+  reason          String
+  status          String          @default("pending") @db.VarChar(50)
+  resolution      String?
+  createdAt       DateTime        @default(now()) @db.Timestamp()
+  resolvedAt      DateTime?       @db.Timestamp()
+
+  // Relations
+  booking         Booking         @relation(fields: [bookingId], references: [id])
+  reportedBy      User            @relation("ReportedBy", fields: [reportedById], references: [id])
+  reportedUser    User            @relation("ReportedAgainst", fields: [reportedUserId], references: [id])
+}
+
+model BlacklistedUser {
+  id            String    @id @default(uuid()) @db.Uuid
+  userId        String    @unique @db.Uuid
+  reason        String
+  blacklistedAt DateTime  @default(now()) @db.Timestamp()
+  blacklistedBy String    @db.Uuid
+  isPermanent   Boolean   @default(false)
+  expiryDate    DateTime? @db.Timestamp()
+
+  // Relations
+  user          User      @relation("BlacklistedUser", fields: [userId], references: [id])
+  blacklistedByUser User  @relation("BlacklistedBy", fields: [blacklistedBy], references: [id])
 }

@@ -1,9 +1,9 @@
 import React from 'react'
 import { SignUp } from '@clerk/nextjs'
 
-export function generateStaticParams() {
-  return [{ 'sign-up': [] }]
-}
+// export function generateStaticParams() {
+//   return [{ 'sign-up': [] }]
+// }
 
 const SignOutPage = () => {
   return (
