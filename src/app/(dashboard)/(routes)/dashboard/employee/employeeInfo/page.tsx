@@ -1,70 +1,33 @@
-"use client";
 import { InputWithLabel } from "@/components/input/inputwithlabel";
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { addHelper } from "@/actions/actions";
+import FileDownloadCard from "@/components/card/FileDownloadCard";
 
 const genderOptions = ["Female", "Male", "Other"];
 
-const UpdateStaffInfo = () => {
-  const [formData, setFormData] = useState({
-    fullName: "aaa",
-    dateOfBirth: "",
-    gender: "",
-    phoneNumber: "",
-    email: "",
-    salaryExpectation: "",
-    cityOrProvince: "",
-    ward: "",
-    postalCode: "",
-    houseNumber: "",
-    streetName: "",
-  })
+const EmployeeInfo = () => {
+  const handleDownload = () => {};
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFormData((prevData) => ({
-      ...prevData,
-    }));
-  };
-
-  const handleSubmit = () => {
-    addHelper(
-      formData.fullName,
-      new Date(formData.dateOfBirth),
-      formData.gender,
-      formData.phoneNumber,
-      formData.email,
-      parseFloat(formData.salaryExpectation),
-      "",
-      "",
-      [],
-      `${formData.houseNumber} ${formData.streetName}, ${formData.ward}, ${formData.cityOrProvince}, ${formData.postalCode}`
-    );
-  };
+  const handleUpdate = () => {};
 
   return (
-    <div className="flex flex-col md:flex-row h-full relative min-h-screen">
+    <div className="bg-white h-full w-full flex flex-col md:flex-row">
       {/* Section-Left */}
       <div className="md:w-2/3 pb-10 bg-white min-h-screen">
-        <Image
-          src="/images/x-button.png"
-          alt="X-button"
-          width={70}
-          height={70}
-        />
-        <div className="justify-center h-max">
-          <p className="text-4xl text-center font-Averta-Bold mb-2  mx-auto md:w-[41.53vw]">
-            Update Your Info to Continue
-          </p>
-          <p className="text-[20px] text-center text-[#88939D] font-Averta-Semibold mx-auto leading-[25px] md:w-[41.53vw]">
-            With your latest details, we can serve you better and ensure
-            everything runs smoothly
+        <div className="flex flex-row">
+          <Image
+            src="/images/exit-button.png"
+            alt="X-button"
+            width={70}
+            height={70}
+          />
+          <p className="font-Averta-Bold text-4xl text-center my-auto ml-[10px]">
+            User Info
           </p>
         </div>
-        <div className="grid justify-center mt-[100px]">
+
+        <div className="grid justify-center mt-[50px]">
           <div className="flex flex-col md:flex-row">
             <InputWithLabel
               labelText="FULL NAME"
@@ -72,15 +35,13 @@ const UpdateStaffInfo = () => {
               inputPlaceholder="Enter Full Name"
               inputId="name"
               inputWidth="25vw"
-              defaulValue={formData.fullName}
             />
             <div className="md:ml-2 md:mt-0">
               <InputWithLabel
                 labelText="DATE OF BIRTH"
                 inputType="date"
                 inputPlaceholder=""
-                inputId="gender"
-                defaultValue={genderOptions.at(0)}
+                inputId="date"
                 inputWidth="11.25vw"
               />
             </div>
@@ -183,13 +144,17 @@ const UpdateStaffInfo = () => {
               plusPX="16px"
             />
           </div>
+
+          <div className="flex justify-center items-center mt-[4.5vw] pb-[2vw]">
+            <Button className="md:w-1/3 h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">
+              Save
+            </Button>
+          </div>
         </div>
       </div>
-      {/* Section-Right */}
-      <div className="md:w-1/3 bg-gray-100 min-h-screen">
-        <p className="text-3xl font-Averta-Bold mb-4 mt-[4.7vw] ml-[2.2vw]">
-          Avatar
-        </p>
+      {/* Section Right */}
+      <div className="md:w-1/3 min-h-screen">
+        <p className="font-Averta-Bold text-3xl my-[12.8875px]">Avatar</p>
 
         <div className="mb-6">
           <Image
@@ -203,63 +168,40 @@ const UpdateStaffInfo = () => {
             variant="link"
             className="flex text-[18px] items-center justify-center mx-auto font-Averta-Semibold text-[#1A78F2]"
           >
-            Upload Your Avatar
+            Upload Avatar
           </Button>
         </div>
 
-        <p className="text-3xl font-Averta-Bold mb-4 ml-[2.2vw] mt-[1vw]">
-          Identify Card
-        </p>
-        <div className="border-2 bg-white mx-[2.08vw] border-dashed border-gray-300 rounded-lg px-4 py-8 text-center">
+        <p className="text-3xl font-Averta-Bold mb-3 mt-[1vw]">Identify Card</p>
+        <div className="px-3 py-5 text-center">
           <Image
-            src="/images/upload.svg"
-            alt="upload"
-            width={40}
-            height={40}
-            className="mb-6 mx-auto"
+            src="/images/identity.png"
+            alt="identity"
+            width={400}
+            height={200}
           />
-          <p className="text-[14px] text-gray-600 font-Averta-Semibold mb-3">
-            Select a file or drag and drop here
-          </p>
-          <p className="text-[12px] text-gray-500 mb-6">
-            JPG, PNG or PDF, file size no more than 10MB
-          </p>
-          <button className="bg-white font-Averta-Semibold text-[#1A78F2] border-2 border-[#1A78F2] px-4 py-2 rounded-md hover:bg-blue-50 transition-colors">
-            Select File
-          </button>
         </div>
-
-        <p className="text-3xl font-Averta-Bold mb-4 ml-[2.2vw] mt-[1vw]">
-          Résumé
-        </p>
-        <div className="border-2 bg-white h-auto mx-[2.08vw] border-dashed border-gray-300 rounded-lg px-4 py-4 flex">
-          <Image src="/images/upload.svg" alt="upload" width={40} height={40} />
-          <div className="py-2 px-4 text-center mx-auto">
-            <p className="text-[14px] text-gray-600 font-Averta-Semibold">
-              Select your CV or drag and drop here
-            </p>
-            <p className="text-[12px] text-gray-500 mt-[12px]">
-              JPG, PNG or PDF, file size no more than 10MB
-            </p>
-          </div>
-          <button
-            className="bg-white font-Averta-Semibold text-[#1A78F2] 
-                  border-2 border-[#1A78F2] px-4 py-2 rounded-md hover:bg-blue-50 
-                  transition-colors h-fit ml-auto my-auto w-auto"
+        <div className="flex flex-row justify-center mb-6">
+          <Button
+            className="w-[170px] h-[40px] 
+        bg-[#1A78F2] font-Averta-Semibold text-[16px]"
           >
-            Select File
-          </button>
-        </div>
-
-        <div className="flex justify-center items-center mt-[2vw] pb-[2vw]">
-          <Button className="md:w-1/3 h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]" 
-            onClick={handleSubmit}>
-            Verify
+            Download
+          </Button>
+          <Button
+            className="ml-[10px] w-[170px] h-[40px]
+         bg-white font-Averta-Semibold text-[#1A78F2] hover:bg-gray-100
+         text-[16px] border-2 border-[#1A78F2]"
+          >
+            Upload IDCard
           </Button>
         </div>
+
+        <p className="text-3xl font-Averta-Bold mb-3 mt-[1vw]">Résumé</p>
+        <FileDownloadCard />
       </div>
     </div>
   );
 };
 
-export default UpdateStaffInfo;
+export default EmployeeInfo;

@@ -3,7 +3,7 @@ import FeedbackRow from './FeedbackRow';
 import Pagination from '../employee/Pagination';
 import SearchBarAndFilter from './SearchBarAndFilter';
 
-type Feedback = {
+export type Feedback = {
   id: number;
   name: string;
   sentiment: "Positive" | "Negative" | "Neutral";
