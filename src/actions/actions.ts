@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/db";
+import { currentUser } from "@clerk/nextjs/server";
 import exp from "constants";
 import { randomUUID } from "crypto";
 
@@ -68,4 +69,11 @@ export async function addServiceCategory(
             description: "Cleaning service",
         }
     });
+}
+
+export async function Clerk(
+) {
+  console.log("Clerk");
+  const user = await currentUser();
+  console.log(user);
 }

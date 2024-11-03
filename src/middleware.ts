@@ -1,6 +1,25 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
-export default clerkMiddleware();
+const isPublicRoute = createRouteMatcher([
+  '/dashboard(.*)'
+])
+
+const isAdminRoute = createRouteMatcher([
+  '/dashboard/chart'
+])
+
+export default clerkMiddleware(async (auth, request) => {
+  if (isPublicRoute(request)) {
+    auth.protect()
+  }
+
+  // Demo check admin
+  if (isAdminRoute(request) && (await auth()).sessionClaims?.metadata?.role !== 'admin') {
+    const url = new URL('/', request.url)
+    return NextResponse.redirect(url)
+  }
+})
 
 export const config = {
   matcher: [
@@ -9,4 +28,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-};
+}
