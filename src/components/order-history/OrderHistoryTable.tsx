@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import SearchBar from "./SearchBar";
-import OrderRow from "./OrderRow";
+import OrderHistoryRow from "./OrderHistoryRow";
 import Pagination from "./Pagination";
 
-type Order = {
+type OrderHistory = {
   id: string;
-  customerName: string;
   helperName: string;
   location: string;
   scheduledStartTime: Date;
@@ -17,20 +16,18 @@ type Order = {
 };
 
 const columns = [
-  { header: "CUSTOMER", className: "w-[150px] hidden md:table-cell" },
-  { header: "HELPER", className: "w-[150px] hidden md:table-cell" },
-  { header: "ADDRESS", className: "w-[190px] hidden md:table-cell" },
-  { header: "TIME", className: "w-[167px] hidden md:table-cell" },
-  { header: "RATING", className: "w-[100px] hidden md:table-cell mr-6" },
-  { header: "PRICE", className: "w-[90px] hidden md:table-cell " },
+  { header: "HELPER", className: "w-[200px] hidden md:table-cell" },
+  { header: "ADDRESS", className: "w-[230px] hidden md:table-cell" },
+  { header: "TIME", className: "w-[190px] hidden md:table-cell" },
+  { header: "RATING", className: "w-[100px] hidden md:table-cell mr-10" },
+  { header: "PRICE", className: "w-[100px] hidden md:table-cell " },
   { header: "STATUS", className: "w-[140px] hidden md:table-cell" },
   { header: "", className: "w-[130px] hidden md:table-cell" },
 ];
 
-const ordersData: Order[] = [
+const ordersData: OrderHistory[] = [
   {
     id: "00001",
-    customerName: "John Doe",
     helperName: "Alice Smith",
     location: "123 Main St",
     scheduledStartTime: new Date("2024-11-10T09:00:00"),
@@ -41,7 +38,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00002",
-    customerName: "Jane Roe",
     helperName: "Bob Johnson",
     location: "456 Elm St",
     scheduledStartTime: new Date("2024-11-11T14:00:00"),
@@ -52,7 +48,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00003",
-    customerName: "Michael Lee",
     helperName: "Carol White",
     location: "789 Oak Ave",
     scheduledStartTime: new Date("2024-11-12T08:00:00"),
@@ -63,7 +58,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00004",
-    customerName: "Emily Davis",
     helperName: "David Brown",
     location: "101 Maple Rd",
     scheduledStartTime: new Date("2024-11-13T13:00:00"),
@@ -74,7 +68,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00005",
-    customerName: "Chris Wilson",
     helperName: "Eva Green",
     location: "202 Birch Blvd",
     scheduledStartTime: new Date("2024-11-14T10:00:00"),
@@ -83,10 +76,8 @@ const ordersData: Order[] = [
     totalPrice: 55,
     status: "Completed",
   },
-  // Tạo thêm 26 mục ở đây
   {
     id: "00006",
-    customerName: "Oliver Twist",
     helperName: "Liam Brown",
     location: "303 Cherry Ln",
     scheduledStartTime: new Date("2024-11-15T09:00:00"),
@@ -97,7 +88,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00007",
-    customerName: "Sophia Turner",
     helperName: "Emma Wilson",
     location: "404 Pine St",
     scheduledStartTime: new Date("2024-11-16T14:00:00"),
@@ -108,7 +98,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00008",
-    customerName: "Isabella Martinez",
     helperName: "Noah Smith",
     location: "505 Cedar Blvd",
     scheduledStartTime: new Date("2024-11-17T08:00:00"),
@@ -119,7 +108,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00009",
-    customerName: "Lucas Garcia",
     helperName: "Mia Johnson",
     location: "606 Walnut St",
     scheduledStartTime: new Date("2024-11-18T13:00:00"),
@@ -130,7 +118,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00010",
-    customerName: "Mason Hall",
     helperName: "Ava Lee",
     location: "707 Birch Blvd",
     scheduledStartTime: new Date("2024-11-19T10:00:00"),
@@ -141,7 +128,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00011",
-    customerName: "Elijah Scott",
     helperName: "Evelyn Taylor",
     location: "808 Oak St",
     scheduledStartTime: new Date("2024-11-20T09:00:00"),
@@ -152,7 +138,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00012",
-    customerName: "Aiden Young",
     helperName: "Harper King",
     location: "909 Maple St",
     scheduledStartTime: new Date("2024-11-21T14:00:00"),
@@ -163,7 +148,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00013",
-    customerName: "James Hill",
     helperName: "Chloe Lopez",
     location: "111 Spruce Ave",
     scheduledStartTime: new Date("2024-11-22T08:00:00"),
@@ -174,7 +158,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00014",
-    customerName: "Jackson Adams",
     helperName: "Abigail Nelson",
     location: "222 Willow Rd",
     scheduledStartTime: new Date("2024-11-23T13:00:00"),
@@ -185,7 +168,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00015",
-    customerName: "Liam Murphy",
     helperName: "Emily Wright",
     location: "333 Elm St",
     scheduledStartTime: new Date("2024-11-24T10:00:00"),
@@ -196,7 +178,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00016",
-    customerName: "Mia Evans",
     helperName: "Henry White",
     location: "444 Chestnut Blvd",
     scheduledStartTime: new Date("2024-11-25T09:00:00"),
@@ -207,7 +188,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00017",
-    customerName: "Noah Carter",
     helperName: "Grace Jackson",
     location: "555 Fir St",
     scheduledStartTime: new Date("2024-11-26T14:00:00"),
@@ -218,7 +198,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00018",
-    customerName: "Charlotte Martinez",
     helperName: "Ella Allen",
     location: "666 Hickory Ln",
     scheduledStartTime: new Date("2024-11-27T08:00:00"),
@@ -229,7 +208,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00019",
-    customerName: "Amelia King",
     helperName: "Jack Brown",
     location: "777 Poplar St",
     scheduledStartTime: new Date("2024-11-28T13:00:00"),
@@ -240,7 +218,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00020",
-    customerName: "Lucas Lee",
     helperName: "Isabella Clark",
     location: "888 Ash St",
     scheduledStartTime: new Date("2024-11-29T10:00:00"),
@@ -251,7 +228,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00021",
-    customerName: "Ella Thomas",
     helperName: "Oliver Green",
     location: "999 Cedar Ln",
     scheduledStartTime: new Date("2024-11-30T14:00:00"),
@@ -262,7 +238,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00022",
-    customerName: "Jacob Wright",
     helperName: "Sophia Hall",
     location: "1010 Elm St",
     scheduledStartTime: new Date("2024-12-01T09:00:00"),
@@ -273,7 +248,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00023",
-    customerName: "Zoe Green",
     helperName: "James Adams",
     location: "1111 Maple Ave",
     scheduledStartTime: new Date("2024-12-02T08:00:00"),
@@ -284,7 +258,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00024",
-    customerName: "Ben Hall",
     helperName: "Ava Carter",
     location: "1212 Pine St",
     scheduledStartTime: new Date("2024-12-03T10:00:00"),
@@ -295,7 +268,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00025",
-    customerName: "Sofia Rivera",
     helperName: "William Taylor",
     location: "1313 Oak Ln",
     scheduledStartTime: new Date("2024-12-04T13:00:00"),
@@ -306,7 +278,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00026",
-    customerName: "Daniel Hill",
     helperName: "Mason Edwards",
     location: "1414 Walnut St",
     scheduledStartTime: new Date("2024-12-05T14:00:00"),
@@ -317,7 +288,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00027",
-    customerName: "Mia Phillips",
     helperName: "Aiden Brooks",
     location: "1515 Birch Blvd",
     scheduledStartTime: new Date("2024-12-06T09:00:00"),
@@ -328,7 +298,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00028",
-    customerName: "Logan Perez",
     helperName: "Oliver Young",
     location: "1616 Chestnut Rd",
     scheduledStartTime: new Date("2024-12-07T14:00:00"),
@@ -339,7 +308,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00029",
-    customerName: "Ethan Carter",
     helperName: "Ella Smith",
     location: "1717 Ash St",
     scheduledStartTime: new Date("2024-12-08T08:00:00"),
@@ -350,7 +318,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00030",
-    customerName: "Avery Cox",
     helperName: "David King",
     location: "1818 Poplar Ave",
     scheduledStartTime: new Date("2024-12-09T13:00:00"),
@@ -361,7 +328,6 @@ const ordersData: Order[] = [
   },
   {
     id: "00031",
-    customerName: "Abigail Reed",
     helperName: "Sofia Martinez",
     location: "1919 Elm St",
     scheduledStartTime: new Date("2024-12-10T10:00:00"),
@@ -372,10 +338,10 @@ const ordersData: Order[] = [
   },
 ];
 
-const OrderTable = () => {
+const OrderHistoryTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchBy, setSearchBy] = useState("Customer");
+  const [searchBy, setSearchBy] = useState("Helper");
 
   // Search
   const handleSearch = (term: string) => {
@@ -386,8 +352,6 @@ const OrderTable = () => {
   const filteredData = ordersData.filter((order) => {
     const term = searchTerm.toLowerCase();
 
-    if (searchBy === "Customer")
-      return order.customerName.toLowerCase().includes(term);
     if (searchBy === "Helper")
       return order.helperName.toLowerCase().includes(term);
     if (searchBy === "Rating")
@@ -395,7 +359,7 @@ const OrderTable = () => {
     if (searchBy === "Price") return order.totalPrice.toString().includes(term);
     if (searchBy === "Status") return order.status.toLowerCase().includes(term);
 
-    return order.customerName.toLowerCase().includes(term);
+    return order.helperName.toLowerCase().includes(term);
   });
 
   // Pagination
@@ -427,8 +391,8 @@ const OrderTable = () => {
       </div>
 
       <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
-        {currentData.map((order: Order, index: any) => (
-          <OrderRow key={order.id} {...order} />
+        {currentData.map((order: OrderHistory, index: any) => (
+          <OrderHistoryRow key={order.id} {...order} />
         ))}
       </div>
 
@@ -442,4 +406,4 @@ const OrderTable = () => {
   );
 };
 
-export default OrderTable;
+export default OrderHistoryTable;
