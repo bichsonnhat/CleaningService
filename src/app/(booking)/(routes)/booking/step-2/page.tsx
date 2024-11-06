@@ -4,7 +4,7 @@ import Header from "@/components/header/Header";
 import Image from "next/image";
 import React from "react";
 import { useState, useEffect } from "react";
-const page = () => {
+const Step_2 = () => {
     const daysOfWeek = [
         "",
         "MONDAY",
@@ -125,4 +125,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Step_2;
