@@ -49,7 +49,7 @@ const UpdateCustomerInfo = () => {
                 inputType="combobox"
                 inputPlaceholder=""
                 inputId="gender"
-                defaulValue={genderOptions.at(0)}
+                defaultValue={genderOptions.at(0)}
                 inputWidth="6.875vw"
                 options={genderOptions}
               />
