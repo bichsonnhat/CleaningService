@@ -35,7 +35,7 @@ const Calendar: React.FC<CalendarProps> = ({
         const selectedDate: SelectedDay = { day, month, year };
 
         if (
-            (isCurrentMonth && day >= currentDay) ||
+            (isCurrentMonth && currentDay !== null && day >= currentDay) ||
             (!isCurrentMonth &&
                 (year > today.getFullYear() ||
                     (year === today.getFullYear() &&
