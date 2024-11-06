@@ -77,3 +77,4 @@ export async function Clerk(
   const user = await currentUser();
   console.log(user);
 }
+ 
