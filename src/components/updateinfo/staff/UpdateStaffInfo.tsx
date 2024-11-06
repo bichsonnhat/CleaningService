@@ -72,7 +72,7 @@ const UpdateStaffInfo = () => {
               inputPlaceholder="Enter Full Name"
               inputId="name"
               inputWidth="25vw"
-              defaulValue={formData.fullName}
+              defaultValue={formData.fullName}
             />
             <div className="md:ml-2 md:mt-0">
               <InputWithLabel
