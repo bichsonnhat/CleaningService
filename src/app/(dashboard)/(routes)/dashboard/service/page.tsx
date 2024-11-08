@@ -308,7 +308,7 @@ const ServicePage = () => {
                             setCurrentDay(new Date());
                             setView("day");
                         }}
-                        className="font-Nunito w-[59px] text-[14px] px-[8px] py-[6px] border border-[rgba(32,34,36,0.5)] text-[rgba(32,34,36,0.5)] rounded-[8px] hover:bg-gray-100"
+                        className="w-[59px] text-[14px] px-[8px] py-[6px] border border-[rgba(32,34,36,0.5)] text-[rgba(32,34,36,0.5)] rounded-[8px] hover:bg-gray-100"
                     >
                         Today
                     </button>
@@ -316,7 +316,7 @@ const ServicePage = () => {
                     <div className="inline-flex items-center border border-[rgba(32,34,36,0.5)] rounded-[8px] overflow-hidden divide-x divide-gray-300">
                         <button
                             onClick={() => changeDate(-1)}
-                            className="font-Nunito w-[77px] text-[14px] px-[8.5px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex items-center"
+                            className="w-[77px] text-[14px] px-[8.5px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex items-center"
                         >
                             <span className="mr-2">
                                 <svg
@@ -338,7 +338,7 @@ const ServicePage = () => {
                         </button>
                         <button
                             onClick={() => changeDate(1)}
-                            className="font-Nunito w-[77px] text-[14px] px-[8.5px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex items-center"
+                            className="w-[77px] text-[14px] px-[8.5px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex items-center"
                         >
                             Next
                             <span className="ml-2">
@@ -381,13 +381,13 @@ const ServicePage = () => {
                 <div className="inline-flex items-center text-center border border-[rgba(32,34,36,0.5)] rounded-[8px] overflow-hidden divide-x divide-gray-300">
                     <button
                         onClick={() => toggleView("month")}
-                        className={`font-Nunito w-[77px] text-[14px] px-[17px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex justify-center items-center`}
+                        className={`w-[77px] text-[14px] px-[17px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex justify-center items-center`}
                     >
                         Month
                     </button>
                     <button
                         onClick={() => toggleView("day")}
-                        className={`font-Nunito w-[77px] text-[14px] px-[17px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex justify-center items-center`}
+                        className={`w-[77px] text-[14px] px-[17px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex justify-center items-center`}
                     >
                         Day
                     </button>
