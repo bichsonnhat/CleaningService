@@ -192,7 +192,7 @@ const ServicePage = () => {
 
     const renderDayView = () => {
         // Format the current day to `YYYY-MM-DD` without time for accurate comparison
-        const dayString = currentDay.toISOString().slice(0, 10);
+        const dayString = currentDay.toLocaleDateString("en-CA");
         const dayTasks = tasks.filter((task) => task.date === dayString);
 
         // Helper function to convert time to 12-hour format with only the hour and AM/PM
