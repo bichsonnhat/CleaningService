@@ -114,11 +114,11 @@ export default function FeedbackTable() {
         onFilterChange={setFilter}
       />
 
-      <div className="flex flex-col justify-center px-8 py-7 mt-3.5 w-full bg-white rounded max-md:px-5 max-md:max-w-full">
+      <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded max-md:px-5 max-md:max-w-full">
         <div className="flex flex-col w-full rounded max-md:max-w-full">
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 max-md:max-w-full">
             {currentData.map((feedback: Feedback, index: any) => (
-              <FeedbackRow key={feedback.id} {...feedback} isEven={index % 2 === 0} />
+              <FeedbackRow key={feedback.id} {...feedback} />
             ))}
           </div>
         </div>
