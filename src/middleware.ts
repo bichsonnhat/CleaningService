@@ -6,17 +6,17 @@ const isPublicRoute = createRouteMatcher(["/dashboard(.*)"]);
 const isAdminRoute = createRouteMatcher(["/dashboard/chart"]);
 
 export default clerkMiddleware(async (auth, request) => {
-  // if (isPublicRoute(request)) {
-  //   auth.protect();
-  // }
-  // // Demo check admin
-  // if (
-  //   isAdminRoute(request) &&
-  //   (await auth()).sessionClaims?.metadata?.role !== "admin"
-  // ) {
-  //   const url = new URL("/", request.url);
-  //   return NextResponse.redirect(url);
-  // }
+  if (isPublicRoute(request)) {
+    auth.protect();
+  }
+  // Demo check admin
+  if (
+    isAdminRoute(request) &&
+    (await auth()).sessionClaims?.metadata?.role !== "admin"
+  ) {
+    const url = new URL("/", request.url);
+    return NextResponse.redirect(url);
+  }
 });
 
 export const config = {
