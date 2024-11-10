@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import FilterDropdown from "./Filter";
-
 type SearchBarAndFilterProps = {
   setSearchTerm: (term: string) => void;
   setSearchBy: (field: string) => void;
   onFilterChange: (term: string) => void;
 };
-
 const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
   setSearchTerm,
   setSearchBy,
@@ -15,22 +13,17 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
-
-  const [selectedSearchBy, setSelectedSearchBy] = useState("Category");
+  const [selectedSearchBy, setSelectedSearchBy] = useState("Name");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // đóng - mở của search by
-
   const handleSearchByChange = (field: string) => {
     setSelectedSearchBy(field);
     setSearchBy(field);
     setIsDropdownOpen(false);
   };
-
   const closeDropdown = () => {
     setIsDropdownOpen(false);
   };
-
-  const searchByOptions = ["Category", "Description", "Value"];
-
+  const searchByOptions = ["Name", "Description", "Price"];
   return (
     <>
       <div className="flex flex-wrap justify-between w-full max-md:max-w-full">
@@ -55,7 +48,6 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
                   onChange={handleSearchChange}
                 />
               </div>
-
               {/* search by */}
               <div className="relative" onMouseLeave={closeDropdown}>
                 <div
@@ -64,7 +56,6 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
                 >
                   {selectedSearchBy}
                 </div>
-
                 {isDropdownOpen && (
                   <div className="absolute bg-white border border-gray-300 rounded-lg shadow-lg w-full z-10">
                     <ul className="text-sm text-[#2b3034e6] font-Averta-Regular py-1">
@@ -83,16 +74,13 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
               </div>
             </div>
           </form>
-
           <FilterDropdown onFilterChange={onFilterChange} />
         </div>
-
         <button className="px-7 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose text-center text-white">
-          Add Detail
+          Add Category
         </button>
       </div>
     </>
   );
 };
-
 export default SearchBarAndFilter;

@@ -5,98 +5,85 @@ import SearchBarAndFilter from "./SearchBarAndFilter";
 import CategoryServiceRow from "./CategoryServiceRow";
 type CategoryService = {
   id: string;
-  category: string;
-  value: number;
+  name: string;
   description?: string;
+  serviceType: "Home Cleaning" | "Other Services";
   basePrice: number;
 };
-
 const columns = [
-  { header: "CATEGORY", className: "w-[210px] hidden md:table-cell" },
-  { header: "VALUE", className: "w-[160px] hidden md:table-cell" },
-  { header: "DESCRIPTION", className: "w-[640px] hidden md:table-cell" },
+  { header: "NAME", className: "w-[210px] hidden md:table-cell" },
+  { header: "DESCRIPTION", className: "w-[600px] hidden md:table-cell" },
+  { header: "SERVICE TYPE", className: "w-[210px] hidden md:table-cell" },
   { header: "BASE PRICE", className: "w-[150px] hidden md:table-cell" },
 ];
-
-const categoryServicesData: CategoryService[] = [
+const CategoryServicesData: CategoryService[] = [
   {
     id: "1",
-    category: "Number of Bedroom",
-    value: 1,
+    name: "Number of Bedroom",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam leo sapien, eleifend a orci posuere, ti",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam leo sapien, eleifend a orci.",
+    serviceType: "Home Cleaning",
     basePrice: 50,
   },
   {
     id: "2",
-    category: "Number of Bedroom",
-    value: 2,
+    name: "Number of Bathroom",
     description:
-      "In finibus ullamcorper ultricies. Nam scelerisque tellus in quam dictum sollicitudin. Etiam scelerisque",
+      "Interdum et malesuada fames ac ante ipsum primis in faucibus. In pulvinar maximus urna.",
+    serviceType: "Home Cleaning",
     basePrice: 50,
   },
   {
     id: "3",
-    category: "Number of Bedroom",
-    value: 3,
+    name: "Clean Type",
     description:
-      "Interdum et malesuada fames ac ante ipsum primis in faucibus. In pulvinar maximus urna, non eleme",
+      "In finibus ullamcorper ultricies. Nam scelerisque tellus in quam dictum sollicitudin.",
+    serviceType: "Home Cleaning",
     basePrice: 50,
   },
   {
     id: "4",
-    category: "Number of Bedroom",
-    value: 4,
+    name: "Service Details",
     description:
-      "Vivamus nec nisl vitae erat sollicitudin porta vitae ut purus. Pellentesque habitant morbi tristique sen",
+      "In finibus ullamcorper ultricies. Nam scelerisque tellus in quam dictum sollicitudin.",
+    serviceType: "Other Services",
     basePrice: 50,
   },
   {
     id: "5",
-    category: "Number of Bedroom",
-    value: 5,
+    name: "For How Long",
     description:
-      "In finibus ullamcorper ultricies. Nam scelerisque tellus in quam dictum sollicitudin. Etiam scelerisque",
+      "Vivamus nec nisl vitae erat sollicitudin porta vitae ut purus. Pellentesque habitant morbi tristique.",
+    serviceType: "Other Services",
     basePrice: 50,
   },
 ];
-
 const CategoryServiceTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Filter by");
-  const [searchBy, setSearchBy] = useState("Category");
-
+  const [searchBy, setSearchBy] = useState("Name");
   // Filter
   const applyFilter = (data: CategoryService[]) => {
-    if (filter === "Price: Low to High") {
-      return [...data].sort((a, b) => a.basePrice - b.basePrice);
+    if (filter === "Home Cleaning" || filter === "Other Services") {
+      return data.filter((detail) => detail.serviceType === filter);
     }
-    if (filter === "Price: High to Low") {
-      return [...data].sort((a, b) => b.basePrice - a.basePrice);
-    }
-
     return data;
   };
-
   // Search
   const handleSearch = (term: string) => {
     setSearchTerm(term);
     setCurrentPage(1);
   };
-
-  const filteredData = categoryServicesData.filter((category) => {
+  const filteredData = CategoryServicesData.filter((detail) => {
     const term = searchTerm.toLowerCase();
-    if (searchBy === "Category")
-      return category.category.toLowerCase().includes(term);
+    if (searchBy === "Name") return detail.name.toLowerCase().includes(term);
     if (searchBy === "Description")
-      return category.description?.toLowerCase().includes(term);
-    if (searchBy === "Value") return category.value.toString().includes(term);
+      return detail.description?.toLowerCase().includes(term);
+    if (searchBy === "Price") return detail.basePrice.toString().includes(term);
     return true;
   });
-
   const finalData = applyFilter(filteredData);
-
   // Pagination
   const itemsPerPage = 10;
   const totalPages = Math.ceil(finalData.length / itemsPerPage);
@@ -104,7 +91,6 @@ const CategoryServiceTable = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
@@ -115,7 +101,6 @@ const CategoryServiceTable = () => {
         setSearchBy={setSearchBy}
         onFilterChange={setFilter}
       />
-
       {/* title column */}
       <div className="flex gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
         {columns.map((col, index) => (
@@ -128,8 +113,8 @@ const CategoryServiceTable = () => {
         ))}
       </div>
       <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
-        {currentData.map((category: CategoryService, index: any) => (
-          <CategoryServiceRow key={category.id} {...category} />
+        {currentData.map((detail: CategoryService, index: any) => (
+          <CategoryServiceRow key={detail.id} {...detail} />
         ))}
       </div>
       <Pagination

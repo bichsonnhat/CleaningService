@@ -1,15 +1,11 @@
 import { useState } from "react";
-
 type FilterDropdownProps = {
   onFilterChange: (filter: string) => void;
 };
-
 const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
-  const options = ["Price: Low to High", "Price: High to Low", "Filter by"];
-
+  const options = ["Home Cleaning", "Other Services", "Filter by"];
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Filter by");
-
   const openDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -21,9 +17,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
   const closeDropdown = () => {
     setIsOpen(false);
   };
-
   return (
-    <div className="relative w-[180px]" onMouseLeave={closeDropdown}>
+    <div className="relative w-[150px]" onMouseLeave={closeDropdown}>
       <div
         className="text-xs text-[#2b3034e6] font-Averta-Bold gap-4 flex items-center justify-between border border-solid border-[#d5d5d5] bg-[#fcfdfd] rounded-lg h-[38px] px-4 cursor-pointer w-full"
         onClick={openDropdown}
@@ -43,7 +38,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
           />
         </svg>
       </div>
-
       {isOpen && (
         <div className="absolute bg-white border border-gray-300 rounded-lg shadow-lg w-full z-10">
           <ul className="text-sm text-[#2b3034e6] font-Averta-Regular py-1">
@@ -62,5 +56,4 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
     </div>
   );
 };
-
 export default FilterDropdown;
