@@ -5,7 +5,7 @@ type FilterDropdownProps = {
 };
 
 const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
-  const options = ["Home Cleaning", "Other Services", "Filter by"];
+  const options = ["Price: Low to High", "Price: High to Low", "Filter by"];
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Filter by");
@@ -23,7 +23,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="relative w-[150px]" onMouseLeave={closeDropdown}>
+    <div className="relative w-[170px]" onMouseLeave={closeDropdown}>
       <div
         className="text-xs text-[#2b3034e6] font-Averta-Bold gap-4 flex items-center justify-between border border-solid border-[#d5d5d5] bg-[#fcfdfd] rounded-lg h-[38px] px-4 cursor-pointer w-full"
         onClick={openDropdown}

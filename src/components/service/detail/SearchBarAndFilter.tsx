@@ -16,7 +16,7 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
     setSearchTerm(event.target.value);
   };
 
-  const [selectedSearchBy, setSelectedSearchBy] = useState("Name");
+  const [selectedSearchBy, setSelectedSearchBy] = useState("Category");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // đóng - mở của search by
 
   const handleSearchByChange = (field: string) => {
@@ -29,7 +29,7 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
     setIsDropdownOpen(false);
   };
 
-  const searchByOptions = ["Name", "Description", "Price"];
+  const searchByOptions = ["Category", "Description", "Value"];
 
   return (
     <>
