@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { UserButton, useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,6 +10,12 @@ const Header = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+  const { isSignedIn } = useUser();
+  const router = useRouter();
+
+  const handleLogin = () => {
+    router.push('/sign-in');
   };
 
   return (
@@ -18,13 +26,15 @@ const Header = () => {
           <img src='/images/Header/Logo.svg' alt='Clean' className='h-[38px]' />
           
           {/* Mobile Menu Button */}
-          <button 
-            onClick={toggleMenu}
-            className='md:hidden p-2'
-            aria-label='Toggle menu'
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="md:hidden flex items-center gap-3.5">
+            <UserButton />
+            <button 
+              onClick={toggleMenu}
+              className='md:hidden p-2'
+              aria-label='Toggle menu'>
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
 
           {/* Desktop Menu */}
           <nav className='hidden md:flex flex-wrap gap-4 lg:gap-8 items-center'>
@@ -37,9 +47,17 @@ const Header = () => {
                 {link}
               </a>
             ))}
-            <button className="text-center text-blue-600 rounded-xl border-[3px] px-4 lg:px-6 py-1 border-blue-600 border-solid font-semibold hover:bg-blue-600 hover:text-white transition-colors">
-              Login
-            </button>
+            {isSignedIn && (
+              <div className=''>
+                <UserButton />
+              </div>
+            )}
+            {!isSignedIn && (
+              <button className="text-center text-blue-600 rounded-xl border-[3px] px-4 lg:px-6 py-1 border-blue-600 border-solid font-Averta-Semibold hover:bg-blue-600 hover:text-white transition-colors"
+               onClick={handleLogin}>
+                Login
+              </button>
+            )}
           </nav>
         </div>
 
@@ -56,9 +74,12 @@ const Header = () => {
                 {link}
               </a>
             ))}
-            <button className="text-center text-blue-600 rounded-xl border-[3px] px-6 py-1 border-blue-600 border-solid font-semibold hover:bg-blue-600 hover:text-white transition-colors w-full">
-              Login
-            </button>
+            {!isSignedIn && (
+              <button className="text-center text-blue-600 rounded-xl border-[3px] px-6 py-1 border-blue-600 border-solid font-Averta-Semibold hover:bg-blue-600 hover:text-white transition-colors w-full"
+               onClick={handleLogin}>
+                Login
+              </button>
+            )} 
           </nav>
         )}
       </div>
