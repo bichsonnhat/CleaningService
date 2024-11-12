@@ -18,6 +18,12 @@ const tasks = [
         endTime: "10:30",
     },
     {
+        date: "2024-10-02",
+        title: "Home Cleaning",
+        startTime: "12:00",
+        endTime: "15:30",
+    },
+    {
         date: "2024-10-11",
         title: "Baby-sitting",
         startTime: "15:00",
@@ -50,8 +56,8 @@ const tasks = [
 ];
 
 const CalendarPage = () => {
-    const [currentMonth, setCurrentMonth] = useState(9); // October (index starts from 0)
-    const [currentYear, setCurrentYear] = useState(2024);
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [currentDay, setCurrentDay] = useState(
         new Date(currentYear, currentMonth, 1)
     );
@@ -83,9 +89,7 @@ const CalendarPage = () => {
         }
     };
 
-    // Render month view component
     const renderMonthView = () => {
-        // Days in the current month
         const daysInMonth = new Date(
             currentYear,
             currentMonth + 1,
@@ -93,7 +97,6 @@ const CalendarPage = () => {
         ).getDate();
         const startDay = new Date(currentYear, currentMonth, 1).getDay();
 
-        // Days in the previous month to fill the first row if needed
         const daysInPrevMonth = new Date(
             currentYear,
             currentMonth,
@@ -104,13 +107,11 @@ const CalendarPage = () => {
             (_, i) => daysInPrevMonth - startDay + i + 1
         );
 
-        // Days in the current month
         const currentMonthDays = Array.from(
             { length: daysInMonth },
             (_, i) => i + 1
         );
 
-        // Days in the next month to fill the last row if needed
         const remainingDays =
             42 - (prevMonthDays.length + currentMonthDays.length);
         const nextMonthDays = Array.from(
@@ -118,7 +119,6 @@ const CalendarPage = () => {
             (_, i) => i + 1
         );
 
-        // Helper function to find a task for a specific date
         const getTaskForDate = (day: number, isCurrentMonth: boolean) => {
             const month = isCurrentMonth
                 ? currentMonth + 1
@@ -153,7 +153,7 @@ const CalendarPage = () => {
                 {prevMonthDays.map((day) => (
                     <div
                         key={`prev-${day}`}
-                        onClick={() => handleDayClick(day)}
+                        onClick={() => changeDate(-1)}
                         className="bg-white min-w-[164px] h-[119px] border rounded-lg p-2 relative text-gray-400 cursor-pointer"
                     >
                         <div className="mt-3 text-left text-[#202224] text-opacity-[0.5] text-[14px] font-medium">
@@ -162,7 +162,6 @@ const CalendarPage = () => {
                     </div>
                 ))}
 
-                {/* Current month's days */}
                 {currentMonthDays.map((day) => {
                     const task = getTaskForDate(day, true);
                     return (
@@ -183,11 +182,10 @@ const CalendarPage = () => {
                     );
                 })}
 
-                {/* Next month's days */}
                 {nextMonthDays.map((day) => (
                     <div
                         key={`next-${day}`}
-                        onClick={() => handleDayClick(day)}
+                        onClick={() => changeDate(1)}
                         className="bg-white min-w-[164px] h-[119px] border rounded-lg p-2 relative text-gray-400 cursor-pointer"
                     >
                         <div className="mt-3 text-left text-[#202224] text-opacity-[0.5] text-[14px] font-medium">
@@ -200,11 +198,9 @@ const CalendarPage = () => {
     };
 
     const renderDayView = () => {
-        // Format the current day to `YYYY-MM-DD` without time for accurate comparison
         const dayString = currentDay.toLocaleDateString("en-CA");
         const dayTasks = tasks.filter((task) => task.date === dayString);
 
-        // Helper function to convert time to 12-hour format with only the hour and AM/PM
         const formatTime = (hour: number) => {
             const period = hour >= 12 ? "PM" : "AM";
             const displayHour = hour % 12 || 12; // Convert 0 to 12 for 12 AM
@@ -220,12 +216,10 @@ const CalendarPage = () => {
                 .padStart(2, "0")} ${period}`;
         };
 
-        // Create an array with hours ordered from 1 AM to 12 AM
         const hours = [...Array(23).keys()].map((i) => i + 1).concat(0); // 1 to 23, then 0 for 12 AM
 
         return (
             <div className="w-full">
-                {/* Display headers for TIME and EVENT columns */}
                 <div className="flex flex-row">
                     <div className="grid grid-cols-2 gap-[30px]">
                         <div className="font-semibold p-2 text-right text-[#202224] text-opacity-[0.8] text-[14px] pr-2">
@@ -244,14 +238,12 @@ const CalendarPage = () => {
                                 index === 0 ? "" : "border-t"
                             }`}
                         >
-                            {/* TIME Column - Align text to the right */}
                             <div className="w-16 pr-2 flex items-center justify-end h-full">
                                 <span className="text-right text-[#202224] text-opacity-[0.8] text-[14px]">
                                     {formatTime(hour)}
                                 </span>
                             </div>
 
-                            {/* EVENT Column */}
                             <div
                                 className="relative"
                                 style={{ width: "1035px" }}
@@ -267,7 +259,6 @@ const CalendarPage = () => {
                                     const taskEnd = endHour + endMin / 60;
                                     const duration = taskEnd - taskStart;
 
-                                    // Only render the task once, starting from the start hour
                                     if (hour === startHour) {
                                         return (
                                             <div
@@ -283,7 +274,6 @@ const CalendarPage = () => {
                                                     left: "50px",
                                                 }}
                                             >
-                                                {/* Center-aligned task content */}
                                                 <div className="text-center ml-[30px]">
                                                     <div className="font-semibold text-[14px]">
                                                         {`${convertTo12HourFormat(
