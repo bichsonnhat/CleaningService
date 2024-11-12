@@ -49,9 +49,9 @@ const HomePage = () => {
             <div className='relative'>
             <Image src='/images/HomePage/HeroIllustration.svg' alt='HeroIllustration' width={0} height={0} sizes="100vw" style={{ width: '100%', height: 'auto' }} />
                 <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full px-4'>
-                    <div className='font-Averta-Bold text-center md:mt-10'>
-                        <p className='text-3xl md:text-5xl lg:text-6xl leading-tight'>Your One Stop Cleaning</p>
-                        <p className='text-3xl md:text-5xl lg:text-6xl leading-tight'>Centre For All Needs</p>
+                    <div className='font-Averta-Bold text-center md:mt-10 mt-10'>
+                        <p className='text-2xl md:text-5xl lg:text-6xl leading-tight'>Your One Stop Cleaning</p>
+                        <p className='text-2xl md:text-5xl lg:text-6xl leading-tight'>Centre For All Needs</p>
                         <button className="px-5 md:px-7 md:py-3 py-2 mt-4 md:mt-12 bg-[#1b78f2] rounded-xl text-base md:text-lg font-Averta-Semibold text-white hover:bg-blue-700 transition-colors">
                             Booking from 80$
                         </button>
