@@ -50,7 +50,7 @@ const Header = () => {
               <a
                 href={`#${link.toLowerCase()}`}
                 key={link}
-                className='text-gray-700 font-semibold hover:text-blue-600 transition-colors'
+                className='text-gray-700 font-Averta-Semibold hover:text-blue-600 transition-colors'
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link}
