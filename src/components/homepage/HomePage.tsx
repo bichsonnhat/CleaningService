@@ -148,7 +148,7 @@ const HomePage = () => {
                     className='absolute inset-0 object-cover'
                 />                
                 <div className='flex flex-col relative items-center justify-center px-4'>
-                    <h1 className='text-white text-3xl md:text-4xl sm:text-2xl font-Averta-Bold z-10 text-center'>
+                    <h1 className='text-white text-3xl md:text-4xl sm:text-2xl font-Averta-Bold z-10 text-center md:mt-20'>
                         What our customers say?
                     </h1>
                     <div className='flex flex-col md:flex-row mt-8 md:mt-20 gap-8 md:gap-32'>
