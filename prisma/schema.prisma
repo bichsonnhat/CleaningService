@@ -78,15 +78,12 @@ datasource db {
 // Models
 model User {
   id              String       @id @default(uuid()) @db.Uuid
-  userType        String       @db.VarChar(50)
   gender          String?      @db.VarChar(10)
-  profilePicture  String?      @db.VarChar(512)
   fullName        String       @db.VarChar(150)
   dateOfBirth     DateTime     @db.Date
   identifyCard    String?
   address         String?
   phoneNumber     String       @db.VarChar(20)
-  email           String?      @unique @db.VarChar(255)
   createdAt       DateTime     @default(now()) @db.Timestamp()
   updatedAt       DateTime     @default(now()) @updatedAt @db.Timestamp()
   status          String       @default("active") @db.VarChar(50)
@@ -96,18 +93,18 @@ model User {
   helper                    Helper?
   approvedAvailabilities    HelperAvailability[] @relation("ApprovedBy")
   bookingsAsCustomer        Booking[]            @relation("CustomerBookings")
-  blacklistsCreated        BlacklistedUser[]    @relation("BlacklistedBy")
-  blacklisted              BlacklistedUser?     @relation("BlacklistedUser")
+  blacklistsCreated         BlacklistedUser[]    @relation("BlacklistedBy")
+  blacklisted               BlacklistedUser?     @relation("BlacklistedUser")
 }
 
 model Helper { 
-  id                   String    @id @db.Uuid
+  id                    String    @id @db.Uuid
   experienceDescription String?
-  resumeUploaded       String?
-  servicesOffered      String[]  @db.Uuid // Array of service_type_ids
-  salaryExpectation    Decimal   @db.Decimal(10, 2)
-  averageRating        Decimal?  @default(0) @db.Decimal(2, 1)
-  completedJobs        Int       @default(0)
+  resumeUploaded        String?
+  servicesOffered       String[]  @db.Uuid // Array of service_type_ids
+  salaryExpectation     Decimal   @db.Decimal(10, 2)
+  averageRating         Decimal?  @default(0) @db.Decimal(2, 1)
+  completedJobs         Int       @default(0)
   cancelledJobs        Int       @default(0)
   createdAt            DateTime  @default(now()) @db.Timestamp()
   updatedAt            DateTime  @default(now()) @updatedAt @db.Timestamp()
@@ -273,6 +270,7 @@ model Feedback {
 model Refund {
   id            String   @id @default(uuid())
   booking_id    String   @db.Uuid
+  requested_by  Boolean  // 0 is customer, 1 is helper
   reason        String   @db.Text 
   status        String   @default("pending")
   created_at    DateTime @default(now()) @db.Timestamp()
