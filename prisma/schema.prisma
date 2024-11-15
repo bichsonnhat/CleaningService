@@ -78,37 +78,33 @@ datasource db {
 // Models
 model User {
   id              String       @id @default(uuid()) @db.Uuid
-  userType        String       @db.VarChar(50)
   gender          String?      @db.VarChar(10)
-  profilePicture  String?      @db.VarChar(512)
   fullName        String       @db.VarChar(150)
   dateOfBirth     DateTime     @db.Date
   identifyCard    String?
   address         String?
   phoneNumber     String       @db.VarChar(20)
-  email           String?      @unique @db.VarChar(255)
   createdAt       DateTime     @default(now()) @db.Timestamp()
   updatedAt       DateTime     @default(now()) @updatedAt @db.Timestamp()
   status          String       @default("active") @db.VarChar(50)
+  numberOfViolations Int?      @default(0)
 
   // Relations
   helper                    Helper?
   approvedAvailabilities    HelperAvailability[] @relation("ApprovedBy")
   bookingsAsCustomer        Booking[]            @relation("CustomerBookings")
-  complaintsReportedBy      Complaint[]          @relation("ReportedBy")
-  complaintsReportedAgainst Complaint[]          @relation("ReportedAgainst")
-  blacklistsCreated        BlacklistedUser[]    @relation("BlacklistedBy")
-  blacklisted              BlacklistedUser?     @relation("BlacklistedUser")
+  blacklistsCreated         BlacklistedUser[]    @relation("BlacklistedBy")
+  blacklisted               BlacklistedUser?     @relation("BlacklistedUser")
 }
 
 model Helper { 
-  id                   String    @id @db.Uuid
+  id                    String    @id @db.Uuid
   experienceDescription String?
-  resumeUploaded       String?
-  servicesOffered      String[]  @db.Uuid // Array of service_type_ids
-  salaryExpectation    Decimal   @db.Decimal(10, 2)
-  averageRating        Decimal?  @default(0) @db.Decimal(2, 1)
-  completedJobs        Int       @default(0)
+  resumeUploaded        String?
+  servicesOffered       String[]  @db.Uuid // Array of service_type_ids
+  salaryExpectation     Decimal   @db.Decimal(10, 2)
+  averageRating         Decimal?  @default(0) @db.Decimal(2, 1)
+  completedJobs         Int       @default(0)
   cancelledJobs        Int       @default(0)
   createdAt            DateTime  @default(now()) @db.Timestamp()
   updatedAt            DateTime  @default(now()) @updatedAt @db.Timestamp()
@@ -193,6 +189,7 @@ model DurationPrice {
 
   // Relations
   serviceType     ServiceType @relation(fields: [serviceTypeId], references: [id])
+  bookingDetails  BookingDetail?
 
   @@unique([serviceTypeId, durationHours])
 }
@@ -210,9 +207,6 @@ model Booking {
   totalPrice        Decimal       @db.Decimal(10, 2)
   paymentStatus     String        @default("pending") @db.VarChar(50)
   paymentMethod     String?       @db.VarChar(50)
-  helperRating      Decimal?      @db.Decimal(2, 1)
-  customerFeedback  String?
-  helperFeedback    String?
   createdAt         DateTime      @default(now()) @db.Timestamp()
   updatedAt         DateTime      @default(now()) @updatedAt @db.Timestamp()
 
@@ -221,13 +215,15 @@ model Booking {
   helper           Helper?        @relation(fields: [helperId], references: [id])
   serviceType      ServiceType    @relation(fields: [serviceTypeId], references: [id])
   bookingDetails   BookingDetail?
-  contract         Contract?
-  complaints       Complaint[]
+  bookingContract  BookingContract?
+  refunds          Refund[]
+  feedbacks        Feedback[]
 }
 
 model BookingDetail {
   id                  String    @id @default(uuid()) @db.Uuid
   bookingId           String    @unique @db.Uuid
+  durationPriceId     String    @unique @db.Uuid 
   bedroomCount        Int       @default(0)
   bathroomCount       Int       @default(0)
   kitchenCount        Int       @default(0)
@@ -237,9 +233,10 @@ model BookingDetail {
 
   // Relations
   booking             Booking   @relation(fields: [bookingId], references: [id])
+  durationPrice       DurationPrice @relation(fields: [durationPriceId], references: [id])
 }
 
-model Contract {
+model BookingContract {
   id        String    @id @default(uuid()) @db.Uuid
   bookingId String    @unique @db.Uuid
   content   String
@@ -249,21 +246,38 @@ model Contract {
   booking   Booking   @relation(fields: [bookingId], references: [id])
 }
 
-model Complaint {
-  id              String          @id @default(uuid()) @db.Uuid
-  bookingId       String          @db.Uuid
-  reportedById    String          @db.Uuid
-  reportedUserId  String          @db.Uuid
-  reason          String
-  status          String          @default("pending") @db.VarChar(50)
-  resolution      String?
-  createdAt       DateTime        @default(now()) @db.Timestamp()
-  resolvedAt      DateTime?       @db.Timestamp()
+model Contract {
+  id            String    @id @default(uuid()) @db.Uuid
+  description   String    @db.Text
+  createdAt     DateTime  @default(now()) @db.Timestamp()
+  updatedAt     DateTime  @default(now()) @updatedAt @db.Timestamp()
+}
+
+model Feedback {
+  id            String   @id @default(uuid())
+  booking_id    String   @db.Uuid
+  reportedBy    Boolean  
+  helperRating  Int
+  title         String   @db.Text
+  description   String   @db.Text
+  created_at    DateTime @default(now()) @db.Timestamp()
+  updated_at    DateTime @default(now()) @updatedAt @db.Timestamp()
 
   // Relations
-  booking         Booking         @relation(fields: [bookingId], references: [id])
-  reportedBy      User            @relation("ReportedBy", fields: [reportedById], references: [id])
-  reportedUser    User            @relation("ReportedAgainst", fields: [reportedUserId], references: [id])
+  booking       Booking  @relation(fields: [booking_id], references: [id])
+}
+
+model Refund {
+  id            String   @id @default(uuid())
+  booking_id    String   @db.Uuid
+  requested_by  Boolean  // 0 is customer, 1 is helper
+  reason        String   @db.Text 
+  status        String   @default("pending")
+  created_at    DateTime @default(now()) @db.Timestamp()
+  resolved_at   DateTime @db.Timestamp
+
+  // Relations
+  booking       Booking  @relation(fields: [booking_id], references: [id])
 }
 
 model BlacklistedUser {
