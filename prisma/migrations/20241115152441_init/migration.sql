@@ -1,18 +1,16 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" UUID NOT NULL,
-    "userType" VARCHAR(50) NOT NULL,
     "gender" VARCHAR(10),
-    "profilePicture" VARCHAR(512),
     "fullName" VARCHAR(150) NOT NULL,
     "dateOfBirth" DATE NOT NULL,
     "identifyCard" TEXT,
     "address" TEXT,
     "phoneNumber" VARCHAR(20) NOT NULL,
-    "email" VARCHAR(255),
     "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" VARCHAR(50) NOT NULL DEFAULT 'active',
+    "numberOfViolations" INTEGER DEFAULT 0,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -111,9 +109,6 @@ CREATE TABLE "Booking" (
     "totalPrice" DECIMAL(10,2) NOT NULL,
     "paymentStatus" VARCHAR(50) NOT NULL DEFAULT 'pending',
     "paymentMethod" VARCHAR(50),
-    "helperRating" DECIMAL(2,1),
-    "customerFeedback" TEXT,
-    "helperFeedback" TEXT,
     "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -124,6 +119,7 @@ CREATE TABLE "Booking" (
 CREATE TABLE "BookingDetail" (
     "id" UUID NOT NULL,
     "bookingId" UUID NOT NULL,
+    "durationPriceId" UUID NOT NULL,
     "bedroomCount" INTEGER NOT NULL DEFAULT 0,
     "bathroomCount" INTEGER NOT NULL DEFAULT 0,
     "kitchenCount" INTEGER NOT NULL DEFAULT 0,
@@ -135,28 +131,50 @@ CREATE TABLE "BookingDetail" (
 );
 
 -- CreateTable
-CREATE TABLE "Contract" (
+CREATE TABLE "BookingContract" (
     "id" UUID NOT NULL,
     "bookingId" UUID NOT NULL,
     "content" TEXT NOT NULL,
     "createdAt" TIMESTAMP NOT NULL,
 
+    CONSTRAINT "BookingContract_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Contract" (
+    "id" UUID NOT NULL,
+    "description" TEXT NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
     CONSTRAINT "Contract_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Complaint" (
-    "id" UUID NOT NULL,
-    "bookingId" UUID NOT NULL,
-    "reportedById" UUID NOT NULL,
-    "reportedUserId" UUID NOT NULL,
-    "reason" TEXT NOT NULL,
-    "status" VARCHAR(50) NOT NULL DEFAULT 'pending',
-    "resolution" TEXT,
-    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "resolvedAt" TIMESTAMP,
+CREATE TABLE "Feedback" (
+    "id" TEXT NOT NULL,
+    "booking_id" UUID NOT NULL,
+    "reportedBy" BOOLEAN NOT NULL,
+    "helperRating" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Complaint_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Feedback_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Refund" (
+    "id" TEXT NOT NULL,
+    "booking_id" UUID NOT NULL,
+    "requested_by" BOOLEAN NOT NULL,
+    "reason" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'pending',
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "resolved_at" TIMESTAMP NOT NULL,
+
+    CONSTRAINT "Refund_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -171,9 +189,6 @@ CREATE TABLE "BlacklistedUser" (
 
     CONSTRAINT "BlacklistedUser_pkey" PRIMARY KEY ("id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE INDEX "HelperAvailability_helperId_startDatetime_endDatetime_idx" ON "HelperAvailability"("helperId", "startDatetime", "endDatetime");
@@ -200,7 +215,10 @@ CREATE UNIQUE INDEX "DurationPrice_serviceTypeId_durationHours_key" ON "Duration
 CREATE UNIQUE INDEX "BookingDetail_bookingId_key" ON "BookingDetail"("bookingId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Contract_bookingId_key" ON "Contract"("bookingId");
+CREATE UNIQUE INDEX "BookingDetail_durationPriceId_key" ON "BookingDetail"("durationPriceId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "BookingContract_bookingId_key" ON "BookingContract"("bookingId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "BlacklistedUser_userId_key" ON "BlacklistedUser"("userId");
@@ -236,16 +254,16 @@ ALTER TABLE "Booking" ADD CONSTRAINT "Booking_serviceTypeId_fkey" FOREIGN KEY ("
 ALTER TABLE "BookingDetail" ADD CONSTRAINT "BookingDetail_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Contract" ADD CONSTRAINT "Contract_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "BookingDetail" ADD CONSTRAINT "BookingDetail_durationPriceId_fkey" FOREIGN KEY ("durationPriceId") REFERENCES "DurationPrice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Complaint" ADD CONSTRAINT "Complaint_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "BookingContract" ADD CONSTRAINT "BookingContract_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Complaint" ADD CONSTRAINT "Complaint_reportedById_fkey" FOREIGN KEY ("reportedById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Feedback" ADD CONSTRAINT "Feedback_booking_id_fkey" FOREIGN KEY ("booking_id") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Complaint" ADD CONSTRAINT "Complaint_reportedUserId_fkey" FOREIGN KEY ("reportedUserId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Refund" ADD CONSTRAINT "Refund_booking_id_fkey" FOREIGN KEY ("booking_id") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BlacklistedUser" ADD CONSTRAINT "BlacklistedUser_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
