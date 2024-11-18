@@ -45,6 +45,7 @@ export async function PUT(
 
 // DELETE helper_availability by id
 export async function DELETE(
+    req: Request,
     { params }: { params: { id: string } }
 ) {
     try {

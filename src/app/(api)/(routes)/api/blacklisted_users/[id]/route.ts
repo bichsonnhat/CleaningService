@@ -46,6 +46,7 @@ export async function PUT(
 
 // DELETE blacklisted user by id
 export async function DELETE(
+    req: Request,
     { params }: { params: { id: string } }
 ) {
     try {
