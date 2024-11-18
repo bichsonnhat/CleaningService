@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 // GET blacklisted user by id
 export async function GET(
+    req: Request,
     { params }: { params: { id: string } }
 ) {
     try {

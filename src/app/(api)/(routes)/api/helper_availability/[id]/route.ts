@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 // Get helper_availability by id
 export async function GET(
+    req: Request,
     { params }: { params: { id: string } }
 ) {
     try {
