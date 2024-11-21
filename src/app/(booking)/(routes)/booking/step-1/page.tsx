@@ -5,10 +5,8 @@ import OtherServices from "@/components/step-1/OtherServices";
 const Step_1 = () => {
   return (
     <>
-      <div>
-        <HomeCleaning />
-        {/* <OtherServices /> */}
-      </div>
+      <HomeCleaning />
+      {/* <OtherServices /> */}
     </>
   );
 };
