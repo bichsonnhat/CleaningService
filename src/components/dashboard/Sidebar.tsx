@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Menu, X } from 'lucide-react';
 
 interface NavItemProps {
   icon: string;
@@ -17,7 +18,10 @@ const NavItem: React.FC<NavItemProps> = ({ icon, activeIcon, label, href, isActi
   return (
     <Link
       href={href}
-      className={`flex gap-5 items-center px-5 py-4 w-48 max-w-full min-h-[50px] ${isActive ? 'text-white bg-blue-500 rounded-lg' : 'hover:bg-gray-100 transition-colors rounded-lg'
+      className={`flex gap-5 items-center px-5 py-4 w-full sm:w-48 max-w-full min-h-[50px] 
+        ${isActive 
+          ? 'text-white bg-blue-500 rounded-lg' 
+          : 'hover:bg-gray-100 transition-colors rounded-lg'
         }`}
       onClick={onClick}
     >
@@ -36,7 +40,10 @@ const NavChildItem: React.FC<NavItemProps> = ({ icon, activeIcon, label, href, i
   return (
     <Link
       href={href}
-      className={`flex gap-5 items-center max-w-full  px-5 min-h-[50px] ${isActive ? 'text-white bg-blue-500 rounded-lg' : 'hover:bg-gray-200 transition-colors bg-[#F4F7F9] rounded-lg'
+      className={`flex gap-5 items-center w-full max-w-full px-5 min-h-[50px] 
+        ${isActive 
+          ? 'text-white bg-blue-500 rounded-lg' 
+          : 'hover:bg-gray-200 transition-colors bg-[#F4F7F9] rounded-lg'
         }`}
       onClick={onClick}
     >
@@ -66,7 +73,7 @@ const CollapsibleNavItem: React.FC<CollapsibleNavItemProps> = ({
   onClick,
 }) => {
   return (
-    <div>
+    <div className="w-full">
       <NavItem
         icon={icon}
         activeIcon={activeIcon}
@@ -75,7 +82,7 @@ const CollapsibleNavItem: React.FC<CollapsibleNavItemProps> = ({
         isActive={isExpanded}
         onClick={onClick}
       />
-      {isExpanded &&
+      {isExpanded && (
         <div className="relative pl-7 mt-1 space-y-1">
           <svg
             className="absolute left-0 top-[-4px] w-16 h-full"
@@ -101,7 +108,7 @@ const CollapsibleNavItem: React.FC<CollapsibleNavItemProps> = ({
             {children}
           </div>
         </div>
-      }
+      )}
     </div>
   );
 };
@@ -109,6 +116,14 @@ const CollapsibleNavItem: React.FC<CollapsibleNavItemProps> = ({
 const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Effect to set initial expanded state based on current path
+  useEffect(() => {
+    if (pathname.includes('/dashboard/service')) {
+      setExpandedMenu('Service');
+    }
+  }, [pathname]);
 
   const navItemsAdmin = [
     {
@@ -179,47 +194,82 @@ const Sidebar: React.FC = () => {
     setExpandedMenu((prev) => (prev === menu ? null : menu));
   };
 
+  const handleMobileItemClick = () => {
+    // Only close mobile menu, don't reset expandedMenu
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <aside className="flex flex-col w-[16%] max-md:ml-0 max-md:w-full">
-      <nav className="flex flex-col items-center px-5 pt-5 mx-auto w-full
-       font-Averta-Bold tracking-wide whitespace-nowrap bg-white min-h-[970px]
-        pb-[700px] text-stone-600 max-md:pb-24 space-y-1">
-        {navItemsAdmin.map((item) => (
-          <React.Fragment key={item.label}>
-            {item.children ? (
-              <CollapsibleNavItem
-                icon={item.icon}
-                activeIcon={item.activeIcon}
-                label={item.label}
-                href={item.href}
-                isExpanded={expandedMenu === item.label}
-                onClick={() => handleMenuClick(item.label)}
-              >
-                {item.children.map((child) => (
-                  <NavChildItem
-                    key={child.label}
-                    icon={child.icon}
-                    activeIcon={child.activeIcon}
-                    label={child.label}
-                    href={child.href}
-                    isActive={pathname === child.href}
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="fixed top-4 right-4 z-50 p-2 bg-white rounded-lg shadow-lg md:hidden"
+      >
+        {isMobileMenuOpen ? (
+          <X className="w-6 h-6 text-gray-600" />
+        ) : (
+          <Menu className="w-6 h-6 text-gray-600" />
+        )}
+      </button>
+
+      {/* Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed md:static top-0 left-0 z-40 h-screen w-[85%] md:w-[16%] 
+          transform transition-transform duration-300 ease-in-out bg-white
+          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+      >
+        <nav className="flex flex-col items-center px-5 pt-5 w-full h-full
+          font-Averta-Bold tracking-wide whitespace-nowrap
+          text-stone-600 overflow-y-auto">
+          <div className="w-full space-y-1 pb-8">
+            {navItemsAdmin.map((item) => (
+              <React.Fragment key={item.label}>
+                {item.children ? (
+                  <CollapsibleNavItem
+                    icon={item.icon}
+                    activeIcon={item.activeIcon}
+                    label={item.label}
+                    href={item.href}
+                    isExpanded={expandedMenu === item.label}
+                    onClick={() => handleMenuClick(item.label)}
+                  >
+                    {item.children.map((child) => (
+                      <NavChildItem
+                        key={child.label}
+                        icon={child.icon}
+                        activeIcon={child.activeIcon}
+                        label={child.label}
+                        href={child.href}
+                        isActive={pathname === child.href}
+                        onClick={handleMobileItemClick}
+                      />
+                    ))}
+                  </CollapsibleNavItem>
+                ) : (
+                  <NavItem
+                    icon={item.icon}
+                    activeIcon={item.activeIcon}
+                    label={item.label}
+                    href={item.href}
+                    isActive={pathname === item.href}
+                    onClick={handleMobileItemClick}
                   />
-                ))}
-              </CollapsibleNavItem>
-            ) : (
-              <NavItem
-                icon={item.icon}
-                activeIcon={item.activeIcon}
-                label={item.label}
-                href={item.href}
-                isActive={pathname === item.href}
-                onClick={() => setExpandedMenu(null)}
-              />
-            )}
-          </React.Fragment>
-        ))}
-      </nav>
-    </aside>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </nav>
+      </aside>
+    </>
   );
 };
 
