@@ -22,7 +22,7 @@ const columns = [
   { header: "RATING", className: "w-[100px] hidden md:table-cell mr-10" },
   { header: "PRICE", className: "w-[100px] hidden md:table-cell " },
   { header: "STATUS", className: "w-[140px] hidden md:table-cell" },
-  { header: "", className: "w-[130px] hidden md:table-cell" },
+  { header: "", className: "w-[120px] hidden md:table-cell" },
 ];
 
 const ordersData: OrderHistory[] = [
@@ -390,7 +390,7 @@ const OrderHistoryTable = () => {
         ))}
       </div>
 
-      <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
+      <div className="flex overflow-hidden flex-col justify-center w-full ">
         {currentData.map((order: OrderHistory, index: any) => (
           <OrderHistoryRow key={order.id} {...order} />
         ))}
