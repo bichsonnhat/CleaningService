@@ -43,7 +43,7 @@ const HomeCleaning = () => {
   };
 
   const handleNext = () => {
-    addBookingDetail(selectedNumberOfBed, selectedNumberOfBathroom)
+    addBookingDetail(selectedNumberOfBed, selectedNumberOfBathroom);
     // addServiceCategory();
   };
 
@@ -73,8 +73,8 @@ const HomeCleaning = () => {
 
   return (
     <>
-      <div className="relative w-full h-[500px] mt-[80px]">
-        <div className="flex flex-col absolute inset-0 items-center">
+      <div className=" w-full h-full mt-[50px]">
+        <div className="flex flex-col inset-0 items-center">
           <p className="font-Averta-Bold text-center text-[38px] mb-8">
             Customize Your Requirements
           </p>
@@ -121,7 +121,10 @@ const HomeCleaning = () => {
             ))}
           </div>
 
-          <button className="px-16 py-2 bg-[#1b78f2] rounded-[8px] text-lg font-Averta-Semibold tracking-normal leading-loose text-center text-white" onClick={handleNext}>
+          <button
+            className="px-16 py-2 bg-[#1b78f2] rounded-[8px] text-lg font-Averta-Semibold tracking-normal leading-loose text-center text-white"
+            onClick={handleNext}
+          >
             Next
           </button>
         </div>
