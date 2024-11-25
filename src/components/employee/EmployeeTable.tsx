@@ -372,7 +372,7 @@ const EmployeeTable = () => {
       />
 
       {/* title column */}
-      <div className="flex flex-wrap w-full bg-[#f5f5f5] h-[48px] items-center mt-4 gap-1 p-2.5">
+      <div className="flex flex-wrap w-full bg-[#f5f5f5] h-[48px] items-center mt-4 gap-3 p-2.5">
         {columns.map((col, index) => (
           <div
             key={index}
