@@ -38,7 +38,7 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({ toggle }) => {
 
   return (
     <div className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={toggle}>
-      <div className="flex flex-col bg-white rounded-lg shadow-lg px-[50px] py-[40px] w-[45%] h-fit" onClick={(e) => e.stopPropagation()}>
+      <div className="flex flex-col bg-white rounded-lg shadow-lg px-[50px] py-[40px] w-fit lg:w-[45%] h-fit max-h-[95%] " onClick={(e) => e.stopPropagation()}>
         <div className='flex w-full h-[10%]'>
             <button onClick={toggle} className='ml-auto'>
               <Image src='/images/ProgressBar/Group.svg' alt='exitButton' width={20} height={20}/>
@@ -52,7 +52,7 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({ toggle }) => {
                 <p className='text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight'>helper</p>
                 <div className='flex flex-row justify-between p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]'>
                   <div className='flex flex-row h-fit gap-[10px]'>
-                    <Image src='/images/About/Google.png' alt='avatar' width={20} height={20}/>
+                    <Image src='/images/About/Google.png' alt='avatar' width={20} height={20} className='max-lg:hidden'/>
                     <p className='text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight'>Long Nhat dep trai</p>
                   </div>
                   <div className='flex flex-row h-fit gap-[2px]'>
@@ -92,7 +92,7 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({ toggle }) => {
               <div className='flex flex-col w-full h-fit gap-[11px]'>
                 <p className='text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight'>customer</p>
                 <div className='flex flex-row gap-[10px] w-full h-fit p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]'>
-                  <Image src='/images/About/Google.png' alt='avatar' width={20} height={20}/>
+                  <Image src='/images/About/Google.png' alt='avatar' width={20} height={20} className='max-lg:hidden'/>
                   <p className='text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight'>Long Nhat dep trai</p>
                 </div>
               </div>
@@ -105,7 +105,7 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({ toggle }) => {
               <div className='flex flex-col w-full h-fit gap-[11px]'>
                 <p className='text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight'>time</p>
                 <div className='flex flex-row h-fit justify-between p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]'>
-                  <p className='text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight'>From 8 AM to 6 PM | 29/10/2024</p>
+                  <p className='text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight'><span className='max-lg:hidden'>From </span>8 AM <span className='max-lg:hidden'>to</span><span className='lg:hidden'>-</span> 6 PM | 29/10/<span className='max-lg:hidden'>20</span>24</p>
                 </div>
               </div>
               <div className='flex flex-col w-full h-full gap-[11px]'>
