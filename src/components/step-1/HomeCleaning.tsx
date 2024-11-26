@@ -1,5 +1,5 @@
 "use client";
-import { addBookingDetail, addServiceCategory } from "@/actions/actions";
+import { addServiceCategory } from "@/actions/actions";
 import React, { useState } from "react";
 
 const HomeCleaning = () => {
@@ -43,7 +43,7 @@ const HomeCleaning = () => {
   };
 
   const handleNext = () => {
-    addBookingDetail(selectedNumberOfBed, selectedNumberOfBathroom);
+    // addBookingDetail(selectedNumberOfBed, selectedNumberOfBathroom);
     // addServiceCategory();
   };
 
