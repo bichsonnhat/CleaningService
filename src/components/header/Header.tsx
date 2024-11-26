@@ -16,7 +16,7 @@ const Header = () => {
 
   const handleLogin = () => {
     router.push('/sign-in');
-  };
+  }; 
 
   return (
     <header className='flex justify-center bg-transparent w-full'>

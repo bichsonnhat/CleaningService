@@ -159,39 +159,23 @@ model ServiceType {
 
   // Relations
   category      ServiceCategory  @relation(fields: [categoryId], references: [id])
-  roomPricing   RoomPricing[]
-  durationPrice DurationPrice[]
   bookings      Booking[]
+  serviceDetails ServiceDetail[]
 
   @@unique([categoryId, name])
 }
 
-model RoomPricing {
-  id              String    @id @default(uuid()) @db.Uuid
-  serviceTypeId   String    @db.Uuid
-  roomType        String    @db.VarChar(50)
-  roomCount       Int?
-  additionalPrice Decimal   @default(0) @db.Decimal(10, 2)
-  createdAt       DateTime  @default(now()) @db.Timestamp()
+model ServiceDetail {
+  id                String    @id @default(uuid()) @db.Uuid
+  serviceTypeId     String    @db.Uuid
+  title             String
+  additionalPrice   Decimal   @default(0) @db.Decimal(10, 2)
+  multiplyPrice     Decimal   @default(0) @db.Decimal(10, 2)
+  createdAt         DateTime  @default(now()) @db.Timestamp()
 
   // Relations
-  serviceType     ServiceType @relation(fields: [serviceTypeId], references: [id])
-
-  @@unique([serviceTypeId, roomType, roomCount])
-}
-
-model DurationPrice {
-  id              String    @id @default(uuid()) @db.Uuid
-  serviceTypeId   String    @db.Uuid
-  durationHours   Int
-  priceMultiplier Decimal   @default(1.00) @db.Decimal(3, 2)
-  createdAt       DateTime  @default(now()) @db.Timestamp()
-
-  // Relations
-  serviceType     ServiceType @relation(fields: [serviceTypeId], references: [id])
-  bookingDetails  BookingDetail?
-
-  @@unique([serviceTypeId, durationHours])
+  serviceType       ServiceType      @relation(fields: [serviceTypeId], references: [id])
+  bookingDetails    BookingDetail[]
 }
 
 model Booking {
@@ -211,29 +195,23 @@ model Booking {
   updatedAt         DateTime      @default(now()) @updatedAt @db.Timestamp()
 
   // Relations
-  customer          User          @relation("CustomerBookings", fields: [customerId], references: [id])
-  helper           Helper?        @relation(fields: [helperId], references: [id])
-  serviceType      ServiceType    @relation(fields: [serviceTypeId], references: [id])
-  bookingDetails   BookingDetail?
-  bookingContract  BookingContract?
-  refunds          Refund[]
-  feedbacks        Feedback[]
+  customer          User            @relation("CustomerBookings", fields: [customerId], references: [id])
+  helper            Helper?         @relation(fields: [helperId], references: [id])
+  serviceType       ServiceType     @relation(fields: [serviceTypeId], references: [id])
+  bookingDetails    BookingDetail[]
+  bookingContract   BookingContract?
+  refunds           Refund[]
+  feedbacks         Feedback[]
 }
 
 model BookingDetail {
-  id                  String    @id @default(uuid()) @db.Uuid
-  bookingId           String    @unique @db.Uuid
-  durationPriceId     String    @unique @db.Uuid 
-  bedroomCount        Int       @default(0)
-  bathroomCount       Int       @default(0)
-  kitchenCount        Int       @default(0)
-  livingRoomCount     Int       @default(0)
-  specialRequirements String?
-  createdAt           DateTime  @default(now()) @db.Timestamp()
+  id                  String        @id @default(uuid()) @db.Uuid
+  bookingId           String        @db.Uuid
+  serviceDetailId     String        @db.Uuid
 
   // Relations
-  booking             Booking   @relation(fields: [bookingId], references: [id])
-  durationPrice       DurationPrice @relation(fields: [durationPriceId], references: [id])
+  booking             Booking       @relation(fields: [bookingId], references: [id])
+  serviceDetail       ServiceDetail @relation(fields: [serviceDetailId], references: [id])
 }
 
 model BookingContract {
