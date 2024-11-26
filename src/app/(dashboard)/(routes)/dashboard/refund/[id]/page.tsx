@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import { FaRegTrashAlt } from "react-icons/fa";
 import { GoArrowLeft } from "react-icons/go";
@@ -15,6 +16,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { useRouter } from 'next/navigation';
 export type Refund = {
     id: number;
     booking_id: string;
@@ -40,13 +42,16 @@ const RefundDetail = () => {
             logo: '/images/About/UIT.svg'
         }
     ]
+    const router = useRouter()
     return (
         <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded max-md:px-5 max-md:max-w-full">
             <div className="flex flex-col w-full rounded max-md:max-w-full pb-6">
                 {/* Begin Title */}
                 <div className='flex flex-row items-center justify-between'>
                     <div className='flex flex-row items-center justify-start'>
-                        <button className='h-full p-6 hover:bg-slate-200 border-r-[1px] '>
+                        <button 
+                        onClick={() => router.back()}
+                        className='h-full p-6 hover:bg-slate-200 border-r-[1px] '>
                             <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
                         </button>
                         <p className='overflow-hidden self-stretch px-3 py-5 w-full ml-5 min-h-[48px] font-Averta-Bold text-lg'>{refundData.reason}</p>
@@ -57,7 +62,7 @@ const RefundDetail = () => {
                             {/* Nút refund */}
                             <AlertDialog>
                                 <AlertDialogTrigger>
-                                    <button className='flex items-center justify-center px-8 py-2 md:w-[130px] rounded-lg font-Averta-Bold text-[13px] text-white bg-blue-600 hover:bg-blue-500'>Refund</button>
+                                    <div className='flex items-center justify-center px-8 py-2 md:w-[130px] rounded-lg font-Averta-Bold text-[13px] text-white bg-blue-600 hover:bg-blue-500'>Refund</div>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
@@ -77,7 +82,7 @@ const RefundDetail = () => {
                             {/* Nút decline */}
                             <AlertDialog>
                                 <AlertDialogTrigger>
-                                    <button className='flex items-center justify-center px-8 py-2 md:w-[130px] rounded-lg font-Averta-Bold text-[13px] text-white bg-red-600 hover:bg-red-500'>Decline</button>
+                                    <div className='flex items-center justify-center px-8 py-2 md:w-[130px] rounded-lg font-Averta-Bold text-[13px] text-white bg-red-600 hover:bg-red-500'>Decline</div>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
