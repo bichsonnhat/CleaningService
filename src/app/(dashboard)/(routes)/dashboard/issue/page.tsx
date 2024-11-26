@@ -10,7 +10,6 @@ export default function IssuePage({
 
   return (
     <div>
-      {/* <SearchAndFilter /> */}
       <IssueTable />
     </div>
   )
