@@ -1,0 +1,90 @@
+[
+    {
+      "id": "p1a2b3c4-d5e6-f7g8-h9i0-j1k2l3m4n5o6",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bedroom",
+      "roomCount": 0,
+      "additionalPrice": 0.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "q2b3c4d5-e6f7-g8h9-i0j1-k2l3m4n5o6p7",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bedroom",
+      "roomCount": 1,
+      "additionalPrice": 20.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "r3c4d5e6-f7g8-h9i0-j1k2-l3m4n5o6p7q8",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bedroom",
+      "roomCount": 2,
+      "additionalPrice": 40.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "s4d5e6f7-g8h9-i0j1-k2l3-m4n5o6p7q8r9",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bedroom",
+      "roomCount": 3,
+      "additionalPrice": 60.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "t5e6f7g8-h9i0-j1k2-l3m4-n5o6p7q8r9s0",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bedroom",
+      "roomCount": 4,
+      "additionalPrice": 80.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "u6f7g8h9-i0j1-k1l2-m3n4-o5p6q7r8s9t0",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bedroom",
+      "roomCount": 5,
+      "additionalPrice": 100.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "v7g8h9i0-j1k2-l3m4-n5o6-p7q8r9s0t1u2",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bathroom",
+      "roomCount": 1,
+      "additionalPrice": 15.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "w8h9i0j1-k2l3-m4n5-o6p7-q8r9s0t1u2v3",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bathroom",
+      "roomCount": 2,
+      "additionalPrice": 30.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "x9i0j1k2-l3m4-n5o6-p7q8-r9s0t1u2v3w4",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bathroom",
+      "roomCount": 3,
+      "additionalPrice": 45.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "y0j1k2l3-m4n5-o6p7-q8r9-s0t1u2v3w4x5",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bathroom",
+      "roomCount": 4,
+      "additionalPrice": 60.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "z1k2l3m4-n5o6-p7q8-r9s0-t1u2v3w4x5y6",
+      "serviceTypeId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "roomType": "Bathroom",
+      "roomCount": 5,
+      "additionalPrice": 75.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    }
+  ]

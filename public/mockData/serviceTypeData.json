@@ -1,0 +1,66 @@
+[
+    {
+      "id": "f1a2b3c4-d5e6-f7g8-h9i0-j1k2l3m4n5o6",
+      "categoryId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6", 
+      "name": "Standard",
+      "description": "Cleaning services tailored for residential properties.",
+      "basePrice": 100.00,
+      "createdAt": "2024-11-20T12:00:00Z",
+      "isActive": true
+    },
+    {
+      "id": "f1a2b3c4-d5e6-f7g8-h9i0-j1k2l3m4n124",
+      "categoryId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6", 
+      "name": "Deep Clean",
+      "description": "Cleaning services tailored for residential properties.",
+      "basePrice": 500.00,
+      "createdAt": "2024-11-20T12:00:00Z",
+      "isActive": true
+    },
+    {
+      "id": "f1a2b3c4-d5e6-f7g8-h9i0-j11113m4n5o6",
+      "categoryId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6", 
+      "name": "Post-Party",
+      "description": "Cleaning services tailored for residential properties.",
+      "basePrice": 10.00,
+      "createdAt": "2024-11-20T12:00:00Z",
+      "isActive": true
+    },
+    {
+      "id": "f1a2b3c4-d5e6-f7g8-h9i0-k11113m4n5o6",
+      "categoryId": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6", 
+      "name": "Post-Constructions",
+      "description": "Cleaning services tailored for residential properties.",
+      "basePrice": 10.00,
+      "createdAt": "2024-11-20T12:00:00Z",
+      "isActive": true
+    },
+    {
+      "id": "g2b3c4d5-e6f7-g8h9-i0j1-k2l3m4n5o6p7",
+      "categoryId": "b2c3d4e5-f6g7-h8i9-j0k1-l2m3n4o5p6q7",
+      "name": "Baby-Sitting",
+      "description": "Quick and effective plumbing leak repairs.",
+      "basePrice": 75.00,
+      "createdAt": "2024-11-20T12:00:00Z",
+      "isActive": true
+    },
+    {
+      "id": "h3c4d5e6-f7g8-h9i0-j1k2-l3m4n5o6p7q8",
+      "categoryId": "b2c3d4e5-f6g7-h8i9-j0k1-l2m3n4o5p6q7",
+      "name": "Caretaking",
+      "description": "Installation of new lighting fixtures and systems.",
+      "basePrice": 150.00,
+      "createdAt": "2024-11-20T12:00:00Z",
+      "isActive": true
+    },
+    {
+      "id": "i4d5e6f7-g8h9-i0j1-k2l3-m4n5o6p7q8r9",
+      "categoryId": "b2c3d4e5-f6g7-h8i9-j0k1-l2m3n4o5p6q7",
+      "name": "House Keeping",
+      "description": "Regular maintenance of gardens and outdoor spaces.",
+      "basePrice": 50.00,
+      "createdAt": "2024-11-20T12:00:00Z",
+      "isActive": true
+    }
+  ]
+  
