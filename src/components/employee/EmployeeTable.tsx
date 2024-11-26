@@ -15,13 +15,13 @@ type Employee = {
 };
 
 const columns = [
-  { header: "ID", className: "w-[8%] hidden md:table-cell" },
-  { header: "NAME", className: "w-[12%] hidden md:table-cell" },
-  { header: "ADDRESS", className: "w-[20%] hidden md:table-cell" },
-  { header: "EVALUATE", className: "w-[15%] hidden md:table-cell " },
-  { header: "PHONE", className: "w-[11%] hidden md:table-cell" },
-  { header: "EMAIL", className: "w-[20%] hidden md:table-cell" },
-  { header: "", className: "w-[8%] hidden md:table-cell" },
+  { header: "ID", className: "w-[98px] hidden md:table-cell" },
+  { header: "NAME", className: "w-[140px] hidden md:table-cell" },
+  { header: "ADDRESS", className: "w-[240px] hidden md:table-cell" },
+  { header: "EVALUATE", className: "w-[182px] hidden md:table-cell " },
+  { header: "PHONE", className: "w-[130px] hidden md:table-cell" },
+  { header: "EMAIL", className: "w-[220px] hidden md:table-cell" },
+  { header: "", className: "w-[120px] hidden md:table-cell" },
 ];
 
 const employeesData: Employee[] = [
@@ -372,7 +372,7 @@ const EmployeeTable = () => {
       />
 
       {/* title column */}
-      <div className="flex w-full bg-[#f5f5f5] h-[48px] items-center mt-4 gap-3 p-2.5">
+      <div className="flex flex-wrap w-full bg-[#f5f5f5] h-[48px] items-center mt-4 gap-3 p-2.5">
         {columns.map((col, index) => (
           <div
             key={index}
@@ -384,7 +384,7 @@ const EmployeeTable = () => {
       </div>
 
       {/* employee table */}
-      <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
+      <div className="mt-4 flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
         {currentData.map((Employee: Employee, index: any) => (
           <EmployeeRow key={Employee.id} {...Employee} />
         ))}

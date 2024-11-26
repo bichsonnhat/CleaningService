@@ -1,5 +1,6 @@
 import React from "react";
 import Star from "../employee/Star";
+import Link from "next/link";
 
 type OrderHistoryRowProps = {
   id: string;
@@ -132,10 +133,13 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
         </div>
       </div>
 
-      <div className="w-full  flex-1 flex items-center md:py-6">
-        <button className="md:w-[100px] ml-auto px-4 py-1.5 bg-[#6896d1] text-[#12153a] bg-opacity-20 text-xs rounded-[4.5px] font-semibold hover:bg-opacity-50">
+      <div className="w-full md:w-[130px] flex items-center">
+        <Link
+          href=""
+          className="ml-auto px-4 py-1.5 bg-[#6896d1] text-[#12153a] bg-opacity-20 text-xs rounded-[4.5px] font-semibold hover:bg-opacity-50"
+        >
           More Info
-        </button>
+        </Link>
       </div>
     </div>
   );

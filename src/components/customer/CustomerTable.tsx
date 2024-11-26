@@ -14,7 +14,7 @@ type Customer = {
 
 const columns = [
   { header: "ID", className: "w-[98px] hidden md:table-cell" },
-  { header: "NAME", className: "w-[240px] hidden md:table-cell" },
+  { header: "NAME", className: "w-[210px] hidden md:table-cell" },
   { header: "ADDRESS", className: "w-[315px] hidden md:table-cell" },
   { header: "PHONE", className: "w-[140px] hidden md:table-cell" },
   { header: "EMAIL", className: "w-[250px] hidden md:table-cell" },
@@ -282,7 +282,7 @@ const CustomerTable = () => {
       <SearhBar setSearchTerm={handleSearch} setSearchBy={setSearchBy} />
 
       {/* title column */}
-      <div className="flex gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
+      <div className="flex flex-wrap gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
         {columns.map((col, index) => (
           <div
             key={index}
@@ -294,7 +294,7 @@ const CustomerTable = () => {
       </div>
 
       {/* table */}
-      <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
+      <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full mt-4">
         {currentData.map((customer: Customer, index: any) => (
           <CustomerRow key={customer.id} {...customer} />
         ))}
