@@ -40,35 +40,6 @@ export async function addHelper(
   return newHelper;
 }
 
-export async function addBookingDetail(
-    bedroomCount: number,
-    bathroomCount: number,
-) {
-    const bookingDetail = await prisma.bookingDetail.create({
-        data: {
-            booking: {
-                connect: {
-                    id: randomUUID(),
-                },
-            },
-            bedroomCount,
-            bathroomCount,
-            durationPrice: {
-                create: {
-                    id: randomUUID(),
-                    durationHours: 1, // example value
-                    serviceType: {
-                        connect: {
-                            id: "some-service-type-id", // replace with actual service type id
-                        },
-                    },
-                },
-            }
-        }
-    });
-    console.log(bookingDetail);
-}
-
 export async function addServiceCategory(
 
 ) {
