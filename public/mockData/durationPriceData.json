@@ -1,0 +1,115 @@
+[
+    {
+      "id": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "serviceTypeId": "f1a2b3c4-d5e6-f7g8-h9i0-j1k2l3m4n5o6",
+      "durationHours": 2,
+      "priceMultiplier": 1.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "b2c3d4e5-f6g7-h8i9-j0k1-l2m3n4o5p6q7",
+      "serviceTypeId": "f1a2b3c4-d5e6-f7g8-h9i0-j1k2l3m4n124",
+      "durationHours": 3,
+      "priceMultiplier": 1.10,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "c3d4e5f6-g7h8-i9j0-k1l2-m3n4o5p6q7r8",
+      "serviceTypeId": "f1a2b3c4-d5e6-f7g8-h9i0-j11113m4n5o6",
+      "durationHours": 4,
+      "priceMultiplier": 1.20,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "d4e5f6g7-h8i9-j0k1-l2m3-n4o5p6q7r8s9",
+      "serviceTypeId": "f1a2b3c4-d5e6-f7g8-h9i0-k11113m4n5o6",
+      "durationHours": 5,
+      "priceMultiplier": 1.30,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "e5f6g7h8-i9j0-k1l2-m3n4-o5p6q7r8s9t0",
+      "serviceTypeId": "g2b3c4d5-e6f7-g8h9-i0j1-k2l3m4n5o6p7",
+      "durationHours": 2,
+      "priceMultiplier": 1.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "f6g7h8i9-j0k1-l2m3-n4o5-p6q7r8s9t0u1",
+      "serviceTypeId": "g2b3c4d5-e6f7-g8h9-i0j1-k2l3m4n5o6p7",
+      "durationHours": 4,
+      "priceMultiplier": 1.15,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
+      "serviceTypeId": "g2b3c4d5-e6f7-g8h9-i0j1-k2l3m4n5o6p7",
+      "durationHours": 12,
+      "priceMultiplier": 1.25,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "h8i9j0k1-l2m3-n4o5-p6q7-r8s9t0u1v2w3",
+      "serviceTypeId": "g2b3c4d5-e6f7-g8h9-i0j1-k2l3m4n5o6p7",
+      "durationHours": 24,
+      "priceMultiplier": 1.40,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "i9j0k1l2-m3n4-o5p6-q7r8-s9t0u1v2w3x4",
+      "serviceTypeId": "h3c4d5e6-f7g8-h9i0-j1k2-l3m4n5o6p7q8",
+      "durationHours": 2,
+      "priceMultiplier": 1.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "j0k1l2m3-n4o5-p6q7-r8s9-t0u1v2w3x4y5",
+      "serviceTypeId": "h3c4d5e6-f7g8-h9i0-j1k2-l3m4n5o6p7q8",
+      "durationHours": 4,
+      "priceMultiplier": 1.10,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "k1l2m3n4-o5p6-q7r8-s9t0-u1v2w3x4y5z6",
+      "serviceTypeId": "h3c4d5e6-f7g8-h9i0-j1k2-l3m4n5o6p7q8",
+      "durationHours": 12,
+      "priceMultiplier": 1.20,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "l2m3n4o5-p6q7-r8s9-t0u1-v2w3x4y5z6a7",
+      "serviceTypeId": "h3c4d5e6-f7g8-h9i0-j1k2-l3m4n5o6p7q8",
+      "durationHours": 24,
+      "priceMultiplier": 1.35,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "m3n4o5p6-q7r8-s9t0-u1v2-w3x4y5z6a7b8",
+      "serviceTypeId": "i4d5e6f7-g8h9-i0j1-k2l3-m4n5o6p7q8r9",
+      "durationHours": 2,
+      "priceMultiplier": 1.00,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "n4o5p6q7-r8s9-t0u1-v2w3-x4y5z6a7b8c9",
+      "serviceTypeId": "i4d5e6f7-g8h9-i0j1-k2l3-m4n5o6p7q8r9",
+      "durationHours": 4,
+      "priceMultiplier": 1.20,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "o5p6q7r8-s9t0-u1v2-w3x4-y5z6a7b8c9d0",
+      "serviceTypeId": "i4d5e6f7-g8h9-i0j1-k2l3-m4n5o6p7q8r9",
+      "durationHours": 12,
+      "priceMultiplier": 1.30,
+      "createdAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "p6q7r8s9-t0u1-v2w3-x4y5-z6a7b8c9d0e1",
+      "serviceTypeId": "i4d5e6f7-g8h9-i0j1-k2l3-m4n5o6p7q8r9",
+      "durationHours": 24,
+      "priceMultiplier": 1.50,
+      "createdAt": "2024-11-20T12:00:00Z"
+    }
+  ]
+  
