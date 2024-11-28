@@ -7,7 +7,10 @@ import {
   serviceDetailSchema,
 } from "../service-detail.schema";
 
-export async function GET({ params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
   try {
     const serviceDetail = await prisma.serviceDetail.findUnique({
