@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { serviceDetailSchema } from "./service-detail.schema";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const serviceDetails = await prisma.serviceDetail.findMany();
 

@@ -2,7 +2,7 @@ import prisma from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { UpdateServiceTypeSchema } from "../service-types.schema";
-import z from 'Zod';
+import z from 'zod';
 
 
 export async function GET(
