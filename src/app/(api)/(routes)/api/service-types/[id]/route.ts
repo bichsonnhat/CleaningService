@@ -1,6 +1,9 @@
 import prisma from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { UpdateServiceTypeSchema } from "../service-types.schema";
+import z from 'Zod';
+
 
 export async function GET(
     request: Request,
@@ -36,6 +39,8 @@ export async function PATCH(
   ) {
     try {
       const data = await request.json(); 
+
+      const parsedData = UpdateServiceTypeSchema.parse(data);
   
       const updatedService = await prisma.serviceType.update({
         where: {
@@ -47,11 +52,25 @@ export async function PATCH(
       return NextResponse.json(updatedService);
     } catch (error) {
       console.error("Error updating service type:", error);
+
+      if (error instanceof z.ZodError) {
+        return NextResponse.json(
+          { error: "Invalid input data", details: error.errors },
+          { status: 400 }
+        );
+      }
   
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2025") {
             return NextResponse.json(
               { error: "Service type not found" },
+              { status: 404 }
+            );
+          }
+
+          if (error.code === 'P2003') {
+            return NextResponse.json(
+              { error: `Category id  not found.` },
               { status: 404 }
             );
           }

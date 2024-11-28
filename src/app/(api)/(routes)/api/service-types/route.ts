@@ -1,5 +1,8 @@
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
+import { ServiceTypeSchema } from "./service-types.schema";
+import z from 'Zod';
+import { Prisma } from "@prisma/client";
 
 export async function GET() {
     try {
@@ -15,14 +18,16 @@ export async function GET() {
   }
 
 export async function POST(request: Request) {
+  
     try {
       const data = await request.json();
+      const parsedData = ServiceTypeSchema.parse(data)
       const serviceType = await prisma.serviceType.create({
         data: {
-            categoryId: data.categoryId,
-          name: data.name,
-          description: data.description,
-          basePrice: data.basePrice,
+            categoryId: parsedData.categoryId,
+          name: parsedData.name,
+          description: parsedData.description,
+          basePrice: parsedData.basePrice,
           isActive: true,
         },
       });
@@ -30,6 +35,23 @@ export async function POST(request: Request) {
       return NextResponse.json(serviceType);
     } catch (error) {
       console.error('Error creating service:', error);
+      
+      if (error instanceof z.ZodError) {
+        return NextResponse.json(
+          { error: "Invalid input data", details: error.errors },
+          { status: 400 }
+        );
+      }
+
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2003') {
+          return NextResponse.json(
+            { error: `Category id  not found.` },
+            { status: 404 }
+          );
+        }
+      }
+
       return NextResponse.json(
         { error: 'Failed to create service' },
         { status: 500 }
