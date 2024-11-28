@@ -13,12 +13,11 @@ type Customer = {
 };
 
 const columns = [
-  { header: "ID", className: "w-[98px] hidden md:table-cell" },
-  { header: "NAME", className: "w-[210px] hidden md:table-cell" },
-  { header: "ADDRESS", className: "w-[315px] hidden md:table-cell" },
+  { header: "ID", className: "w-[130px] hidden md:table-cell" },
+  { header: "NAME", className: "w-[230px] hidden md:table-cell" },
+  { header: "ADDRESS", className: "w-[370px] hidden md:table-cell" },
   { header: "PHONE", className: "w-[140px] hidden md:table-cell" },
   { header: "EMAIL", className: "w-[250px] hidden md:table-cell" },
-  { header: "", className: "w-[120px] hidden md:table-cell" },
 ];
 
 const customersData: Customer[] = [
