@@ -26,7 +26,7 @@ export type Feedback = {
 const feedbackData: Feedback[] = [
   {
     id: 1,
-    customerName: "Jullu Jalal",
+    customerName: "Khang Trung Trương Peso",
     sentiment: "Positive" as "Positive",
     message: "Get Best Advertiser In Your Side Pocket",
     createdAt: "2023-10-15T08:13:00Z",
@@ -286,7 +286,7 @@ export default function FeedbackTable() {
 
   return (
     <>
-    <div className="flex flex-row justify-between items-center">
+    <div className="flex flex-wrap flex-row gap-2 justify-between items-center">
       <SearchBarAndFilter
         setSearchTerm={setSearchTerm}
         setSearchBy={setSearchBy}
@@ -295,7 +295,7 @@ export default function FeedbackTable() {
 
 <AlertDialog>
                                 <AlertDialogTrigger>
-                                <div className="flex flex-row gap-2 items-center justify-center px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
         <Image src="/images/Dashboard/Feedback/Trash.svg" alt="" width={18} height={18} />
           Delete
         </div>
@@ -321,9 +321,9 @@ export default function FeedbackTable() {
                             </AlertDialog>
     </div>
 
-      <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded max-md:px-5 max-md:max-w-full">
-        <div className="flex flex-col w-full rounded max-md:max-w-full">
-          <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 max-md:max-w-full">
+      <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded ">
+        <div className="flex flex-col w-full rounded ">
+          <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 ">
             {currentData.map((feedback: Feedback, index: any) => (
               <FeedbackRow key={feedback.id} {...feedback} />
             ))}
