@@ -1,9 +1,26 @@
 import { Separator } from "@/components/ui/separator"
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import React from 'react'
+import React, { useState } from 'react'
+import { revalidatePath } from "next/cache";
+import { useRouter } from "next/navigation";
 
 const Booking5Right = () => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const handlePayment = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/stripe');
+      const data = await response.json();
+      router.push(data.url);
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="w-full md:w-1/3 p-4 bg-gray-100 min-h-screen">
       <p className="text-4xl mx-auto font-Averta-Bold mb-4 mt-[50px]">Billing</p>
@@ -67,7 +84,7 @@ const Booking5Right = () => {
       </div>
 
       <div className="flex justify-center items-center ">
-        <Button className="md:w-1/3 h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">Place order</Button>
+        <Button className="md:w-1/3 h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]" onClick={handlePayment}>Place order</Button>
       </div>
     </div>
   )

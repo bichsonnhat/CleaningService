@@ -16,13 +16,12 @@ type OrderHistory = {
 };
 
 const columns = [
-  { header: "HELPER", className: "w-[200px] hidden md:table-cell" },
-  { header: "ADDRESS", className: "w-[230px] hidden md:table-cell" },
-  { header: "TIME", className: "w-[190px] hidden md:table-cell" },
-  { header: "RATING", className: "w-[100px] hidden md:table-cell mr-10" },
-  { header: "PRICE", className: "w-[100px] hidden md:table-cell " },
-  { header: "STATUS", className: "w-[140px] hidden md:table-cell" },
-  { header: "", className: "w-[120px] hidden md:table-cell" },
+  { header: "HELPER", className: "w-[210px] hidden md:table-cell" },
+  { header: "ADDRESS", className: "w-[340px] hidden md:table-cell" },
+  { header: "TIME", className: "w-[200px] hidden md:table-cell" },
+  { header: "RATING", className: "w-[110px] hidden md:table-cell mr-10" },
+  { header: "PRICE", className: "w-[120px] hidden md:table-cell " },
+  { header: "STATUS", className: "w-[120px] hidden md:table-cell" },
 ];
 
 const ordersData: OrderHistory[] = [

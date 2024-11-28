@@ -1,0 +1,41 @@
+[
+    {
+      "id": "e1a5f2c3-89ab-456d-9f08-abc123456789",
+      "helperId": "0dfb34e6-23c3-4ea2-8d0c-2c5d6e0bb5a1",
+      "startDatetime": "2024-11-25T08:00:00Z",
+      "endDatetime": "2024-11-25T16:00:00Z",
+      "availabilityType": "Personal",
+      "status": "approved",
+      "requestReason": null,
+      "rejectionReason": null,
+      "approvedById": "f3b1c8d7-2def-4e89-8a9e-987654321abc",
+      "createdAt": "2024-11-20T12:00:00Z",
+      "updatedAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "f5d7e8a9-9b01-4c23-bcde-56789abcdef1",
+      "helperId": "47e0f50a-871c-4937-b593-d4c29d8a6cb4",
+      "startDatetime": "2024-11-26T09:00:00Z",
+      "endDatetime": "2024-11-26T15:00:00Z",
+      "availabilityType": "Sick",
+      "status": "pending",
+      "requestReason": "Requested leave on 2024-11-27.",
+      "rejectionReason": null,
+      "approvedById": null,
+      "createdAt": "2024-11-20T12:00:00Z",
+      "updatedAt": "2024-11-20T12:00:00Z"
+    },
+    {
+      "id": "a2c5e6f7-1d2b-3f4a-5b6c-7d8e9f0abc12",
+      "helperId": "b7a3c762-66c3-4235-9cc1-7b3d8c8de0cd",
+      "startDatetime": "2024-11-27T10:00:00Z",
+      "endDatetime": "2024-11-27T18:00:00Z",
+      "availabilityType": "Personal",
+      "status": "rejected",
+      "requestReason": "Doctor's appointment.",
+      "rejectionReason": "Unavailable due to prior commitments.",
+      "approvedById": null,
+      "createdAt": "2024-11-20T12:00:00Z",
+      "updatedAt": "2024-11-20T12:00:00Z"
+    }
+  ]

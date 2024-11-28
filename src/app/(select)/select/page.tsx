@@ -7,7 +7,7 @@ const Select = () => {
   const [selectService, setSelectService] = useState("");
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-full pb-8">
       <div className="w-full h-[75px]">
         <div className="w-[5%] h-full flex items-center justify-center">
           <button>
@@ -33,9 +33,9 @@ const Select = () => {
             What we have to offer:
           </h5>
         </div>
-        <div className="w-[80%] h-[450px] flex flex-row items-center justify-center divide-x-2 divide-dashed m-auto border-2 rounded-2xl p-[20px] shadow-xl">
+        <div className="w-[80%] h-fit flex flex-col sm:flex-row max-sm:justify-center max-sm:items-center max-sm:divide-y-2 sm:divide-x-2 divide-dashed m-auto border-2 rounded-2xl p-[20px] shadow-xl">
           <div
-            className="w-[50%] h-full flex flex-col items-center justify-center gap-[10px] hover:cursor-pointer"
+            className="w-[80%] sm:w-[50%] h-full flex flex-col items-center justify-center gap-[10px] hover:cursor-pointer max-sm:pb-5"
             onMouseEnter={() => setSelectService("Home Service")}
             onMouseLeave={() => setSelectService("")}
           >
@@ -67,7 +67,7 @@ const Select = () => {
             </div>
           </div>
           <div
-            className="w-[50%] h-full flex flex-col items-center justify-center gap-[10px] hover:cursor-pointer"
+            className="w-[80%] sm:w-[50%] h-full flex flex-col items-center justify-center gap-[10px] hover:cursor-pointer max-sm:pt-5"
             onMouseEnter={() => setSelectService("Other Service")}
             onMouseLeave={() => setSelectService("")}
           >
