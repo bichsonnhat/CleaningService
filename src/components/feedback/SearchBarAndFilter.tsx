@@ -30,7 +30,7 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
     setIsDropdownOpen(false);
   };
 
-  const searchByOptions = ["Name", "Sentiment", "Message", "Date"];
+  const searchByOptions = ["Customer", "Sentiment", "Message", "Date"];
 
   return (
     <>
@@ -88,7 +88,7 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
           <FilterDropdown onFilterChange={onFilterChange} />
         </div>
 
-        <button className="flex flex-row justify-center items-center px-7 h-[38px] bg-[#e11b1a] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose text-center text-white gap-1.5">
+        {/* <button className="flex flex-row justify-center items-center px-7 h-[38px] bg-[#e11b1a] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose text-center text-white gap-1.5">
           <Image
             src="/images/Dashboard/Feedback/Trash.svg"
             alt=""
@@ -96,7 +96,7 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
             height={18}
           />
           <p>Delete</p>
-        </button>
+        </button> */}
       </div>
     </>
   );
