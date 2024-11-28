@@ -11,10 +11,10 @@ type CategoryService = {
   basePrice: number;
 };
 const columns = [
-  { header: "NAME", className: "w-[210px] hidden md:table-cell" },
-  { header: "DESCRIPTION", className: "w-[600px] hidden md:table-cell" },
-  { header: "SERVICE TYPE", className: "w-[210px] hidden md:table-cell" },
-  { header: "BASE PRICE", className: "w-[150px] hidden md:table-cell" },
+  { header: "NAME", className: "w-[210px] hidden xl:table-cell" },
+  { header: "DESCRIPTION", className: "w-[600px] hidden xl:table-cell" },
+  { header: "SERVICE TYPE", className: "w-[210px] hidden xl:table-cell" },
+  { header: "BASE PRICE", className: "w-[150px] hidden xl:table-cell" },
 ];
 const CategoryServicesData: CategoryService[] = [
   {

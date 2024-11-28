@@ -16,15 +16,25 @@ type Order = {
   status: "Pending" | "In Progress" | "Cancelled" | "Completed";
 };
 
+// const columns = [
+//   { header: "CUSTOMER", className: "w-[150px] hidden md:table-cell" },
+//   { header: "HELPER", className: "w-[150px] hidden md:table-cell" },
+//   { header: "ADDRESS", className: "w-[190px] hidden md:table-cell flex-1" },
+//   { header: "TIME", className: "w-[167px] hidden md:table-cell text-center" },
+//   { header: "RATING", className: "w-[100px] hidden md:table-cell mr-6" },
+//   { header: "PRICE", className: "w-[90px] hidden md:table-cell " },
+//   { header: "STATUS", className: "w-[140px] hidden md:table-cell text-center" },
+//   // { header: "", className: "w-[130px] hidden md:table-cell" },
+// ];
+
 const columns = [
-  { header: "CUSTOMER", className: "w-[150px] hidden md:table-cell" },
-  { header: "HELPER", className: "w-[150px] hidden md:table-cell" },
-  { header: "ADDRESS", className: "w-[190px] hidden md:table-cell" },
-  { header: "TIME", className: "w-[167px] hidden md:table-cell" },
-  { header: "RATING", className: "w-[100px] hidden md:table-cell mr-6" },
-  { header: "PRICE", className: "w-[90px] hidden md:table-cell " },
-  { header: "STATUS", className: "w-[140px] hidden md:table-cell" },
-  { header: "", className: "w-[130px] hidden md:table-cell" },
+  { header: "CUSTOMER", className: "w-[130px] flex-[3] hidden md:table-cell " }, // Ít thông tin, không cần rộng
+  { header: "HELPER", className: "w-[130px] flex-[3] hidden md:table-cell " },   // Tương tự CUSTOMER
+  { header: "ADDRESS", className: "w-[250px] flex-[5] hidden md:table-cell " }, // Thông tin thường dài, cần rộng hơn
+  { header: "TIME", className: "w-[130px] flex-[3] hidden md:table-cell text-center" }, // Số liệu ngắn, đủ hẹp
+  { header: "RATING", className: "w-[120px] flex-[3] hidden md:table-cell text-center" }, // Nội dung ngắn
+  { header: "PRICE", className: "w-[120px] flex-[2] hidden md:table-cell text-center" },  // Số liệu ngắn
+  { header: "STATUS", className: "w-[120px] flex-[3] hidden md:table-cell text-center" }, // Có thể cần rộng hơn chút
 ];
 
 const ordersData: Order[] = [
@@ -415,7 +425,7 @@ const OrderTable = () => {
       <SearchBar setSearchTerm={handleSearch} setSearchBy={setSearchBy} />
 
       {/* title column */}
-      <div className="flex gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
+      <div className="lg:flex hidden gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5 ">
         {columns.map((col, index) => (
           <div
             key={index}

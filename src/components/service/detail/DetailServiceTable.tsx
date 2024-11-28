@@ -117,7 +117,7 @@ const DetailServiceTable = () => {
       />
 
       {/* title column */}
-      <div className="flex gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
+      <div className="xl:flex gap-3 w-full hidden bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
         {columns.map((col, index) => (
           <div
             key={index}
@@ -127,7 +127,7 @@ const DetailServiceTable = () => {
           </div>
         ))}
       </div>
-      <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
+      <div className="flex overflow-hidden flex-col max-xl:mt-4 rounded-lg justify-center w-full max-md:max-w-full">
         {currentData.map((category: DetailService, index: any) => (
           <DetailServiceRow key={category.id} {...category} />
         ))}

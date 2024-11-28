@@ -1,18 +1,21 @@
+'use client'
 import React from 'react'
 import { FaRegTrashAlt } from "react-icons/fa";
-import { GoArrowLeft } from "react-icons/go";
 import { LuArrowLeft } from "react-icons/lu";
 import Image from 'next/image';
 import { Feedback } from '@/components/feedback/FeedbackTable';
+import { useRouter } from 'next/navigation';
 
 
 const FeedbackDetail = () => {
+    const router = useRouter();
+
     const feedbackData: Feedback = {
         id: 1,
-        name: "Jullu Jalal",
+        customerName: "Jullu Jalal",
         sentiment: "Neutral" as "Neutral",
         message: "Get Best Advertiser In Your Side Pocket",
-        date: "OCT 15 - 8:13 AM"
+        createdAt: "2023-10-15T08:13:00Z"
     }
 
     const logo = [
@@ -29,13 +32,28 @@ const FeedbackDetail = () => {
         feedbackData.sentiment === 'Negative' ? 'bg-[#fcd7d4] text-[#ef3826]' :
             'bg-[#ccd0d9] text-[#2b3641]';
 
+    const formatDate = (date: string) => {
+        const newDate = new Date(date);
+
+        const hours = newDate.getHours().toString().padStart(2, '0');
+        const minutes = newDate.getMinutes().toString().padStart(2, '0');
+
+        const day = newDate.getDate().toString().padStart(2, '0');
+        const month = (newDate.getMonth() + 1).toString().padStart(2, '0');
+        const year = newDate.getFullYear();
+
+        return `${hours}:${minutes} - ${day}/${month}/${year}`;
+    }
+
     return (
         <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded max-md:px-5 max-md:max-w-full">
             <div className="flex flex-col w-full rounded max-md:max-w-full pb-6">
                 {/* Begin Title */}
                 <div className='flex flex-row items-center justify-between'>
                     <div className='flex flex-row items-center justify-start'>
-                        <button className='h-full p-6 hover:bg-slate-200 border-r-[1px] '>
+                        <button
+                        onClick={() => router.back()}
+                        className='h-full p-6 hover:bg-slate-200 border-r-[1px] '>
                             <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
                         </button>
                         <p className='overflow-hidden self-stretch px-3 py-5 w-full ml-5 min-h-[48px] font-Averta-Bold text-lg'>{feedbackData.message}</p>
@@ -68,13 +86,13 @@ const FeedbackDetail = () => {
                             style={{ width: '60px', height: 'auto' }}
                         />
                         <div className='flex flex-row self-stretch items-center mx-4'>
-                            <p className=' font-bold font-Averta-Semibold text-lg mr-1'>{feedbackData.name}</p>
+                            <p className=' font-bold font-Averta-Semibold text-lg mr-1'>{feedbackData.customerName}</p>
                             <p className='text-xs font-semibold text-neutral-600 font-Averta-Regular mt-0.5'>{'<customer>'}</p>
                         </div>
                     </div>
 
 
-                    <p className=" py-4 font-Averta-Regular text-sm text-gray-400">{feedbackData.date}</p>
+                    <p className=" py-4 font-Averta-Regular text-sm text-gray-400">{formatDate(feedbackData.createdAt)}</p>
                 </div>
                 {/* End Sender info */}
 
