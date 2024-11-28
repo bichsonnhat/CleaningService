@@ -75,21 +75,21 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
 
   return (
     <div className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto items-start md:items-center p-2.5 cursor-pointer">
-      <div className="w-full md:w-[200px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
+      <div className="w-full md:w-[210px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="md:hidden font-bold">HELPER: </span>
           {helperName}
         </div>
       </div>
 
-      <div className="w-full md:w-[230px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
+      <div className="w-full md:w-[340px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="md:hidden font-bold">ADDRESS: </span>
           {location}
         </div>
       </div>
 
-      <div className="w-full md:w-[190px] flex items-center justify-start md:pl-0 mb-2 md:mb-0">
+      <div className="w-full md:w-[200px] flex items-center justify-start md:pl-0 mb-2 md:mb-0">
         <div className="text-xs text-[#1D2C4C80] font-semibold">
           <span className="md:hidden font-bold text-[#202224]">TIME:</span>
 
@@ -103,7 +103,7 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
         </div>
       </div>
 
-      <div className="w-full md:w-[100px] flex items-center justify-center md:pl-0 mb-2 md:mb-0 mr-10">
+      <div className="w-full md:w-[110px] flex items-center justify-start md:pl-0 mb-2 md:mb-0 mr-10">
         <div className="text-xs text-[#1D2C4C80] font-semibold text-center">
           <span className="md:hidden font-bold text-[#202224]">RATING:</span>
           {renderRating()}
@@ -113,33 +113,24 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
         </div>
       </div>
 
-      <div className="w-full md:w-[100px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
+      <div className="w-full md:w-[120px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224cc]">
           <span className="md:hidden font-bold">PRICE: </span>
           {`$${totalPrice}`}
         </div>
       </div>
 
-      <div className="w-full md:w-[140px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
+      <div className="w-full md:w-[120px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224cc]">
           <span className="md:hidden font-bold">STATUS: </span>
           <div
-            className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-h-[27px] ${statusColor}  bg-opacity-20 rounded-md`}
+            className={`md:w-[100px] text-center flex relative gap-4 justify-between items-start px-4 py-1.5 min-h-[27px] ${statusColor}  bg-opacity-20 rounded-md`}
           >
             <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px]">
               {status}
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="w-full md:w-[130px] flex items-center">
-        <Link
-          href=""
-          className="ml-auto px-4 py-1.5 bg-[#6896d1] text-[#12153a] bg-opacity-20 text-xs rounded-[4.5px] font-semibold hover:bg-opacity-50"
-        >
-          More Info
-        </Link>
       </div>
     </div>
   );
