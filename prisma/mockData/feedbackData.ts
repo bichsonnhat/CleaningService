@@ -1,33 +1,33 @@
-[
+export const feedbackData = [
     {
-      "id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6",
-      "booking_id": "b1c2d3e4-f5g6-h7i8-j9k0-l1m2n3o4p5q6",
+      "id": "465d9bdf-7992-4087-bf9f-868b74509c19",
+      "booking_id": "4a961bfb-4ffd-45a7-9291-09471fb19470",
       "reportedBy": true,
       "helperRating": 5,
       "title": "Excellent Service",
       "description": "The helper was punctual, thorough, and extremely professional. I am very satisfied with the service.",
-      "created_at": "2024-11-20T12:00:00Z",
-      "updated_at": "2024-11-20T12:00:00Z"
+      "created_at": new Date(),
+      "updated_at": new Date()
     },
     {
-      "id": "b2c3d4e5-f6g7-h8i9-j0k1-l2m3n4o5p6q7",
-      "booking_id": "c2d3e4f5-g6h7-i8j9-k0l1-m2n3o4p5q6r7",
+      "id": "8a1776de-5ef4-4556-b5e7-b8d55858dbf4",
+      "booking_id": "5d8b0ceb-d7dd-4a41-8d62-ffb9d8c7f143",
       "reportedBy": true,
       "helperRating": 4,
       "title": "Good Overall",
       "description": "The service was good, but there was a slight delay in arrival. The cleaning was done well.",
-      "created_at": "2024-11-20T12:00:00Z",
-      "updated_at": "2024-11-20T12:00:00Z"
+      "created_at": new Date(),
+      "updated_at": new Date()
     },
     {
-      "id": "c3d4e5f6-g7h8-i9j0-k1l2-m3n4o5p6q7r8",
-      "booking_id": "f5g6h7i8-j9k0-l1m2-n3o4-p5q6r7s8t9u0",
+      "id": "a7d94906-e2b5-44b7-b09f-f81544c08c41",
+      "booking_id": "ae6853e4-a950-4639-848e-2b533c448733",
       "reportedBy": false,
       "helperRating": 3,
       "title": "Satisfactory Service",
       "description": "The cleaning was average, and some areas were missed. The helper was polite and responsive, though.",
-      "created_at": "2024-11-20T12:00:00Z",
-      "updated_at": "2024-11-20T12:00:00Z"
+      "created_at": new Date(),
+      "updated_at": new Date()
     }
   ]
   
