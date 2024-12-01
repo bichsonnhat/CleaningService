@@ -116,15 +116,16 @@ const OrderRow: React.FC<OrderRowProps> = ({
 
       <div className="lg:flex-[3] w-full lg:w-[130px] flex items-center justify-start lg:justify-center lg:pl-0 mb-2 lg:mb-0">
         <div className="flex-row flex text-xs text-[#1D2C4C80] font-semibold">
-          <span className="lg:hidden font-bold text-[#202224] mr-2">TIME:  </span>
+          <span className="lg:hidden font-bold text-[#202224] text-sm mr-2">TIME:  </span>
 
-          <div className="flex flex-row lg:flex-col lg:items-center lg:text-sm">
+          <div className="flex flex-row lg:flex-col lg:items-center items-center lg:text-sm">
             <span className="text-[#677582]">
               {/* {startTimeString}{" "}
               <span className="text-[#1D2C4C80] mx-1">-</span> {endTimeString} */}
               {formatBookingTime(scheduledStartTime, scheduledEndTime)}
             </span>
-            <span className="text-[#1D2C4C80] lg:ml-2">{formatBookingDate(scheduledStartTime)}</span>
+            <span className="text-[#1D2C4C80] ml-2 lg:hidden">| {formatBookingDate(scheduledStartTime)}</span>
+            <span className="text-[#1D2C4C80] hidden lg:block">{formatBookingDate(scheduledStartTime)}</span>
           </div>
         </div>
       </div>

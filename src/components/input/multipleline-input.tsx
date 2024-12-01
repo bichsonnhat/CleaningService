@@ -4,11 +4,12 @@ import React, { useState } from 'react';
 import { Label } from '../ui/label';
 
 interface MultiLineInputProps {
-    labelText: string;
+    labelText?: string;
     inputPlaceholder: string;
     inputId: string;
     inputWidth?: string;
     inputHeight?: string;
+    hasLabel: boolean;
 }
 
 export function MultiLineInput({
@@ -16,7 +17,8 @@ export function MultiLineInput({
     inputPlaceholder,
     inputId,
     inputWidth = "w-full",
-    inputHeight = "h-full"
+    inputHeight = "h-full",
+    hasLabel,
 }: MultiLineInputProps) {
     const [inputValue, setInputValue] = useState('');
 
@@ -40,7 +42,6 @@ export function MultiLineInput({
                 onChange={handleChange}
                 placeholder={inputPlaceholder}
             />
-            {/* <p className="mt-2 text-gray-600">You have typed: {inputValue}</p> */}
         </div>
     );
 };

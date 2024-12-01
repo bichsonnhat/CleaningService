@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const searchByOptions = ["Customer", "Rating", "Price", "Status"];
   return (
     <>
-      <div className="flex flex-wrap gap-10 w-full max-md:max-w-full">
+      <div className="flex flex-wrap gap-10 w-full max-md:max-w-full mb-3">
         <div className="flex gap-5 justify-center my-auto min-w-[240px]">
           <form className="flex items-center my-auto text-sm text-center min-w-[240px] text-neutral-800 w-[252px]">
             <div className="flex self-stretch my-auto min-w-[240px] w-[252px]">
