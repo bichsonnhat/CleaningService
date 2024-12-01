@@ -3,6 +3,8 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import FileDownloadCard from "@/components/card/FileDownloadCard";
+import { ComboboxInput } from "@/components/input/combobox-input";
+import { MultipleChoiceInput } from "@/components/input/multiplechoice-input";
 
 const genderOptions = ["Female", "Male", "Other"];
 
@@ -17,10 +19,11 @@ const EmployeeInfo = () => {
       <div className="md:w-2/3 pb-10 bg-white min-h-screen">
         <div className="flex flex-row">
           <Image
-            src="/images/exit-button.png"
+            src="/images/Dashboard/Personal/exit-button.png"
             alt="X-button"
             width={70}
             height={70}
+            className='cursor-pointer hover:bg-[#ededed]'
           />
           <p className="font-Averta-Bold text-4xl text-center my-auto ml-[10px]">
             User Info
@@ -46,10 +49,8 @@ const EmployeeInfo = () => {
               />
             </div>
             <div className="md:ml-2 md:mt-0">
-              <InputWithLabel
+              <ComboboxInput
                 labelText="GENDER"
-                inputType="combobox"
-                inputPlaceholder=""
                 inputId="gender"
                 defaultValue={genderOptions.at(0)}
                 inputWidth="6.875vw"
@@ -135,10 +136,8 @@ const EmployeeInfo = () => {
           </div>
 
           <div className="mt-[30px]">
-            <InputWithLabel
+            <MultipleChoiceInput
               labelText="OFFERED SERVICES"
-              inputType="multipleChoice"
-              inputPlaceholder="Add new service"
               inputId="houseNum"
               inputWidth="43.125vw"
               plusPX="16px"
