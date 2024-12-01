@@ -15,13 +15,12 @@ type Employee = {
 };
 
 const columns = [
-  { header: "ID", className: "w-[98px] hidden md:table-cell" },
-  { header: "NAME", className: "w-[140px] hidden md:table-cell" },
-  { header: "ADDRESS", className: "w-[240px] hidden md:table-cell" },
+  { header: "ID", className: "w-[130px] hidden md:table-cell" },
+  { header: "NAME", className: "w-[170px] hidden md:table-cell" },
+  { header: "ADDRESS", className: "w-[300px] hidden md:table-cell" },
   { header: "EVALUATE", className: "w-[182px] hidden md:table-cell " },
   { header: "PHONE", className: "w-[130px] hidden md:table-cell" },
   { header: "EMAIL", className: "w-[220px] hidden md:table-cell" },
-  { header: "", className: "w-[120px] hidden md:table-cell" },
 ];
 
 const employeesData: Employee[] = [
