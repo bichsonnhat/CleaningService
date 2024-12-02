@@ -1,16 +1,16 @@
-[
+export const serviceCategoryData = [
     {
-      "id": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+      "id": "e30f77d9-c79d-42c0-b521-875b59a28a68",
       "name": "Home Cleaning",
       "description": "Comprehensive cleaning solutions for homes and offices.",
-      "createdAt": "2024-11-20T12:00:00Z",
+      "createdAt": new Date(),
       "isActive": true
     },
     {
-      "id": "b2c3d4e5-f6g7-h8i9-j0k1-l2m3n4o5p6q7",
+      "id": "f6902cb1-da83-4d1e-bd10-4ea641901031",
       "name": "Other Services",
       "description": "Expert plumbing repairs and installations.",
-      "createdAt": "2024-11-20T12:00:00Z",
+      "createdAt": new Date(),
       "isActive": true
     }
   ]
