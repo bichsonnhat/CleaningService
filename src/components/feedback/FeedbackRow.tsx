@@ -34,7 +34,6 @@ const FeedbackRow: React.FC<FeedbackRowProps> = ({ customerName, sentiment, mess
     <div 
     onClick={() => router.push(`feedback/${customerName}`)}
     className={`flex overflow-hidden flex-col xl:flex-row flex-wrap w-full border-b px-4 border-gray-200 xl:h-[80px] cursor-pointer bg-white hover:bg-[#f4f7ff]`}>
-      
       <div onClick={(e) => e.stopPropagation()} className={`relative flex flex-[1] flex-col xl:justify-center `}>
         <div className="max-xl:absolute flex overflow-hidden items-center justify-end xl:justify-center max-xl:mt-2 pl-px w-full min-h-[48px]">
           <Checkbox onClick={(e) => e.stopPropagation()}  onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
