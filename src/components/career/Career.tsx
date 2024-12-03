@@ -46,7 +46,7 @@ const Career = () => {
 
     return (
         <div className="flex flex-col justify-center items-center">
-            <div className="relative">
+            <div className="relative z-[-999]">
                 <Image
                     src="/images/Career/CareerBackground.svg"
                     alt="HeroIllustration"
@@ -57,9 +57,9 @@ const Career = () => {
                 />
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     <div className="font-Averta-Bold text-center text-5xl mt-10">
-                        <p className="leading-normal">Treat Employees Like</p>
-                        <p className="leading-normal">Your Own Customers</p>
-                        <button className="px-16 py-3 mt-[9%] bg-[#1b78f2] rounded-xl text-lg font-Averta-Semibold tracking-normal leading-loose text-center text-white">
+                        <p className="text-2xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight">Treat Employees Like</p>
+                        <p className="text-2xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight">Your Own Customers</p>
+                        <button className="px-7 lg:px-14 py-2 lg:py-3 bg-[#1b78f2] rounded-xl text-base font-Averta-Semibold tracking-normal leading-loose text-center text-white">
                             Join Our Team
                         </button>
                     </div>
@@ -74,7 +74,7 @@ const Career = () => {
                     className="absolute inset-0 object-cover"
                 />
                 <div className="flex flex-col absolute inset-0 items-center justify-center">
-                    <h2 className="text-white text-4xl font-Averta-Bold z-10">
+                    <h2 className="text-white text-4xl font-Averta-Bold z-10 ">
                         <p>Our accreditions</p>
                     </h2>
                     <div className="container mx-auto mt-20">
@@ -84,7 +84,7 @@ const Career = () => {
                                     key={accredition.logo}
                                     className="flex items-center justify-center"
                                 >
-                                    <div className="relative w-full h-[40px] md:h-[50px] lg:h-[60px]">
+                                    <div className="relative w-full h-[40px] sm:h[50px] md:h-[60px] lg:h-[70px] xl:h[80px]">
                                         <Image
                                             src={accredition.logo}
                                             alt="ClientLogo"
@@ -100,34 +100,38 @@ const Career = () => {
             </div>
             {/* Benefits */}
             <div className="flex flex-col max-w-[1000px] pt-[112px] items-center justify-center">
-                <div className="font-Averta-Bold text-5xl w-full flex flex-col gap-5">
+                <div className="font-Averta-Bold xl:text-5xl text-2xl md:text-3xl lg:text-4xl  w-full flex flex-col gap-5">
                     <p>What can Shield Cleaning do for you?</p>
                 </div>
             </div>
             <div className="flex w-full h-fit items-center justify-center mt-28">
-                <div className="grid grid-cols-2 max-w-[1000px] w-full gap-24">
-                    {Benefits.map(({ title, description, logo }, index) => (
-                        <div key={index} className="flex flex-col gap-y-8">
-                            <Image
-                                src={logo}
-                                alt="benefit"
-                                width={0}
-                                height={0}
-                                sizes="100vw"
-                                style={{ width: "100px", height: "100px" }}
-                            />
-                            <div className="flex flex-col gap-y-2">
-                                <p className="font-Averta-Bold text-3xl">
-                                    {title}
-                                </p>
-                                <p className="text-neutral-500">
-                                    {description}
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+  <div className="grid grid-cols-1 lg:grid-cols-2 max-w-[1000px] w-full gap-12 lg:gap-24">
+    {Benefits.map(({ title, description, logo }, index) => (
+      <div 
+        key={index} 
+        className="flex flex-col items-center text-center lg:items-start lg:text-left justify-center lg:justify-start gap-y-6 lg:gap-y-8"
+      >
+        <Image
+          src={logo}
+          alt="benefit"
+          width={0}
+          height={0}
+          sizes="100vw"
+          className="w-24 h-[70px] md:h-[80px] lg:h-[100px]"
+        />
+        <div className="flex flex-col gap-y-3">
+          <p className="font-Averta-Bold text-2xl lg:text-3xl leading-tight lg:leading-snug">
+            {title}
+          </p>
+          <p className="text-neutral-500 text-sm lg:text-base leading-relaxed">
+            {description}
+          </p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
             {/* Make a request */}
             <div className="w-full h-[393px] relative mt-28 ">
                 <Image
@@ -137,10 +141,10 @@ const Career = () => {
                     className="absolute inset-0 object-cover"
                 />
                 <div className="flex flex-col absolute inset-0 items-center justify-center">
-                    <p className="font-Averta-Bold text-center text-5xl mb-14">
+                    <p className="font-Averta-Bold text-center mb-14 text-2xl md:text-3xl lg:text-4xl xl:text-5xl  leading-tight">
                         The Ultimate Cleaning Companion
                     </p>
-                    <button className="px-14 py-3 bg-[#1b78f2] rounded-xl text-base font-Averta-Semibold tracking-normal leading-loose text-center text-white">
+                    <button className=" px-7 lg:px-14 py-2 lg:py-3 bg-[#1b78f2] rounded-xl text-base font-Averta-Semibold tracking-normal leading-loose text-center text-white">
                         Request a Quote
                     </button>
                 </div>
