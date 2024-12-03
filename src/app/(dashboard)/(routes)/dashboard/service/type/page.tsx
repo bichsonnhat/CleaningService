@@ -1,10 +1,10 @@
-import CategoryServiceTable from "@/components/service/category/CategoryServiceTable";
+import ServiceTypeTable from "@/components/service/type/ServiceTypeTable";
 import React from "react";
 
 const CategoryServicePage = () => {
   return (
     <div>
-      <CategoryServiceTable />
+      <ServiceTypeTable />
     </div>
   );
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,12 +17,63 @@ import {
   createServiceDetailData,
   serviceDetailSchema,
 } from "@/schema/serviceDetailSchema";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function CreateServiceDetailPopup() {
+  const queryClient = useQueryClient();
+
+  const fetchServiceTypesUrl = "http://localhost:3000/api/service-types";
+
+  const createServiceDetailUrl = "http://localhost:3000/api/service-detail";
+
+  const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const form = useForm<createServiceDetailData>({
     mode: "onSubmit",
     resolver: zodResolver(serviceDetailSchema),
   });
+
+  const fetchServiceTypes = async () => {
+    try {
+      const response = await fetch(fetchServiceTypesUrl);
+      if (!response.ok) {
+        throw new Error("Error fetching service types");
+      }
+      const data = await response.json();
+      setServiceTypes(data);
+    } catch (error) {
+      console.error("Error fetching service types:", error);
+    }
+  };
+  const createServiceDetail = async (data: createServiceDetailData) => {
+    try {
+      const response = await fetch(createServiceDetailUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error("Error creating service detail");
+      }
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Error creating service detail:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchServiceTypes();
+  }, []);
+
+  const options = serviceTypes.map((serviceType) => ({
+    id: serviceType.id,
+    name: serviceType.name,
+  }));
 
   const {
     control,
@@ -28,14 +81,29 @@ export function CreateServiceDetailPopup() {
     formState: { errors },
   } = form;
 
-  const onSubmitHandle = (data: createServiceDetailData) => {
-    console.log(data);
+  const onSubmitHandle = async (data: createServiceDetailData) => {
+    try {
+      console.log("Submitting data:", data);
+      await createServiceDetail(data);
+      console.log("Service detail created successfully.");
+      queryClient.invalidateQueries({ queryKey: ["serviceDetails"] });
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Error while creating service detail:", error);
+      alert("Failed to create service detail. Please try again.");
+    }
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Create Detail</Button>
+        <Button
+          className="px-7 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose text-center text-white"
+          variant="default"
+          onClick={() => setIsDialogOpen(true)}
+        >
+          Create Detail
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -44,22 +112,17 @@ export function CreateServiceDetailPopup() {
         <form onSubmit={handleSubmit(onSubmitHandle)}>
           <div className="flex flex-col justify-center items-center gap-6 py-4">
             <Controller
-              name="service_type_id"
+              name="serviceTypeId"
               control={control}
               render={({ field }) => (
                 <CustomSelect
                   label="SERVICE TYPE"
                   id="service-type"
-                  options={[
-                    "Home Cleaning",
-                    "Baby-Sitting",
-                    "Caretaking",
-                    "House Keeping",
-                  ]}
+                  options={options}
                   placeholder="Select Service Type"
                   value={field.value ?? ""}
                   onChange={field.onChange}
-                  error={errors.service_type_id?.message}
+                  error={errors.serviceTypeId?.message}
                   ref={field.ref}
                 />
               )}
@@ -83,7 +146,7 @@ export function CreateServiceDetailPopup() {
 
             <div className="flex gap-4 w-full">
               <Controller
-                name="multiply_price"
+                name="multiplyPrice"
                 control={control}
                 render={({ field }) => (
                   <CustomInput
@@ -94,24 +157,24 @@ export function CreateServiceDetailPopup() {
                     type="number"
                     value={field.value ?? ""}
                     onChange={field.onChange}
-                    error={errors.multiply_price?.message}
+                    error={errors.multiplyPrice?.message}
                   />
                 )}
               />
 
               <Controller
-                name="additional_price"
+                name="additionalPrice"
                 control={control}
                 render={({ field }) => (
                   <CustomInput
                     label="Additional Price (USD)"
                     placeholder="Enter + Price"
-                    id="additional_price"
+                    id="additionalPrice"
                     className="w-full"
                     type="number"
                     value={field.value ?? ""}
                     onChange={field.onChange}
-                    error={errors.additional_price?.message}
+                    error={errors.additionalPrice?.message}
                   />
                 )}
               />

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FilterDropdown from "./Filter";
+import { CreateServiceDetailPopup } from "@/components/popup/CreateServiceDetailPopup";
 
 type SearchBarAndFilterProps = {
   setSearchTerm: (term: string) => void;
@@ -51,7 +52,7 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
                   type="text"
                   id="search"
                   placeholder="Search"
-                  className="text-sm text-[#202224] px-2 w-full font-Averta-Regular opacity-50 bg-transparent h-full px-2 focus:outline-none"
+                  className="text-sm text-[#202224] w-full font-Averta-Regular opacity-50 bg-transparent h-full px-2 focus:outline-none"
                   onChange={handleSearchChange}
                 />
               </div>
@@ -87,9 +88,7 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
           <FilterDropdown onFilterChange={onFilterChange} />
         </div>
 
-        <button className="px-7 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose text-center text-white">
-          Add Detail
-        </button>
+        <CreateServiceDetailPopup></CreateServiceDetailPopup>
       </div>
     </>
   );
