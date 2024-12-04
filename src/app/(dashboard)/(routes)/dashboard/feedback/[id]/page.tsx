@@ -5,7 +5,8 @@ import { LuArrowLeft } from "react-icons/lu";
 import Image from "next/image";
 import { Feedback2 } from "@/components/feedback/FeedbackTable";
 import { useRouter } from "next/navigation";
-import FadeLoader from "react-spinners";
+import ClipLoader from "react-spinners/ClipLoader";
+import FadeLoader from "react-spinners/FadeLoader";
 
 const FeedbackDetail = ({ params }: { params: { id: string } }) => {
   const [detail, setDetail] = useState<Feedback2 | null>(null);
@@ -56,7 +57,12 @@ const FeedbackDetail = ({ params }: { params: { id: string } }) => {
     return `${hours}:${minutes} - ${day}/${month}/${year}`;
   };
 
-  if (!detail) return <div>Loading...</div>;
+  if (!detail)
+    return (
+      <div className="flex w-full h-full items-center justify-center">
+        <ClipLoader color="#2A88F5" loading={true} size={30} />
+      </div>
+    );
 
   return (
     <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded max-md:max-w-full">

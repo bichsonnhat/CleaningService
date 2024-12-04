@@ -13,7 +13,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export type Feedback = {
   id: number;
@@ -35,9 +36,9 @@ export type Feedback2 = {
   booking: {
     customer: {
       fullName: string;
-    }
-  }
-}
+    };
+  };
+};
 
 const feedbackData: Feedback[] = [
   {
@@ -244,8 +245,8 @@ export default function FeedbackTable() {
       const response = await fetch("/api/feedback");
       const data = await response.json();
       setFeedbacks(data);
-      console.log("Feedback response: ",data);
-    } 
+      console.log("Feedback response: ", data);
+    };
 
     fetchData();
   }, []);
@@ -254,21 +255,17 @@ export default function FeedbackTable() {
   const applyFilter = (data: any) => {
     switch (filter) {
       case "Newest":
-        return [...data].sort(
-          (a, b) => {
-            const dateA = new Date(a.createdAt).getTime();
-            const dateB = new Date(b.createdAt).getTime();
-            return dateB - dateA;
-          }
-        );
+        return [...data].sort((a, b) => {
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          return dateB - dateA;
+        });
       case "Oldest":
-        return [...data].sort(
-          (a, b) => {
-            const dateA = new Date(a.createdAt).getTime();
-            const dateB = new Date(b.createdAt).getTime();
-            return dateA - dateB;
-          }
-        );
+        return [...data].sort((a, b) => {
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          return dateA - dateB;
+        });
       default:
         return data;
     }
@@ -278,23 +275,19 @@ export default function FeedbackTable() {
   const filteredData = feedbacks.filter((Feedback) => {
     switch (searchBy) {
       case "Customer":
-        return Feedback.booking.customer.fullName.toLowerCase().includes(searchTerm.toLowerCase());
-      // case "Sentiment":
-      //   const check = Feedback.sentiment
-      //     .toLowerCase()
-      //     .includes(searchTerm.toLowerCase());
-        // console.log(check);
-        // return Feedback.sentiment
-        //   .toLowerCase()
-        //   .includes(searchTerm.toLowerCase());
-      case "Message":
-        return Feedback.title
+        return Feedback.booking.customer.fullName
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
+      case "Message":
+        return Feedback.title.toLowerCase().includes(searchTerm.toLowerCase());
       case "Date":
-        return Feedback.created_at.toLowerCase().includes(searchTerm.toLowerCase());
+        return Feedback.created_at
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
       default:
-        return Feedback.booking.customer.fullName.toLowerCase().includes(searchTerm.toLowerCase());
+        return Feedback.booking.customer.fullName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
     }
   });
 
@@ -313,42 +306,56 @@ export default function FeedbackTable() {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
 
+  if (feedbacks.length === 0)
+    return (
+      <div className="flex justify-center items-center w-full h-[500px]">
+        <ClipLoader color="#2A88F5" loading={true} size={30} />
+      </div>
+    );
+
   return (
     <>
-    <div className="flex flex-wrap flex-row gap-2 justify-between items-center">
-      <SearchBarAndFilter
-        setSearchTerm={setSearchTerm}
-        setSearchBy={setSearchBy}
-        onFilterChange={setFilter}
-      />
+      <div className="flex flex-wrap flex-row gap-2 justify-between items-center">
+        <SearchBarAndFilter
+          setSearchTerm={setSearchTerm}
+          setSearchBy={setSearchBy}
+          onFilterChange={setFilter}
+        />
 
-<AlertDialog>
-                                <AlertDialogTrigger>
-                                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
-        <Image src="/images/Dashboard/Feedback/Trash.svg" alt="" width={18} height={18} />
-          Delete
-        </div>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            This action cannot be undone. This action will delete the feedback permanently.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction asChild>
-                                            <button 
-                                            onClick={() => alert('Feedback deleted')}
-                                            className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
-                                                Delete
-                                            </button>
-                                        </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-    </div>
+        <AlertDialog>
+          <AlertDialogTrigger>
+            <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+              <Image
+                src="/images/Dashboard/Feedback/Trash.svg"
+                alt=""
+                width={18}
+                height={18}
+              />
+              Delete
+            </div>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This action will delete the
+                feedback permanently.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction asChild>
+                <button
+                  onClick={() => alert("Feedback deleted")}
+                  className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
 
       <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded ">
         <div className="flex flex-col w-full rounded ">
