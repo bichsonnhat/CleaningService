@@ -2,7 +2,19 @@ import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const feedback = await prisma.feedback.findMany();
+  const feedback = await prisma.feedback.findMany({
+    include: {
+      booking: {
+        select:{
+          customer: {
+            select:{
+              fullName: true,
+            }
+          }
+        }
+      }
+    }
+  });
   return NextResponse.json(feedback);
 }
 

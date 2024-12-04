@@ -1,17 +1,20 @@
 import React from 'react';
 import { Checkbox } from "@material-tailwind/react";
 import { useRouter } from 'next/navigation';
+import { Feedback2 } from './FeedbackTable';
 
 interface FeedbackRowProps {
-  customerName: string;
-  sentiment: 'Positive' | 'Negative' | 'Neutral';
-  message: string;
-  createdAt: string;
+  // customerName: string;
+  // sentiment: 'Positive' | 'Negative' | 'Neutral';
+  // message: string;
+  // createdAt: string;
+  feedback: Feedback2
 }
 
-const FeedbackRow: React.FC<FeedbackRowProps> = ({ customerName, sentiment, message, createdAt }) => {
+const FeedbackRow: React.FC<FeedbackRowProps> = ({ feedback }) => {
   const router = useRouter();
 
+  const sentiment = feedback.helperRating > 3 ? 'Positive' : feedback.helperRating < 3 ? 'Negative' : 'Neutral';
   const sentimentColor = sentiment === 'Positive' ? 'bg-[#ccf0eb] text-[#00b69b]' :
     sentiment === 'Negative' ? 'bg-[#fcd7d4] text-[#ef3826]' :
       'bg-[#ccd0d9] text-[#2b3641]';
@@ -32,7 +35,7 @@ const FeedbackRow: React.FC<FeedbackRowProps> = ({ customerName, sentiment, mess
   return (
 
     <div 
-    onClick={() => router.push(`feedback/${customerName}`)}
+    onClick={() => router.push(`feedback/${feedback.id}`)}
     className={`flex overflow-hidden flex-col xl:flex-row flex-wrap w-full border-b px-4 border-gray-200 xl:h-[80px] cursor-pointer bg-white hover:bg-[#f4f7ff]`}>
       <div onClick={(e) => e.stopPropagation()} className={`relative flex flex-[1] flex-col xl:justify-center `}>
         <div className="max-xl:absolute flex overflow-hidden items-center justify-end xl:justify-center max-xl:mt-2 pl-px w-full min-h-[48px]">
@@ -44,7 +47,7 @@ const FeedbackRow: React.FC<FeedbackRowProps> = ({ customerName, sentiment, mess
 
         <div className="overflow-hidden px-3 py-4 w-full min-h-[48px] font-Averta-Regular xl:font-Averta-Semibold text-[15px]">
         <span className="xl:hidden font-mono font-bold">Customer: </span>
-          {customerName}</div>
+          {feedback.booking.customer.fullName}</div>
       </div>
 
       <div className={`flex flex-[3] flex-col px-3 py-4 xl:justify-center font-bold text-center whitespace-nowrap `}>
@@ -62,13 +65,13 @@ const FeedbackRow: React.FC<FeedbackRowProps> = ({ customerName, sentiment, mess
       <div className={`flex flex-[10] flex-col  justify-center  text-sm  min-w-[240px] text-neutral-800 `}>
         <div className="overflow-hidden self-stretch px-3 py-4 w-full min-h-[48px] max-md:max-w-full font-Averta-Regular xl:font-Averta-Semibold text-[15px]">
         <span className="xl:hidden font-mono font-semibold text-[15px]">Title: </span>
-          {message}</div>
+          {feedback.title}</div>
       </div>
 
       <div className={`flex flex-[3] flex-col  justify-center text-sm  text-neutral-800 `}>
         <div className="overflow-hidden self-stretch px-3 py-4 w-full min-h-[48px] font-Averta-Regular xl:font-Averta-Semibold text-[14px]">
         <span className="xl:hidden font-mono font-semibold">Date: </span>
-          {formatDate(createdAt)}</div>
+          {formatDate(feedback.created_at)}</div>
       </div>
     </div>
 

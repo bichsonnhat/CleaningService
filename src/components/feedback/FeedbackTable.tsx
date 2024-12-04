@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import FeedbackRow from "./FeedbackRow";
 import Pagination from "../employee/Pagination";
 import SearchBarAndFilter from "./SearchBarAndFilter";
@@ -22,6 +22,22 @@ export type Feedback = {
   message: string;
   createdAt: string;
 };
+
+export type Feedback2 = {
+  id: string;
+  bookingId: string;
+  reportedBy: boolean;
+  helperRating: number;
+  title: string;
+  description?: string;
+  created_at: string;
+  updated_at: string;
+  booking: {
+    customer: {
+      fullName: string;
+    }
+  }
+}
 
 const feedbackData: Feedback[] = [
   {
@@ -221,6 +237,19 @@ export default function FeedbackTable() {
   const [filter, setFilter] = useState("Filter by");
   const [searchBy, setSearchBy] = useState("Name");
 
+  const [feedbacks, setFeedbacks] = useState<Feedback2[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/api/feedback");
+      const data = await response.json();
+      setFeedbacks(data);
+      console.log("Feedback response: ",data);
+    } 
+
+    fetchData();
+  }, []);
+
   // filter
   const applyFilter = (data: any) => {
     switch (filter) {
@@ -246,26 +275,26 @@ export default function FeedbackTable() {
   };
 
   // search by
-  const filteredData = feedbackData.filter((Feedback) => {
+  const filteredData = feedbacks.filter((Feedback) => {
     switch (searchBy) {
       case "Customer":
-        return Feedback.customerName.toLowerCase().includes(searchTerm.toLowerCase());
-      case "Sentiment":
-        const check = Feedback.sentiment
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-        console.log(check);
-        return Feedback.sentiment
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
+        return Feedback.booking.customer.fullName.toLowerCase().includes(searchTerm.toLowerCase());
+      // case "Sentiment":
+      //   const check = Feedback.sentiment
+      //     .toLowerCase()
+      //     .includes(searchTerm.toLowerCase());
+        // console.log(check);
+        // return Feedback.sentiment
+        //   .toLowerCase()
+        //   .includes(searchTerm.toLowerCase());
       case "Message":
-        return Feedback.message
+        return Feedback.title
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
       case "Date":
-        return Feedback.createdAt.toLowerCase().includes(searchTerm.toLowerCase());
+        return Feedback.created_at.toLowerCase().includes(searchTerm.toLowerCase());
       default:
-        return Feedback.customerName.toLowerCase().includes(searchTerm.toLowerCase());
+        return Feedback.booking.customer.fullName.toLowerCase().includes(searchTerm.toLowerCase());
     }
   });
 
@@ -324,8 +353,8 @@ export default function FeedbackTable() {
       <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded ">
         <div className="flex flex-col w-full rounded ">
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 ">
-            {currentData.map((feedback: Feedback, index: any) => (
-              <FeedbackRow key={feedback.id} {...feedback} />
+            {currentData.map((feedback: Feedback2, index: any) => (
+              <FeedbackRow key={feedback.id} feedback={feedback} />
             ))}
           </div>
         </div>
