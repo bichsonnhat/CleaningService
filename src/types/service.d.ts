@@ -32,7 +32,7 @@ type DetailServiceRowProps = {
   };
 };
 
-type DetailService = {
+type ServiceDetail = {
   id: string;
   serviceTypeId: string;
   title: number;

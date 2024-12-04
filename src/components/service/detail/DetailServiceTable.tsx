@@ -13,7 +13,7 @@ const columns = [
   { header: "MULTIPLY PRICE", className: "w-[300px] hidden md:table-cell" },
 ];
 
-const DetailServicesData: DetailService[] = [
+const DetailServicesData: ServiceDetail[] = [
   {
     id: "1",
     serviceTypeId: "Number of Bedroom",
@@ -71,7 +71,7 @@ const DetailServiceTable = () => {
 
   const url = "http://localhost:3000/api/service-detail";
 
-  const fetchData = async (): Promise<DetailService[]> => {
+  const fetchData = async (): Promise<ServiceDetail[]> => {
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -94,7 +94,7 @@ const DetailServiceTable = () => {
   const [filter, setFilter] = useState("Filter by");
   const [searchBy, setSearchBy] = useState("Category");
 
-  const applyFilter = (data: DetailService[]) => {
+  const applyFilter = (data: ServiceDetail[]) => {
     if (filter === "+ Price: Low to High") {
       return [...data].sort((a, b) => a.additionalPrice - b.additionalPrice);
     }
@@ -159,7 +159,7 @@ const DetailServiceTable = () => {
         ))}
       </div>
       <div className="flex overflow-hidden flex-col max-xl:mt-4 rounded-lg justify-center w-full max-md:max-w-full">
-        {currentData.map((category: DetailService, index: any) => (
+        {currentData.map((category: ServiceDetail, index: any) => (
           <DetailServiceRow key={category.id} {...category} />
         ))}
       </div>
