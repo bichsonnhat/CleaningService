@@ -98,8 +98,12 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
           <span className="md:hidden font-bold text-[#202224]">RATING:</span>
           {renderRating()}
           <div className="mt-1">
-            {booking.feedbacks[0].helperRating !== null
-              ? `${booking.feedbacks[0].helperRating} out of 5 stars`
+            {booking.feedbacks.length !== 0 &&
+            booking.feedbacks[0]?.helperRating !== null
+              ? `${
+                  booking.feedbacks.length !== 0 &&
+                  booking.feedbacks[0]?.helperRating
+                } out of 5 stars`
               : "N/A"}
           </div>
         </div>
