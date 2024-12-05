@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FilterDropdown from "./Filter";
+import { useRouter } from "next/navigation";
 
 type SearchBarAndFilterProps = {
   setSearchTerm: (term: string) => void;
@@ -12,6 +13,8 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
   setSearchBy,
   onFilterChange,
 }) => {
+  const router = useRouter();
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
@@ -87,7 +90,10 @@ const SearchBarAndFilter: React.FC<SearchBarAndFilterProps> = ({
           <FilterDropdown onFilterChange={onFilterChange} />
         </div>
 
-        <button className="px-7 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose text-center text-white">
+        <button
+          className="px-7 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose text-center text-white"
+          onClick={() => router.push("/dashboard/employee/add")}
+        >
           Add Account
         </button>
       </div>
