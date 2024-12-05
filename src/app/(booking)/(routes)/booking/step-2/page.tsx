@@ -4,7 +4,7 @@ import Header from "@/components/header/Header";
 import Image from "next/image";
 import React from "react";
 import { useState, useEffect } from "react";
-const page = () => {
+const Step_2 = () => {
     const daysOfWeek = [
         "",
         "MONDAY",
@@ -30,7 +30,9 @@ const page = () => {
         "December",
     ];
 
-    const [currentIndex, setCurrentIndex] = useState(11);
+    const today = new Date();
+
+    const [currentIndex, setCurrentIndex] = useState(today.getMonth() + 1);
 
     const handleNext = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % months.length);
@@ -43,7 +45,7 @@ const page = () => {
     };
 
     const getMonth = (index: any) => {
-        return months[(index + months.length) % months.length];
+        return months[(index + months.length - 1) % months.length];
     };
 
     return (
@@ -54,8 +56,8 @@ const page = () => {
             <div className="font-Averta-Regular text-center text-neutral-500 mt-3 text-[20px]">
                 Book a specific date you need to space sparkled
             </div>
-            <div className="mt-[50px] flex flex-row justify-between min-w-[1002px]">
-                <div>
+            <div className="mt-[50px] flex flex-row justify-between xl:w-[1000px] lg:w-[550px] sm:w-[500px] w-[390px]">
+                <div className="hidden: sm:block">
                     <Image
                         src="/images/icons/arrow_back.svg"
                         alt="arrow_back"
@@ -65,30 +67,30 @@ const page = () => {
                     />
                 </div>
                 <div
-                    className={`flex flex-row gap-4 text-2xl font-Averta-Regular items-center`}
+                    className={`flex flex-row sm:gap-4 gap-1 text-2xl font-Averta-Regular items-center`}
                 >
                     <div
-                        className="w-[122px] text-center text-neutral-400 cursor-pointer"
+                        className="text-[20px] sm:text-[24px] w-[122px] text-center text-neutral-400 cursor-pointer"
                         onClick={handlePrev}
                     >
                         {getMonth(currentIndex - 1)}
                     </div>
 
                     <div
-                        className="w-[122px] text-center text-[#151634] font-Averta-Semibold"
-                        key={currentIndex} // Helps React recognize each month as unique
+                        className="text-[20px] sm:text-[24px] w-[122px] text-center text-[#151634] font-Averta-Semibold"
+                        key={currentIndex}
                     >
                         {getMonth(currentIndex)}
                     </div>
 
                     <div
-                        className="w-[122px] text-center text-neutral-400 cursor-pointer"
+                        className="text-[20px] sm:text-[24px] w-[122px] text-center text-neutral-400 cursor-pointer"
                         onClick={handleNext}
                     >
                         {getMonth(currentIndex + 1)}
                     </div>
                 </div>
-                <div>
+                <div className="hidden: sm:block">
                     <Image
                         src="/images/icons/arrow_forward.svg"
                         alt="arrow_forward"
@@ -99,20 +101,14 @@ const page = () => {
                 </div>
             </div>
             <div className="flex flex-col justify-center items-center mt-[50px] ">
-                <div className="font-Averta-Regular text-[12px] flex flex-row justify-center items-center w-[966px] text-[#DADDE1]">
-                    <div className="w-[132px] text-center m-[3px]">SUNDAY</div>
-                    <div className="w-[132px] text-center m-[3px]">MONDAY</div>
-                    <div className="w-[132px] text-center m-[3px]">TUESDAY</div>
-                    <div className="w-[132px] text-center m-[3px]">
-                        WEDNESDAY
-                    </div>
-                    <div className="w-[132px] text-center m-[3px]">
-                        THURSDAY
-                    </div>
-                    <div className="w-[132px] text-center m-[3px]">FRIDAY</div>
-                    <div className="w-[132px] text-center m-[3px]">
-                        SATURDAY
-                    </div>
+                <div className="grid grid-cols-7 gap-3 sm:w-[600px] md:w-[680px] lg:w-[966px] w-[360px] font-Averta-Regular text-[12px] items-center text-[#a6a8ab]">
+                    <div className="lg:w-[132px] text-center m-[3px]">SUN</div>
+                    <div className="lg:w-[132px] text-center m-[3px]">MON</div>
+                    <div className="lg:w-[132px] text-center m-[3px]">TUE</div>
+                    <div className="lg:w-[132px] text-center m-[3px]">WED</div>
+                    <div className="lg:w-[132px] text-center m-[3px]">THU</div>
+                    <div className="lg:w-[132px] text-center m-[3px]">FRI</div>
+                    <div className="lg:w-[132px] text-center m-[3px]">SAT</div>
                 </div>
                 <Calendar month={currentIndex} />
             </div>
@@ -123,4 +119,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Step_2;
