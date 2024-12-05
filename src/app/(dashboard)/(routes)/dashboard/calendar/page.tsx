@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { text } from "stream/consumers";
 import style from "styled-jsx/style";
+import { GET } from "@/app/(api)/(routes)/api/bookings/route";
+import { date } from "zod";
 
 interface Task {
     date: string; // Format: 'YYYY-MM-DD'
@@ -10,52 +12,17 @@ interface Task {
     endTime: string; // Format: 'HH:MM'
 }
 
-const tasks = [
-    {
-        date: "2024-10-02",
-        title: "Home Cleaning",
-        startTime: "09:00",
-        endTime: "10:30",
-    },
-    {
-        date: "2024-10-02",
-        title: "Home Cleaning",
-        startTime: "12:00",
-        endTime: "15:30",
-    },
-    {
-        date: "2024-10-11",
-        title: "Baby-sitting",
-        startTime: "15:00",
-        endTime: "18:00",
-    },
-    {
-        date: "2024-10-21",
-        title: "Caretaking",
-        startTime: "08:00",
-        endTime: "12:00",
-    },
-    {
-        date: "2024-10-25",
-        title: "Grocery Shopping",
-        startTime: "17:00",
-        endTime: "18:00",
-    },
-    {
-        date: "2024-10-28",
-        title: "Doctor Appointment",
-        startTime: "10:00",
-        endTime: "11:00",
-    },
-    {
-        date: "2024-10-30",
-        title: "Project Meeting",
-        startTime: "14:00",
-        endTime: "16:00",
-    },
-];
+const CalendarPage = async () => {
+    const booking = await GET();
+    const tasks: Task[] = booking.map((booking) => ({
+        date: new Date(booking.scheduledStartTime).toISOString().slice(0, 10),
+        title: booking.name,
+        startTime: new Date(booking.scheduledStartTime)
+            .toISOString()
+            .slice(11, 16),
+        endTime: new Date(booking.scheduledEndTime).toISOString().slice(11, 16),
+    }));
 
-const CalendarPage = () => {
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [currentDay, setCurrentDay] = useState(
@@ -154,9 +121,9 @@ const CalendarPage = () => {
                     <div
                         key={`prev-${day}`}
                         onClick={() => changeDate(-1)}
-                        className="bg-white min-w-[164px] h-[119px] border rounded-lg p-2 relative text-gray-400 cursor-pointer"
+                        className="bg-white min-w-[34px] h-[84px] sm:h-[119px] border rounded-lg p-2 relative text-gray-400 cursor-pointer"
                     >
-                        <div className="mt-3 text-left text-[#202224] text-opacity-[0.5] text-[14px] font-medium">
+                        <div className="sm:mt-3 mt-1 text-left text-[#202224] text-opacity-[0.5] text-[14px] font-medium">
                             {String(day).padStart(2, "0")}
                         </div>
                     </div>
@@ -168,13 +135,13 @@ const CalendarPage = () => {
                         <div
                             key={`current-${day}`}
                             onClick={() => handleDayClick(day)}
-                            className="bg-white min-w-[164px] h-[119px] border rounded-lg p-2 relative cursor-pointer"
+                            className="bg-white min-w-[34px] h-[84px] sm:h-[119px] border rounded-lg p-2 relative cursor-pointer"
                         >
-                            <div className="mt-3 text-left text-[#202224] text-[14px] font-medium">
+                            <div className="sm:mt-3 mt-1 text-left text-[#202224] text-[14px] font-medium">
                                 {String(day).padStart(2, "0")}
                             </div>
                             {task && (
-                                <div className="absolute left-2 right-2 bg-blue-500 text-white text-[14px] rounded p-1 text-center ">
+                                <div className="absolute left-2 right-2 bg-blue-500 text-white text-[14px] rounded p-1 text-center overflow-hidden text-ellipsis whitespace-nowrap">
                                     {task.title}
                                 </div>
                             )}
@@ -186,9 +153,9 @@ const CalendarPage = () => {
                     <div
                         key={`next-${day}`}
                         onClick={() => changeDate(1)}
-                        className="bg-white min-w-[164px] h-[119px] border rounded-lg p-2 relative text-gray-400 cursor-pointer"
+                        className="bg-white min-w-[34px] h-[84px] sm:h-[119px] border rounded-lg p-2 relative text-gray-400 cursor-pointer"
                     >
-                        <div className="mt-3 text-left text-[#202224] text-opacity-[0.5] text-[14px] font-medium">
+                        <div className="sm:mt-3 mt-1 text-left text-[#202224] text-opacity-[0.5] text-[14px] font-medium">
                             {String(day).padStart(2, "0")}
                         </div>
                     </div>
@@ -238,7 +205,7 @@ const CalendarPage = () => {
                                 index === 0 ? "" : "border-t"
                             }`}
                         >
-                            <div className="w-16 pr-2 flex items-center justify-end h-full">
+                            <div className="ml-3 sm:ml-0 w-16 pr-2 flex items-center justify-end h-full">
                                 <span className="text-right text-[#202224] text-opacity-[0.8] text-[14px]">
                                     {formatTime(hour)}
                                 </span>
@@ -263,7 +230,7 @@ const CalendarPage = () => {
                                         return (
                                             <div
                                                 key={index}
-                                                className={`absolute bg-blue-100 text-blue-800 w-[calc(100vw-350px)] lg:w-[calc(100vw-400px)] xl:w-[calc(100vw-450px)] 2xl:w-[calc(100vw-550px)]  rounded-lg shadow-sm flex items-center`}
+                                                className={`absolute bg-blue-100 text-blue-800 w-[250px] sm:w-[calc(100vw-350px)] lg:w-[calc(100vw-400px)] xl:w-[calc(100vw-450px)] 2xl:w-[calc(100vw-550px)]  rounded-lg shadow-sm flex items-center`}
                                                 style={{
                                                     top: `${
                                                         (startMin / 60) * 80 + 5
@@ -300,7 +267,7 @@ const CalendarPage = () => {
     };
 
     return (
-        <div className="min-w-[1207px] min-h-[970px] p-4 bg-[#F1F4F9]">
+        <div className="min-w-[380px] min-h-[970px] p-1 sm:p-4 bg-[#F1F4F9]">
             <div className="flex justify-between items-center mb-12">
                 <div className="flex items-center space-x-2 gap-[10px]">
                     <button
@@ -308,7 +275,7 @@ const CalendarPage = () => {
                             setCurrentDay(new Date());
                             setView("day");
                         }}
-                        className="bg-white w-[59px] text-[14px] px-[8px] py-[6px] border-[1.5px] border-[rgba(32,34,36,0.5)] text-[rgba(32,34,36,0.5)] rounded-[8px] hover:bg-gray-100"
+                        className="hidden sm:block bg-white w-[59px] text-[14px] px-[8px] py-[6px] border-[1.5px] border-[rgba(32,34,36,0.5)] text-[rgba(32,34,36,0.5)] rounded-[8px] hover:bg-gray-100"
                     >
                         Today
                     </button>
@@ -316,9 +283,9 @@ const CalendarPage = () => {
                     <div className="bg-white inline-flex items-center border-[1.5px] border-[rgba(32,34,36,0.5)] rounded-[8px] overflow-hidden divide-x divide-gray-300">
                         <button
                             onClick={() => changeDate(-1)}
-                            className="w-[77px] text-[14px] px-[8.5px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex items-center"
+                            className="w-[50px] sm:w-[77px] text-[12px] sm:text-[14px] px-[3px] py-[3px] sm:px-[8.5px] sm:py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex items-center justify-center"
                         >
-                            <span className="mr-2">
+                            <span className="mr-2 hidden sm:block">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-5 w-5"
@@ -338,10 +305,10 @@ const CalendarPage = () => {
                         </button>
                         <button
                             onClick={() => changeDate(1)}
-                            className="w-[77px] text-[14px] px-[8.5px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex items-center"
+                            className="w-[50px] sm:w-[77px] text-[12px] sm:text-[14px] px-[3px] py-[3px] sm:px-[8.5px] sm:py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex items-center justify-center"
                         >
                             Next
-                            <span className="ml-2">
+                            <span className="ml-2 hidden sm:block">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-5 w-5"
@@ -361,32 +328,31 @@ const CalendarPage = () => {
                     </div>
                 </div>
 
-                <h2 className="text-4xl font-semibold">
+                <h2 className="text-md sm:text-4xl font-semibold">
                     {view === "month"
                         ? `${new Date(currentYear, currentMonth).toLocaleString(
                               "en-US",
                               {
-                                  month: "long",
+                                  month: "short",
                               }
                           )} ${currentYear}`
                         : currentDay.toLocaleDateString("en-US", {
-                              weekday: "long",
-                              month: "long",
+                              weekday: "short",
+                              month: "short",
                               day: "numeric",
-                              year: "numeric",
                           })}
                 </h2>
 
                 <div className="bg-white inline-flex items-center text-center border-[1.5px] border-[rgba(32,34,36,0.5)] rounded-[8px] overflow-hidden divide-x divide-gray-300">
                     <button
                         onClick={() => toggleView("month")}
-                        className={`w-[77px] text-[14px] px-[17px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex justify-center items-center`}
+                        className={`w-[77px] text-[12px] sm:text-[14px] px-[3px] py-[3px] sm:px-[17px] sm:py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex justify-center items-center`}
                     >
                         Month
                     </button>
                     <button
                         onClick={() => toggleView("day")}
-                        className={`w-[77px] text-[14px] px-[17px] py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex justify-center items-center`}
+                        className={`w-[77px] text-[12px] sm:text-[14px] px-[3px] py-[3px] sm:px-[17px] sm:py-[6px] text-[rgba(32,34,36,0.5)] hover:bg-gray-100 flex justify-center items-center`}
                     >
                         Day
                     </button>
