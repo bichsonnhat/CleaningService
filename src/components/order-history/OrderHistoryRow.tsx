@@ -1,53 +1,43 @@
 import React from "react";
 import Star from "../employee/Star";
 import Link from "next/link";
+import { Booking } from "../order/OrderTable";
 
 type OrderHistoryRowProps = {
-  id: string;
-  helperName: string;
-  location: string;
-  scheduledStartTime: Date;
-  scheduledEndTime: Date;
-  helperRating?: number | null;
-  totalPrice: number;
-  status: "Pending" | "In Progress" | "Cancelled" | "Completed";
+  booking: Booking;
 };
 
-const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
-  id,
-  helperName,
-  location,
-  scheduledEndTime,
-  scheduledStartTime,
-  helperRating,
-  totalPrice,
-  status,
-}) => {
-  const startTimeString: string = scheduledStartTime.toLocaleTimeString([], {
+const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
+  const startTimeString: string = new Date(
+    booking.scheduledStartTime
+  ).toLocaleTimeString([], {
     hour: "numeric",
     minute: "numeric",
     hour12: true,
   });
-  const endTimeString: string = scheduledEndTime.toLocaleTimeString([], {
+  const endTimeString: string = new Date(
+    booking.scheduledEndTime
+  ).toLocaleTimeString([], {
     hour: "numeric",
     minute: "numeric",
     hour12: true,
   });
-  const dateString: string = scheduledStartTime.toLocaleDateString("en-US");
+  const dateString: string = new Date(
+    booking.scheduledStartTime
+  ).toLocaleDateString("en-US");
 
   const statusColor =
-    status === "Pending"
+    booking.status === "pending"
       ? "bg-[#FFD154] text-[#FF9500]"
-      : status === "In Progress"
+      : booking.status === "inprogress"
       ? "bg-[#1A78F2] text-[#1A78F2]"
-      : status === "Cancelled"
+      : booking.status === "cancelled"
       ? "bg-[#EF3826] text-[#EF3826]"
-      : status === "Completed"
+      : booking.status === "completed"
       ? "bg-[#00B69B] text-[#00B69B]"
       : "";
 
-  // Phần trăm hoàn thành
-  const percentage = (helperRating ?? 0) * 20;
+  const percentage = (booking.feedbacks[0]?.helperRating ?? 0) * 20;
   const filledStars = Math.floor(percentage / 20);
 
   // Hàm render ngôi sao
@@ -78,14 +68,14 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
       <div className="w-full md:w-[210px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="md:hidden font-bold">HELPER: </span>
-          {helperName}
+          {booking.helper.user.fullName}
         </div>
       </div>
 
       <div className="w-full md:w-[340px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="md:hidden font-bold">ADDRESS: </span>
-          {location}
+          {booking.location}
         </div>
       </div>
 
@@ -108,7 +98,9 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
           <span className="md:hidden font-bold text-[#202224]">RATING:</span>
           {renderRating()}
           <div className="mt-1">
-            {helperRating !== null ? `${helperRating} out of 5 stars` : "N/A"}
+            {booking.feedbacks[0].helperRating !== null
+              ? `${booking.feedbacks[0].helperRating} out of 5 stars`
+              : "N/A"}
           </div>
         </div>
       </div>
@@ -116,7 +108,7 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
       <div className="w-full md:w-[120px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224cc]">
           <span className="md:hidden font-bold">PRICE: </span>
-          {`$${totalPrice}`}
+          {`${booking.totalPrice}/vnđ`}
         </div>
       </div>
 
@@ -127,7 +119,7 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
             className={`md:w-[100px] text-center flex relative gap-4 justify-between items-start px-4 py-1.5 min-h-[27px] ${statusColor}  bg-opacity-20 rounded-md`}
           >
             <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px]">
-              {status}
+              {booking.status}
             </div>
           </div>
         </div>

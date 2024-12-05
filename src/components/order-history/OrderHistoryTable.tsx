@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 import OrderHistoryRow from "./OrderHistoryRow";
 import Pagination from "./Pagination";
+import { Booking } from "../order/OrderTable";
 
 type OrderHistory = {
   id: string;
@@ -338,6 +339,18 @@ const ordersData: OrderHistory[] = [
 ];
 
 const OrderHistoryTable = () => {
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/api/bookings");
+      const data = await response.json();
+      setBookings(data);
+      console.log("Booking history response: ", data);
+    };
+
+    fetchData();
+  }, []);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchBy, setSearchBy] = useState("Helper");
@@ -348,17 +361,15 @@ const OrderHistoryTable = () => {
     setCurrentPage(1);
   };
 
-  const filteredData = ordersData.filter((order) => {
+  const filteredData = bookings.filter((order) => {
     const term = searchTerm.toLowerCase();
 
     if (searchBy === "Helper")
-      return order.helperName.toLowerCase().includes(term);
-    if (searchBy === "Rating")
-      return order.helperRating?.toString().includes(term);
+      return order.helper.user.fullName.toLowerCase().includes(term);
     if (searchBy === "Price") return order.totalPrice.toString().includes(term);
     if (searchBy === "Status") return order.status.toLowerCase().includes(term);
 
-    return order.helperName.toLowerCase().includes(term);
+    return order.customer.fullName.toLowerCase().includes(term);
   });
 
   // Pagination
@@ -390,8 +401,8 @@ const OrderHistoryTable = () => {
       </div>
 
       <div className="flex overflow-hidden flex-col justify-center w-full mt-4">
-        {currentData.map((order: OrderHistory, index: any) => (
-          <OrderHistoryRow key={order.id} {...order} />
+        {currentData.map((booking: Booking, index: any) => (
+          <OrderHistoryRow key={booking.id} booking={booking} />
         ))}
       </div>
 

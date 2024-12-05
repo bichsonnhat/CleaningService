@@ -84,8 +84,6 @@ const OrderTable = () => {
       return order.customer.fullName.toLowerCase().includes(term);
     if (searchBy === "Helper")
       return order.helper.user.fullName.toLowerCase().includes(term);
-    //if (searchBy === "Rating")
-    //return order.helperRating?.toString().includes(term);
     if (searchBy === "Price") return order.totalPrice.toString().includes(term);
     if (searchBy === "Status") return order.status.toLowerCase().includes(term);
 
