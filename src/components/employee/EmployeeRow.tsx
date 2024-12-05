@@ -1,6 +1,6 @@
 import React from "react";
 import Star from "./Star";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type EmployeeRowProps = {
   id: string;
@@ -8,6 +8,7 @@ type EmployeeRowProps = {
   address: string;
   phone: string;
   email?: string;
+  averageRating: string;
   completedJobs: number;
   totalJobs: number;
 };
@@ -18,29 +19,29 @@ const EmployeeRow: React.FC<EmployeeRowProps> = ({
   address,
   phone,
   email,
+  averageRating,
   completedJobs,
   totalJobs,
 }) => {
-  // Phần trăm hoàn thành job
-  const percentage = (completedJobs / totalJobs) * 100;
-  const filledStars = Math.floor(percentage / 20);
+  const router = useRouter();
 
-  // Hàm render ngôi sao
   const renderRating = () => {
-    const remainingPercentage = (percentage % 20) / 20;
+    const rating = parseFloat(averageRating);
+    const filledStars = Math.floor(rating); // Số lượng ngôi sao đầy
+    const remainingPercentage = (rating % 1) * 100; // Phần trăm cho ngôi sao tiếp theo
 
     const starPercentages = Array.from({ length: 5 }, (_, index) => {
       if (index < filledStars) {
-        return 100;
+        return 100; // Ngôi sao đầy
       } else if (index === filledStars) {
-        return remainingPercentage * 100;
+        return remainingPercentage; // Ngôi sao một phần
       } else {
-        return 0;
+        return 0; // Ngôi sao rỗng
       }
     });
 
     return (
-      <div className="flex items-center ">
+      <div className="flex items-center">
         {starPercentages.map((percent, index) => (
           <Star key={index} percentage={percent} />
         ))}
@@ -51,10 +52,10 @@ const EmployeeRow: React.FC<EmployeeRowProps> = ({
   return (
     <div
       className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto items-start md:items-center p-2.5 cursor-pointer"
-      onClick={() => (window.location.href = `/dashboard/employee/${id}`)}
+      onClick={() => router.push(`/dashboard/employee/${id}`)}
     >
       <div className="w-full md:w-[130px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
-        <div className="text-sm text-[#202224] font-semibold">
+        <div className="text-sm text-[#202224] font-semibold  truncate">
           <span className="md:hidden font-bold">ID: </span>
           {id}
         </div>

@@ -1,11 +1,16 @@
 // src/app/api/helpers/route.ts
-import prisma from '@/lib/db'
-import { NextResponse } from 'next/server'
+import prisma from "@/lib/db";
+import { NextResponse } from "next/server";
 
 // GET all helpers
 export async function GET() {
-  const helpers = await prisma.helper.findMany()
-  return NextResponse.json(helpers)
+  const helpers = await prisma.helper.findMany({
+    include: {
+      user: true,
+    },
+  });
+
+  return NextResponse.json(helpers);
 }
 
 // POST a new helper
