@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Feedback2 } from "@/components/feedback/FeedbackTable";
 import { useRouter } from "next/navigation";
 import ClipLoader from "react-spinners/ClipLoader";
-import FadeLoader from "react-spinners/FadeLoader";
 
 const FeedbackDetail = ({ params }: { params: { id: string } }) => {
   const [detail, setDetail] = useState<Feedback2 | null>(null);

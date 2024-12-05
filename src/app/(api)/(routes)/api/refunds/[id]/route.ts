@@ -10,6 +10,17 @@ export async function GET(
       where: {
         id: params.id,
       },
+      include: {
+        booking: {
+          select: {
+            customer: {
+              select: {
+                fullName: true,
+              },
+            },
+          },
+        },
+      },
     });
     if (!refund) {
       return NextResponse.json({ error: "Refund not found" }, { status: 404 });

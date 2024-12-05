@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import Pagination from '../employee/Pagination';
-import SearchBarAndFilter from './SearchBarAndFilter';
-import IssueRow from '../issue/IssueRow';
-import Image from 'next/image';
+import React, { useEffect, useState } from "react";
+import Pagination from "../employee/Pagination";
+import SearchBarAndFilter from "./SearchBarAndFilter";
+import IssueRow from "../issue/IssueRow";
+import Image from "next/image";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,9 +13,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Feedback2 } from '../feedback/FeedbackTable';
-import ClipLoader from 'react-spinners/ClipLoader';
+} from "@/components/ui/alert-dialog";
+import { Feedback2 } from "../feedback/FeedbackTable";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export type Issue = {
   id: number;
@@ -23,20 +23,20 @@ export type Issue = {
   sentiment: "Positive" | "Negative" | "Neutral";
   message: string;
   createAt: string;
-}
+};
 
 export default function IssueHistoryTable() {
   const [issueData, setIssueData] = useState<Feedback2[]>([]);
 
   useEffect(() => {
-    const fetchFeedback = async () => {
+    const fetchIssueHistory = async () => {
       const response = await fetch(`/api/feedback`);
       const data = await response.json();
       console.log("Issue History: ", data);
       setIssueData(data);
     };
 
-    fetchFeedback();
+    fetchIssueHistory();
   }, []);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,9 +68,13 @@ export default function IssueHistoryTable() {
   const filteredData = issueData.filter((Issue) => {
     switch (searchBy) {
       case "Helper":
-        return Issue.booking.helper.user.fullName.toLowerCase().includes(searchTerm.toLowerCase());
+        return Issue.booking.helper.user.fullName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
       default:
-        return Issue.booking.helper.user.fullName.toLowerCase().includes(searchTerm.toLowerCase());
+        return Issue.booking.helper.user.fullName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
     }
   });
 
@@ -98,24 +102,34 @@ export default function IssueHistoryTable() {
 
   return (
     <>
-      <div className='flex flex-wrap justify-between gap-3  items-center'>
-
+      <div className="flex flex-wrap justify-between gap-3  items-center">
         <SearchBarAndFilter
           setSearchTerm={setSearchTerm}
           setSearchBy={setSearchBy}
           onFilterChange={setFilter}
         />
-        <div className='flex flex-row gap-2'>
+        <div className="flex flex-row gap-2">
           <button
-            onClick={() => alert('Open popup Create Issue')}
-            className="flex flex-row gap-2 items-center justify-center px-8 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
-            <Image src="/images/icons/outline_plus.svg" alt="" width={18} height={18} />
+            onClick={() => alert("Open popup Create Issue")}
+            className="flex flex-row gap-2 items-center justify-center px-8 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white"
+          >
+            <Image
+              src="/images/icons/outline_plus.svg"
+              alt=""
+              width={18}
+              height={18}
+            />
             Create Issue
           </button>
           <AlertDialog>
             <AlertDialogTrigger>
               <div className="flex flex-row gap-2 items-center justify-center px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-80 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
-                <Image src="/images/Dashboard/Feedback/Trash.svg" alt="" width={18} height={18} />
+                <Image
+                  src="/images/Dashboard/Feedback/Trash.svg"
+                  alt=""
+                  width={18}
+                  height={18}
+                />
                 Delete
               </div>
             </AlertDialogTrigger>
@@ -123,7 +137,8 @@ export default function IssueHistoryTable() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This action will delete the refund request.
+                  This action cannot be undone. This action will delete the
+                  refund request.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -149,9 +164,8 @@ export default function IssueHistoryTable() {
         currentPage={currentPage}
         totalItems={filteredData.length}
         totalPages={totalPages}
-        onPageChange={handlePageChange} />
-
+        onPageChange={handlePageChange}
+      />
     </>
-
   );
-};
+}

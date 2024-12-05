@@ -2,7 +2,19 @@ import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const refunds = await prisma.refund.findMany();
+  const refunds = await prisma.refund.findMany({
+    include: {
+      booking: {
+        select: {
+          customer: {
+            select: {
+              fullName: true,
+            },
+          },
+        },
+      },
+    },
+  });
   return NextResponse.json(refunds);
 }
 
