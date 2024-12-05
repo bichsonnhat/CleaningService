@@ -4,7 +4,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { GoArrowLeft } from "react-icons/go";
 import { LuArrowLeft } from "react-icons/lu";
 import Image from "next/image";
-import { Feedback, Feedback2 } from "@/components/feedback/FeedbackTable";
+import { Feedback2 } from "@/components/feedback/FeedbackTable";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +26,7 @@ export type Refund = {
   create_at: string;
   resolved_at: string;
 };
-const IssueDetail = ({params} : {params: {id: string}}) => {
+const IssueDetail = ({ params }: { params: { id: string } }) => {
   const issueData: Refund = {
     id: 1,
     booking_id: "123456",

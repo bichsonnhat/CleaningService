@@ -1,3 +1,4 @@
+"use client";
 import React, { use, useEffect, useState } from "react";
 import FeedbackRow from "./FeedbackRow";
 import Pagination from "../employee/Pagination";
@@ -15,14 +16,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import ClipLoader from "react-spinners/ClipLoader";
+import { ToastContainer, toast } from "react-toastify";
 
-export type Feedback = {
-  id: number;
-  customerName: string;
-  sentiment: "Positive" | "Negative" | "Neutral";
-  message: string;
-  createdAt: string;
-};
+// export type Feedback = {
+//   id: number;
+//   customerName: string;
+//   sentiment: "Positive" | "Negative" | "Neutral";
+//   message: string;
+//   createdAt: string;
+// };
 
 export type Feedback2 = {
   id: string;
@@ -50,8 +52,10 @@ export default function FeedbackTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Filter by");
   const [searchBy, setSearchBy] = useState("Name");
+  const [checkedRows, setCheckedRows] = useState<string[]>([]);
+  const [deleting, setDeleting] = useState(false);
 
-  const [feedbacks, setFeedbacks] = useState<Feedback2[]>([]);
+  const [feedbacks, setFeedbacks] = useState<Feedback2[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,24 +89,28 @@ export default function FeedbackTable() {
   };
 
   // search by
-  const filteredData = feedbacks.filter((Feedback) => {
-    switch (searchBy) {
-      case "Customer":
-        return Feedback.booking.customer.fullName
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      case "Message":
-        return Feedback.title.toLowerCase().includes(searchTerm.toLowerCase());
-      case "Date":
-        return Feedback.created_at
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      default:
-        return Feedback.booking.customer.fullName
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-    }
-  });
+  const filteredData = !feedbacks
+    ? []
+    : feedbacks.filter((Feedback) => {
+        switch (searchBy) {
+          case "Customer":
+            return Feedback.booking.customer.fullName
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+          case "Message":
+            return Feedback.title
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+          case "Date":
+            return Feedback.created_at
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+          default:
+            return Feedback.booking.customer.fullName
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+        }
+      });
 
   const finalData = applyFilter(filteredData);
 
@@ -119,7 +127,43 @@ export default function FeedbackTable() {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
 
-  if (feedbacks.length === 0)
+  const handleCheckboxToggle = (id: string, isChecked: boolean) => {
+    setCheckedRows((prevCheckedRows) =>
+      isChecked
+        ? [...prevCheckedRows, id]
+        : prevCheckedRows.filter((rowId) => rowId !== id)
+    );
+  };
+
+  const handleDeleteFeedback = async () => {
+    if (checkedRows.length === 0) {
+      toast.error("Please select feedback to delete");
+      console.log("Please select feedback to delete");
+    } else {
+      try {
+        setDeleting(true);
+        await Promise.all(
+          checkedRows.map((id) => {
+            return fetch(`/api/feedback/${id}`, {
+              method: "DELETE",
+            });
+          })
+        );
+        toast.success("Delete feedback successfully!");
+        setFeedbacks((prev) =>
+          (prev || []).filter((feedback) => !checkedRows.includes(feedback.id))
+        );
+        console.log("Delete feedback successfully!");
+      } catch (error) {
+        toast.error("Failed to delete some feedback");
+        console.error(error);
+      } finally {
+        setDeleting(false);
+      }
+    }
+  };
+
+  if (!feedbacks)
     return (
       <div className="flex justify-center items-center w-full h-[500px]">
         <ClipLoader color="#2A88F5" loading={true} size={30} />
@@ -159,7 +203,7 @@ export default function FeedbackTable() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction asChild>
                 <button
-                  onClick={() => alert("Feedback deleted")}
+                  onClick={() => handleDeleteFeedback()}
                   className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
                 >
                   Delete
@@ -174,7 +218,11 @@ export default function FeedbackTable() {
         <div className="flex flex-col w-full rounded ">
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 ">
             {currentData.map((feedback: Feedback2, index: any) => (
-              <FeedbackRow key={feedback.id} feedback={feedback} />
+              <FeedbackRow
+                key={feedback.id}
+                feedback={feedback}
+                onCheckboxToggle={handleCheckboxToggle}
+              />
             ))}
           </div>
         </div>
