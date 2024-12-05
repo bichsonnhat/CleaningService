@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
 interface NavItemProps {
   icon: string;
@@ -14,15 +14,25 @@ interface NavItemProps {
   onClick?: () => void;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon, activeIcon, label, href, isActive, onClick }) => {
+const NavItem: React.FC<NavItemProps> = ({
+  icon,
+  activeIcon,
+  label,
+  href,
+  isActive,
+  onClick,
+}) => {
   return (
-    <Link href={href}
+    <Link
+      href={href}
       className={`flex gap-5 items-center px-5 py-4 w-full sm:w-48 max-w-full min-h-[50px] 
-      ${isActive
-          ? 'text-white bg-blue-500 rounded-lg'
-          : 'hover:bg-gray-100 transition-colors rounded-lg'
-        }`}
-      onClick={onClick}>
+      ${
+        isActive
+          ? "text-white bg-blue-500 rounded-lg"
+          : "hover:bg-gray-100 transition-colors rounded-lg"
+      }`}
+      onClick={onClick}
+    >
       <img
         loading="lazy"
         src={isActive ? activeIcon : icon}
@@ -43,31 +53,31 @@ const SidebarCustomer: React.FC = () => {
       icon: "/images/Dashboard/Sidebar/InActive/Employee.svg",
       activeIcon: "/images/Dashboard/Sidebar/Active/Employee.svg",
       label: "Personal",
-      href: "/dashboard/personal"
+      href: "/dashboard/personal",
     },
     {
       icon: "/images/Dashboard/Sidebar/InActive/OrderHistory.svg",
       activeIcon: "/images/Dashboard/Sidebar/Active/OrderHistory.svg",
       label: "Order History",
-      href: "/dashboard/order-history"
+      href: "/dashboard/order-history",
     },
     {
       icon: "/images/Dashboard/Sidebar/InActive/Calendar.svg",
       activeIcon: "/images/Dashboard/Sidebar/Active/Calendar.svg",
       label: "Calendar",
-      href: "/dashboard/calendar"
+      href: "/dashboard/calendar",
     },
     {
       icon: "/images/Dashboard/Sidebar/InActive/Feedback.svg",
       activeIcon: "/images/Dashboard/Sidebar/Active/Feedback.svg",
       label: "Feedback",
-      href: "/dashboard/feedback"
+      href: "/dashboard/feedback",
     },
     {
       icon: "/images/Dashboard/Sidebar/InActive/Refund.svg",
       activeIcon: "/images/Dashboard/Sidebar/Active/Refund.svg",
       label: "Refund",
-      href: "/dashboard/refund"
+      href: "/dashboard/refund",
     },
   ];
 
@@ -102,10 +112,17 @@ const SidebarCustomer: React.FC = () => {
       <aside
         className={`fixed md:static top-0 left-0 z-40 h-screen w-[85%] md:w-[16%] 
           transform transition-transform duration-300 ease-in-out bg-white
-          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-        <nav className="flex flex-col items-center px-5 pt-5 w-full h-full
+          ${
+            isMobileMenuOpen
+              ? "translate-x-0"
+              : "-translate-x-full md:translate-x-0"
+          }`}
+      >
+        <nav
+          className="flex flex-col items-center px-5 pt-5 w-full h-full
           font-Averta-Bold tracking-wide whitespace-nowrap
-          text-stone-600 overflow-y-auto">
+          text-stone-600 overflow-y-auto"
+        >
           {navItems.map((item) => (
             <NavItem
               key={item.label}

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
 interface NavItemProps {
   icon: string;
@@ -14,14 +14,22 @@ interface NavItemProps {
   onClick?: () => void;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon, activeIcon, label, href, isActive, onClick }) => {
+const NavItem: React.FC<NavItemProps> = ({
+  icon,
+  activeIcon,
+  label,
+  href,
+  isActive,
+  onClick,
+}) => {
   return (
     <Link
       href={href}
       className={`flex gap-5 items-center px-5 py-4 w-full sm:w-48 max-w-full min-h-[50px] 
-        ${isActive 
-          ? 'text-white bg-blue-500 rounded-lg' 
-          : 'hover:bg-gray-100 transition-colors rounded-lg'
+        ${
+          isActive
+            ? "text-white bg-blue-500 rounded-lg"
+            : "hover:bg-gray-100 transition-colors rounded-lg"
         }`}
       onClick={onClick}
     >
@@ -36,14 +44,22 @@ const NavItem: React.FC<NavItemProps> = ({ icon, activeIcon, label, href, isActi
   );
 };
 
-const NavChildItem: React.FC<NavItemProps> = ({ icon, activeIcon, label, href, isActive, onClick }) => {
+const NavChildItem: React.FC<NavItemProps> = ({
+  icon,
+  activeIcon,
+  label,
+  href,
+  isActive,
+  onClick,
+}) => {
   return (
     <Link
       href={href}
       className={`flex gap-5 items-center w-full max-w-full px-5 min-h-[50px] 
-        ${isActive 
-          ? 'text-white bg-blue-500 rounded-lg' 
-          : 'hover:bg-gray-200 transition-colors bg-[#F4F7F9] rounded-lg'
+        ${
+          isActive
+            ? "text-white bg-blue-500 rounded-lg"
+            : "hover:bg-gray-200 transition-colors bg-[#F4F7F9] rounded-lg"
         }`}
       onClick={onClick}
     >
@@ -58,7 +74,7 @@ const NavChildItem: React.FC<NavItemProps> = ({ icon, activeIcon, label, href, i
   );
 };
 
-interface CollapsibleNavItemProps extends Omit<NavItemProps, 'isActive'> {
+interface CollapsibleNavItemProps extends Omit<NavItemProps, "isActive"> {
   isExpanded: boolean;
   children?: React.ReactNode;
 }
@@ -86,7 +102,7 @@ const CollapsibleNavItem: React.FC<CollapsibleNavItemProps> = ({
         <div className="relative pl-7 mt-1 space-y-1">
           <svg
             className="absolute left-0 top-[-4px] w-16 h-full"
-            style={{ pointerEvents: 'none' }}
+            style={{ pointerEvents: "none" }}
           >
             <path
               d="M 16 0 L 16 70%"
@@ -104,9 +120,7 @@ const CollapsibleNavItem: React.FC<CollapsibleNavItemProps> = ({
               />
             ))}
           </svg>
-          <div className="space-y-1 relative">
-            {children}
-          </div>
+          <div className="space-y-1 relative">{children}</div>
         </div>
       )}
     </div>
@@ -120,73 +134,73 @@ const Sidebar: React.FC = () => {
 
   // Effect to set initial expanded state based on current path
   useEffect(() => {
-    if (pathname.includes('/dashboard/service')) {
-      setExpandedMenu('Service');
+    if (pathname.includes("/dashboard/service")) {
+      setExpandedMenu("Service");
     }
   }, [pathname]);
 
   const navItemsAdmin = [
     {
-      icon: '/images/Dashboard/Sidebar/InActive/Chart.svg',
-      activeIcon: '/images/Dashboard/Sidebar/Active/Chart.svg',
-      label: 'Chart',
-      href: '/dashboard/chart',
+      icon: "/images/Dashboard/Sidebar/InActive/Chart.svg",
+      activeIcon: "/images/Dashboard/Sidebar/Active/Chart.svg",
+      label: "Chart",
+      href: "/dashboard/chart",
     },
     {
-      icon: '/images/Dashboard/Sidebar/InActive/Order.svg',
-      activeIcon: '/images/Dashboard/Sidebar/Active/Order.svg',
-      label: 'Order',
-      href: '/dashboard/order',
+      icon: "/images/Dashboard/Sidebar/InActive/Order.svg",
+      activeIcon: "/images/Dashboard/Sidebar/Active/Order.svg",
+      label: "Order",
+      href: "/dashboard/order",
     },
     {
-      icon: '/images/Dashboard/Sidebar/InActive/Customer.svg',
-      activeIcon: '/images/Dashboard/Sidebar/Active/Customer.svg',
-      label: 'Customer',
-      href: '/dashboard/customer',
+      icon: "/images/Dashboard/Sidebar/InActive/Customer.svg",
+      activeIcon: "/images/Dashboard/Sidebar/Active/Customer.svg",
+      label: "Customer",
+      href: "/dashboard/customer",
     },
     {
-      icon: '/images/Dashboard/Sidebar/InActive/Employee.svg',
-      activeIcon: '/images/Dashboard/Sidebar/Active/Employee.svg',
-      label: 'Employee',
-      href: '/dashboard/employee',
+      icon: "/images/Dashboard/Sidebar/InActive/Employee.svg",
+      activeIcon: "/images/Dashboard/Sidebar/Active/Employee.svg",
+      label: "Employee",
+      href: "/dashboard/employee",
     },
     {
-      icon: '/images/Dashboard/Sidebar/InActive/Service.svg',
-      activeIcon: '/images/Dashboard/Sidebar/Active/Service.svg',
-      label: 'Service',
-      href: '/dashboard/service/category',
+      icon: "/images/Dashboard/Sidebar/InActive/Service.svg",
+      activeIcon: "/images/Dashboard/Sidebar/Active/Service.svg",
+      label: "Service",
+      href: "/dashboard/service/category",
       children: [
         {
-          icon: '/images/Dashboard/Sidebar/InActive/C.svg',
-          activeIcon: '/images/Dashboard/Sidebar/Active/C.svg',
-          label: 'Category',
-          href: '/dashboard/service/category',
+          icon: "/images/Dashboard/Sidebar/InActive/C.svg",
+          activeIcon: "/images/Dashboard/Sidebar/Active/C.svg",
+          label: "Category",
+          href: "/dashboard/service/category",
         },
         {
-          icon: '/images/Dashboard/Sidebar/InActive/D.svg',
-          activeIcon: '/images/Dashboard/Sidebar/Active/D.svg',
-          label: 'Detail',
-          href: '/dashboard/service/detail',
+          icon: "/images/Dashboard/Sidebar/InActive/D.svg",
+          activeIcon: "/images/Dashboard/Sidebar/Active/D.svg",
+          label: "Detail",
+          href: "/dashboard/service/detail",
         },
       ],
     },
     {
-      icon: '/images/Dashboard/Sidebar/InActive/Feedback.svg',
-      activeIcon: '/images/Dashboard/Sidebar/Active/Feedback.svg',
-      label: 'Feedback',
-      href: '/dashboard/feedback',
+      icon: "/images/Dashboard/Sidebar/InActive/Feedback.svg",
+      activeIcon: "/images/Dashboard/Sidebar/Active/Feedback.svg",
+      label: "Feedback",
+      href: "/dashboard/feedback",
     },
     {
-      icon: '/images/Dashboard/Sidebar/InActive/Issue.svg',
-      activeIcon: '/images/Dashboard/Sidebar/Active/Issue.svg',
-      label: 'Issue',
-      href: '/dashboard/issue',
+      icon: "/images/Dashboard/Sidebar/InActive/Issue.svg",
+      activeIcon: "/images/Dashboard/Sidebar/Active/Issue.svg",
+      label: "Issue",
+      href: "/dashboard/issue",
     },
     {
-      icon: '/images/Dashboard/Sidebar/InActive/Refund.svg',
-      activeIcon: '/images/Dashboard/Sidebar/Active/Refund.svg',
-      label: 'Refund',
-      href: '/dashboard/refund',
+      icon: "/images/Dashboard/Sidebar/InActive/Refund.svg",
+      activeIcon: "/images/Dashboard/Sidebar/Active/Refund.svg",
+      label: "Refund",
+      href: "/dashboard/refund",
     },
   ];
 
@@ -203,7 +217,7 @@ const Sidebar: React.FC = () => {
   const handleMobileItemClickAndCollapse = () => {
     handleMobileItemClick();
     setExpandedMenu(null);
-  }
+  };
 
   return (
     <>
@@ -231,11 +245,17 @@ const Sidebar: React.FC = () => {
       <aside
         className={`fixed md:static top-0 left-0 z-40 h-screen w-[85%] md:w-[16%] 
           transform transition-transform duration-300 ease-in-out bg-white
-          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+          ${
+            isMobileMenuOpen
+              ? "translate-x-0"
+              : "-translate-x-full md:translate-x-0"
+          }`}
       >
-        <nav className="flex flex-col items-center px-5 pt-5 w-full h-full
+        <nav
+          className="flex flex-col items-center px-5 pt-5 w-full h-full
           font-Averta-Bold tracking-wide whitespace-nowrap
-          text-stone-600 overflow-y-auto">
+          text-stone-600 overflow-y-auto"
+        >
           <div className="w-full space-y-1 pb-8">
             {navItemsAdmin.map((item) => (
               <React.Fragment key={item.label}>
