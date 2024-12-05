@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Pagination from '../employee/Pagination';
 import SearchBarAndFilter from './SearchBarAndFilter';
 import IssueRow from '../issue/IssueRow';
@@ -14,6 +14,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Feedback2 } from '../feedback/FeedbackTable';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 export type Issue = {
   id: number;
@@ -23,37 +25,19 @@ export type Issue = {
   createAt: string;
 }
 
-const issueData: Issue[] = [
-  { id: 1, name: "Jullu Jalal", sentiment: "Positive" as "Positive", message: "Get Best Advertiser In Your Side Pocket", createAt: "2024-10-08T08:13:00Z" },
-  { id: 2, name: "Jullu Jalal", sentiment: "Positive" as "Positive", message: "Free Classifieds Using Them To Promote Your Stuff Online", createAt: "2023-10-15T08:13:00Z" },
-  { id: 3, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Vacation Home Rental Success", createAt: "2023-10-15T08:13:00Z" },
-  { id: 4, name: "Jullu Jalal", sentiment: "Neutral" as "Neutral", message: "Enhance Your Brand Potential With Giant Advertising Blimps", createAt: "2023-10-15T08:13:00Z" },
-  { id: 5, name: "Sepo Jalal", sentiment: "Negative" as "Negative", message: "Always Look On The Bright Side Of Life", createAt: "2023-10-15T08:13:00Z" },
-  { id: 6, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 7, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 8, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 9, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 10, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 11, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2010-10-15T08:13:00Z" },
-  { id: 12, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 13, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 14, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 15, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 16, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2027-10-15T08:13:00Z" },
-  { id: 17, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 18, name: "Jullu Jalal", sentiment: "Positive" as "Positive", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 19, name: "Jullu Jalal", sentiment: "Positive" as "Positive", message: "Free Classifieds Using Them To Promote Your Stuff Online", createAt: "2023-10-15T08:13:00Z" },
-  { id: 20, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Vacation Home Rental Success", createAt: "2023-10-15T08:13:00Z" },
-  { id: 21, name: "Jullu Jalal", sentiment: "Neutral" as "Neutral", message: "Enhance Your Brand Potential With Giant Advertising Blimps", createAt: "2023-10-15T08:13:00Z" },
-  { id: 22, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Always Look On The Bright Side Of Life", createAt: "2023-10-15T08:13:00Z" },
-  { id: 23, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 24, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 25, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 26, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-  { id: 27, name: "Jullu Jalal", sentiment: "Negative" as "Negative", message: "Get Best Advertiser In Your Side Pocket", createAt: "2023-10-15T08:13:00Z" },
-];
-
 export default function IssueHistoryTable() {
+  const [issueData, setIssueData] = useState<Feedback2[]>([]);
+
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      const response = await fetch(`/api/feedback`);
+      const data = await response.json();
+      console.log("Issue History: ", data);
+      setIssueData(data);
+    };
+
+    fetchFeedback();
+  }, []);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -84,9 +68,9 @@ export default function IssueHistoryTable() {
   const filteredData = issueData.filter((Issue) => {
     switch (searchBy) {
       case "Helper":
-        return Issue.name.toLowerCase().includes(searchTerm.toLowerCase());
+        return Issue.booking.helper.user.fullName.toLowerCase().includes(searchTerm.toLowerCase());
       default:
-        return Issue.name.toLowerCase().includes(searchTerm.toLowerCase());
+        return Issue.booking.helper.user.fullName.toLowerCase().includes(searchTerm.toLowerCase());
     }
   });
 
@@ -104,6 +88,13 @@ export default function IssueHistoryTable() {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
+
+  if (issueData.length === 0)
+    return (
+      <div className="flex justify-center items-center w-full h-[500px]">
+        <ClipLoader color="#2A88F5" loading={true} size={30} />
+      </div>
+    );
 
   return (
     <>
@@ -149,8 +140,8 @@ export default function IssueHistoryTable() {
       </div>
 
       <div className="flex overflow-hidden flex-col justify-center mt-3.5 w-full max-md:max-w-full">
-        {currentData.map((issue: Issue, index: any) => (
-          <IssueRow key={issue.id} {...issue} />
+        {currentData.map((issue: Feedback2, index: any) => (
+          <IssueRow key={issue.id} issueData={issue} />
         ))}
       </div>
 
