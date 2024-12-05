@@ -5,6 +5,8 @@ import Pagination from "./Pagination";
 import SearchBarAndFilter from "./SearchBarAndFilter";
 import DetailServiceRow from "./DetailServiceRow";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { UpdateServiceDetailPopup } from "@/components/popup/UpdateServiceDetailPopup";
+import { set } from "zod";
 
 const columns = [
   { header: "TYPE", className: "w-[210px] hidden md:table-cell" },
@@ -67,7 +69,10 @@ const DetailServicesData: ServiceDetail[] = [
 ];
 
 const DetailServiceTable = () => {
-  const queryClient = useQueryClient();
+  const [selectedServiceDetailId, setSelectedServiceDetailId] = useState<
+    string | null
+  >(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const url = "http://localhost:3000/api/service-detail";
 
@@ -139,6 +144,12 @@ const DetailServiceTable = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
+
+  const handleRowClick = (id: string) => {
+    setSelectedServiceDetailId(id);
+    setIsDialogOpen(true);
+  };
+
   return (
     <>
       <SearchBarAndFilter
@@ -160,7 +171,11 @@ const DetailServiceTable = () => {
       </div>
       <div className="flex overflow-hidden flex-col max-xl:mt-4 rounded-lg justify-center w-full max-md:max-w-full">
         {currentData.map((category: ServiceDetail, index: any) => (
-          <DetailServiceRow key={category.id} {...category} />
+          <DetailServiceRow
+            key={category.id}
+            {...category}
+            onRowClick={handleRowClick}
+          />
         ))}
       </div>
       <Pagination
@@ -168,6 +183,12 @@ const DetailServiceTable = () => {
         totalItems={filteredData.length}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+      />
+
+      <UpdateServiceDetailPopup
+        id={selectedServiceDetailId}
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
       />
     </>
   );

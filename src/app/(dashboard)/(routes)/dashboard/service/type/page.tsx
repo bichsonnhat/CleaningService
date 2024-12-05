@@ -1,7 +1,7 @@
 import ServiceTypeTable from "@/components/service/type/ServiceTypeTable";
 import React from "react";
 
-const CategoryServicePage = () => {
+const ServiceTypePage = () => {
   return (
     <div>
       <ServiceTypeTable />
@@ -9,4 +9,4 @@ const CategoryServicePage = () => {
   );
 };
 
-export default CategoryServicePage;
+export default ServiceTypePage;

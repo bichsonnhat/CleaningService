@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from "react";
 import Pagination from "./Pagination";
 import SearchBarAndFilter from "./SearchBarAndFilter";
-import CategoryServiceRow from "./ServiceTypeRow";
 import { useQuery } from "@tanstack/react-query";
+import { UpdateServiceTypePopup } from "@/components/popup/UpdateServiceTypePopup";
+import ServiceTypeRow from "./ServiceTypeRow";
 
 const columns = [
   { header: "NAME", className: "w-[210px] hidden xl:table-cell" },
@@ -86,6 +87,11 @@ const ServiceTypeTable = () => {
     }
   };
 
+  const [selectedServiceTypeId, setSelectedServiceTypeId] = useState<
+    string | null
+  >(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Filter by");
@@ -127,6 +133,18 @@ const ServiceTypeTable = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
+
+  const handleRowClick = (id: string) => {
+    setSelectedServiceTypeId(id);
+    setIsDialogOpen(true);
+  };
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
+
   return (
     <>
       <SearchBarAndFilter
@@ -147,7 +165,11 @@ const ServiceTypeTable = () => {
       </div>
       <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
         {currentData.map((detail: ServiceType, index: any) => (
-          <CategoryServiceRow key={detail.id} {...detail} />
+          <ServiceTypeRow
+            key={detail.id}
+            {...detail}
+            onRowClick={handleRowClick}
+          />
         ))}
       </div>
       <Pagination
@@ -155,6 +177,11 @@ const ServiceTypeTable = () => {
         totalItems={filteredData.length}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+      />
+      <UpdateServiceTypePopup
+        id={selectedServiceTypeId}
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
       />
     </>
   );

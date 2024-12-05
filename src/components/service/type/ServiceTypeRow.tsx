@@ -6,6 +6,7 @@ const ServiceTypeRow: React.FC<ServiceTypeRowProps> = ({
   description,
   basePrice,
   category,
+  onRowClick,
 }) => {
   const serviceColor =
     category?.name === "Home Cleaning"
@@ -15,7 +16,10 @@ const ServiceTypeRow: React.FC<ServiceTypeRowProps> = ({
       : "bg-[#9370db] text-[#171717]";
 
   return (
-    <div className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto items-start md:items-center p-2.5 cursor-pointer">
+    <div
+      className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto items-start md:items-center p-2.5 cursor-pointer"
+      onClick={() => onRowClick(id)}
+    >
       <div className="w-full md:w-[210px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224cc] ">
           <span className="xl:hidden font-Averta-Semibold">NAME: </span>

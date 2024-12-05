@@ -19,6 +19,7 @@ type ServiceTypeRowProps = {
   category?: {
     name: string;
   };
+  onRowClick: (id: string) => void;
 };
 
 type DetailServiceRowProps = {
@@ -30,6 +31,7 @@ type DetailServiceRowProps = {
   serviceType?: {
     name: string;
   };
+  onRowClick: (id: string) => void;
 };
 
 type ServiceDetail = {

@@ -33,7 +33,7 @@ const CustomSelect = forwardRef<HTMLButtonElement, CustomSelectProps>(
         >
           {label.toUpperCase()}
         </Label>
-        <Select value={value} onValueChange={onChange}>
+        <Select value={value} onValueChange={(val) => onChange?.(val)}>
           <SelectTrigger
             className={cn(
               `font-Averta-Regular h-[50px] text-[16px] text-[#4F6071] border-2`,
@@ -47,8 +47,8 @@ const CustomSelect = forwardRef<HTMLButtonElement, CustomSelectProps>(
           </SelectTrigger>
           <SelectContent>
             {options.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
-                {option.name} {/* Display the name of the option */}
+              <SelectItem key={option.id} value={option.id.toString()}>
+                {option.name}
               </SelectItem>
             ))}
           </SelectContent>

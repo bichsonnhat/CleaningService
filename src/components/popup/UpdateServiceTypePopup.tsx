@@ -12,14 +12,15 @@ import CustomInput from "../input/CustomInput";
 import CustomSelect from "../select/CustomSelect";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  serviceDetailSchema,
-  updateServiceDetailData,
-} from "@/schema/serviceDetailSchema";
+import { serviceDetailSchema } from "@/schema/serviceDetailSchema";
 import { useEffect } from "react";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
+import {
+  serviceTypeSchema,
+  updateServiceTypeData,
+} from "@/schema/serviceTypeSchema";
 
-export function UpdateServiceDetailPopup({
+export function UpdateServiceTypePopup({
   id,
   open,
   onClose,
@@ -30,22 +31,23 @@ export function UpdateServiceDetailPopup({
 }) {
   const queryClient = useQueryClient();
 
-  const fetchServiceTypesUrl = "http://localhost:3000/api/service-types";
-  const serviceDetailUrl = id
-    ? `http://localhost:3000/api/service-detail/${id}`
+  const fetchServiceCategoryUrl =
+    "http://localhost:3000/api/service-categories";
+  const serviceTypelUrl = id
+    ? `http://localhost:3000/api/service-types/${id}`
     : null;
 
-  const form = useForm<updateServiceDetailData>({
+  const form = useForm<updateServiceTypeData>({
     mode: "onSubmit",
-    resolver: zodResolver(serviceDetailSchema),
+    resolver: zodResolver(serviceTypeSchema),
   });
 
-  const fetchServiceDetail = async (): Promise<ServiceDetail> => {
+  const fetchServiceType = async (): Promise<ServiceType> => {
     try {
-      if (!serviceDetailUrl) {
+      if (!serviceTypelUrl) {
         throw new Error("Service detail URL is null");
       }
-      const response = await fetch(serviceDetailUrl);
+      const response = await fetch(serviceTypelUrl);
       if (!response.ok) {
         throw new Error("Error fetching service detail");
       }
@@ -55,9 +57,9 @@ export function UpdateServiceDetailPopup({
       throw new Error("Error fetching service detail");
     }
   };
-  const fetchServiceTypes = async (): Promise<ServiceType[]> => {
+  const fetchServiceCategories = async (): Promise<ServiceType[]> => {
     try {
-      const response = await fetch(fetchServiceTypesUrl);
+      const response = await fetch(fetchServiceCategoryUrl);
       if (!response.ok) {
         throw new Error("Error fetching service types");
       }
@@ -68,23 +70,25 @@ export function UpdateServiceDetailPopup({
     }
   };
 
-  const { data: detailData, isPending: isFetchDetailPending } = useQuery({
-    queryKey: ["serviceDetail", id],
-    queryFn: fetchServiceDetail,
+  const { data: typeData, isPending: isFetchTypePending } = useQuery({
+    queryKey: ["serviceType", id],
+    queryFn: fetchServiceType,
   });
 
-  const { data: serviceTypesData, isPending: isFetchServiceTypePending } =
-    useQuery({
-      queryKey: ["serviceTypes"],
-      queryFn: fetchServiceTypes,
-    });
+  const {
+    data: serviceCategoriesData,
+    isPending: isFetchServiceCategoriesPending,
+  } = useQuery({
+    queryKey: ["serviceCategories"],
+    queryFn: fetchServiceCategories,
+  });
 
-  const updateServiceDetail = async (data: updateServiceDetailData) => {
+  const updateServiceDetail = async (data: updateServiceTypeData) => {
     try {
-      if (!serviceDetailUrl) {
+      if (!serviceTypelUrl) {
         throw new Error("Service detail URL is null");
       }
-      const response = await fetch(serviceDetailUrl, {
+      const response = await fetch(serviceTypelUrl, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -101,8 +105,8 @@ export function UpdateServiceDetailPopup({
     }
   };
 
-  const options = serviceTypesData
-    ? serviceTypesData.map((serviceType) => ({
+  const options = serviceCategoriesData
+    ? serviceCategoriesData.map((serviceType) => ({
         id: serviceType.id.toString(),
         name: serviceType.name.toString(),
       }))
@@ -120,29 +124,28 @@ export function UpdateServiceDetailPopup({
       reset();
       return;
     }
-    if (detailData) {
+    if (typeData) {
       reset({
-        ...detailData,
-        serviceTypeId: detailData?.serviceTypeId?.toString(),
-        title: detailData.title.toString(),
+        categoryId: typeData.categoryId?.toString(),
+        name: typeData.name,
+        description: typeData.description,
+        basePrice: typeData.basePrice,
       });
     }
-  }, [id, detailData, reset]);
+  }, [id, typeData, reset]);
 
   useEffect(() => {
     if (!open) {
-      reset({
-        serviceTypeId: detailData?.serviceTypeId.toString(),
-      });
+      reset({});
     }
   }, [open, reset]);
 
-  const onSubmitHandle = async (data: updateServiceDetailData) => {
+  const onSubmitHandle = async (data: updateServiceTypeData) => {
     try {
       console.log("Submitting data:", data);
       await updateServiceDetail(data);
       console.log("Service detail update successfully.");
-      queryClient.invalidateQueries({ queryKey: ["serviceDetails"] });
+      queryClient.invalidateQueries({ queryKey: ["serviceTypes"] });
       onClose();
     } catch (error) {
       console.error("Error while updating service detail:", error);
@@ -156,83 +159,80 @@ export function UpdateServiceDetailPopup({
         <DialogHeader>
           <DialogTitle>Update Service Detail</DialogTitle>
         </DialogHeader>
-        {!id || !detailData || isFetchDetailPending ? (
+        {!id || !typeData || isFetchTypePending ? (
           <div>Loading...</div>
         ) : (
           <form onSubmit={handleSubmit(onSubmitHandle)}>
             <div className="flex flex-col justify-center items-center gap-6 py-4">
-              {isFetchServiceTypePending ? (
+              {isFetchServiceCategoriesPending ? (
                 <div>Loading...</div>
               ) : (
                 <Controller
-                  name="serviceTypeId"
+                  name="categoryId"
                   control={control}
                   render={({ field }) => (
                     <CustomSelect
-                      label="SERVICE TYPE"
-                      id="service-type"
+                      label="SERVICE CATEGORY"
+                      id="service-category"
                       options={options}
-                      placeholder="Select Service Type"
-                      value={field.value ?? "Standard"}
+                      placeholder="Select Service Category"
+                      value={field.value ?? ""}
                       onChange={() => field.onChange(field.value)}
-                      error={errors.serviceTypeId?.message}
+                      error={errors.categoryId?.message}
                       ref={field.ref}
-                    />
+                    ></CustomSelect>
                   )}
                 />
               )}
 
               <Controller
-                name="title"
+                name="name"
                 control={control}
                 render={({ field }) => (
                   <CustomInput
-                    label="Title"
-                    placeholder="Enter Title"
-                    id="title"
+                    label="Name"
+                    placeholder="Enter Type Name"
+                    id="name"
                     className="w-full"
                     value={field.value ?? ""}
                     onChange={field.onChange}
-                    error={errors.title?.message}
-                  />
+                    error={errors.name?.message}
+                  ></CustomInput>
                 )}
               />
 
-              <div className="flex gap-4 w-full">
-                <Controller
-                  name="multiplyPrice"
-                  control={control}
-                  render={({ field }) => (
-                    <CustomInput
-                      label="Multiply Price (times)"
-                      placeholder="Enter x Price"
-                      id="multiply_price"
-                      className="w-full"
-                      type="number"
-                      value={field.value ?? ""}
-                      onChange={field.onChange}
-                      error={errors.multiplyPrice?.message}
-                    />
-                  )}
-                />
+              <Controller
+                name="basePrice"
+                control={control}
+                render={({ field }) => (
+                  <CustomInput
+                    label="Base Price (USD)"
+                    placeholder="Base Price"
+                    id="base-price"
+                    className="w-full"
+                    type="number"
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    error={errors.basePrice?.message}
+                  ></CustomInput>
+                )}
+              />
 
-                <Controller
-                  name="additionalPrice"
-                  control={control}
-                  render={({ field }) => (
-                    <CustomInput
-                      label="Additional Price (USD)"
-                      placeholder="Enter + Price"
-                      id="additionalPrice"
-                      className="w-full"
-                      type="number"
-                      value={field.value ?? ""}
-                      onChange={field.onChange}
-                      error={errors.additionalPrice?.message}
-                    />
-                  )}
-                />
-              </div>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <CustomInput
+                    label="Description"
+                    placeholder="Enter Description"
+                    id="description"
+                    className="w-full"
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    error={errors.description?.message}
+                  ></CustomInput>
+                )}
+              />
             </div>
             <DialogFooter>
               <Button
