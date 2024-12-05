@@ -17,6 +17,8 @@ const Pagination: React.FC<PaginationProps> = ({
   const startItem = (currentPage - 1) * 10 + 1;
   const endItem = Math.min(currentPage * 10, totalItems);
 
+  const isDisabled = totalItems === 0;
+
   return (
     <div className="flex flex-wrap gap-10 justify-between items-center mt-3.5 w-full max-md:max-w-full">
       <div className="self-stretch my-auto text-sm font-Averta-Regular text-[#202224] opacity-60">
@@ -31,12 +33,12 @@ const Pagination: React.FC<PaginationProps> = ({
           <button
             className="w-[38px] h-[38px] flex items-center justify-center"
             onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            disabled={currentPage === 1 || isDisabled}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className={`h-5 w-5 text-[#202224] ${
-                currentPage === 1
+                isDisabled || currentPage === 1
                   ? "opacity-60"
                   : "opacity-90 hover:text-[#1b78f2]"
               }`}
@@ -58,12 +60,12 @@ const Pagination: React.FC<PaginationProps> = ({
           <button
             className="w-[38px] h-[38px] flex items-center justify-center"
             onClick={() => onPageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            disabled={currentPage === totalPages || isDisabled}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className={`h-5 w-5 text-[#202224]  ${
-                currentPage === totalPages
+              className={`h-5 w-5 text-[#202224] ${
+                isDisabled || currentPage === totalPages
                   ? "opacity-60"
                   : "opacity-90 hover:text-[#1b78f2]"
               }`}

@@ -4,7 +4,11 @@ import { NextResponse } from 'next/server'
 
 // GET all booking contract
 export async function GET() {
-  const bookingContract = await prisma.bookingContract.findMany()
+  const bookingContract = await prisma.bookingContract.findMany({
+    include: {
+      booking: true,
+    },
+  })
   return NextResponse.json(bookingContract)
 }
 

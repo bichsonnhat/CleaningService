@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { FC } from 'react'
 import {Line} from 'react-chartjs-2'
 import 'chart.js/auto'
 
-export const Chart = () => {    
+type ChartProps = {
+    totalIncome: number[];
+}
+
+export const Chart: FC<ChartProps> = ({totalIncome}) => {    
     const config = {
         type: 'line',
         data: {
@@ -10,7 +14,7 @@ export const Chart = () => {
             datasets: [
                 {
                     label: 'Total Income',
-                    data: [12345, 67891, 9874, 41053, 22398, 69889, 54769, 67832, 68890, 80159, 13563, 94365],
+                    data: totalIncome,
                     borderColor: "#4379EE",
                     tension: 0.1,
                     fill: true,
@@ -23,9 +27,9 @@ export const Chart = () => {
             scales: {
                 y: {
                     beginAtZero: true,
-                    max: 100000,
+                    max: 20000,
                     ticks: {
-                        stepSize: 20000
+                        stepSize: 5000,
                       }
                 },
                 x: {
