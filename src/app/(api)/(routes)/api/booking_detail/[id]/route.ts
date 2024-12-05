@@ -11,6 +11,10 @@ export async function GET(
             where: {
                 id: params.id,
             },
+            include: {
+                booking: true,
+                serviceDetail: true,
+              },
         });
         if (!bookingDetail) {
             return NextResponse.json(
