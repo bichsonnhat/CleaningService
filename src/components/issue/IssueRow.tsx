@@ -1,28 +1,14 @@
 import React from "react";
 import { Checkbox } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
+import { Feedback2 } from "../feedback/FeedbackTable";
 
 interface IssueRowProps {
-  name: string;
-  sentiment: "Positive" | "Negative" | "Neutral";
-  message: string;
-  createAt: string;
+  issueData: Feedback2;
 }
 
-const IssueRow: React.FC<IssueRowProps> = ({
-  name,
-  sentiment,
-  message,
-  createAt,
-}) => {
+const IssueRow: React.FC<IssueRowProps> = ({ issueData }) => {
   const router = useRouter();
-
-  const sentimentColor =
-    sentiment === "Positive"
-      ? "bg-[#ccf0eb] text-[#00b69b]"
-      : sentiment === "Negative"
-      ? "bg-[#fcd7d4] text-[#ef3826]"
-      : "bg-[#ccd0d9] text-[#2b3641]";
 
   function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -38,7 +24,7 @@ const IssueRow: React.FC<IssueRowProps> = ({
 
   return (
     <div
-      onClick={() => router.push(`issue/${name}`)}
+      onClick={() => router.push(`issue/${issueData.id}`)}
       className={`flex overflow-hidden flex-col xl:flex-row flex-wrap w-full border-b-2 xl:border-b px-4 border-gray-200 xl:h-[80px] cursor-pointer bg-white hover:bg-[#f4f7ff]`}
     >
       <div
@@ -59,7 +45,7 @@ const IssueRow: React.FC<IssueRowProps> = ({
       >
         <div className="overflow-hidden px-3 py-4 w-full min-h-[48px] font-Averta-Regular xl:font-Averta-Semibold text-[15px]">
           <span className="xl:hidden font-mono font-bold">Helper: </span>
-          {name}
+          {issueData.booking.helper.user.fullName}
         </div>
       </div>
       <div
@@ -69,7 +55,7 @@ const IssueRow: React.FC<IssueRowProps> = ({
           <span className="xl:hidden font-mono font-semibold text-[15px]">
             Title:{" "}
           </span>
-          {message}
+          {issueData.title}
         </div>
       </div>
       <div
@@ -77,7 +63,7 @@ const IssueRow: React.FC<IssueRowProps> = ({
       >
         <div className="overflow-hidden self-stretch px-3 py-4 w-full min-h-[48px] font-Averta-Regular xl:font-Averta-Semibold text-[14px]">
           <span className="xl:hidden font-mono font-semibold">Date: </span>
-          {formatDate(createAt)}
+          {formatDate(issueData.created_at)}
         </div>
       </div>
     </div>

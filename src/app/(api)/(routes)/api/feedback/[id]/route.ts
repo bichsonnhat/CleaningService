@@ -17,6 +17,15 @@ export async function GET(
               select:{
                 fullName: true,
               }
+            },
+            helper: {
+              select:{
+                user: {
+                  select:{
+                    fullName: true,
+                  }
+                }
+              }
             }
           }
         }
