@@ -57,7 +57,7 @@ const Step_2 = () => {
                 Book a specific date you need to space sparkled
             </div>
             <div className="mt-[50px] flex flex-row justify-between xl:w-[1000px] lg:w-[550px] sm:w-[500px] w-[390px]">
-                <div className="hidden: sm:block">
+                <div className="hidden sm:block">
                     <Image
                         src="/images/icons/arrow_back.svg"
                         alt="arrow_back"
@@ -90,7 +90,7 @@ const Step_2 = () => {
                         {getMonth(currentIndex + 1)}
                     </div>
                 </div>
-                <div className="hidden: sm:block">
+                <div className="hidden sm:block">
                     <Image
                         src="/images/icons/arrow_forward.svg"
                         alt="arrow_forward"
