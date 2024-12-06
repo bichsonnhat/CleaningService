@@ -77,9 +77,10 @@ datasource db {
 
 // Models
 model User {
-  id              String       @id @default(uuid()) @db.Uuid  
+  id              String       @id   
   gender          String?      @db.VarChar(10)
   fullName        String       @db.VarChar(150)
+  email           String       @unique @db.VarChar(150)
   dateOfBirth     DateTime     @db.Date
   identifyCard    String?
   address         String?
@@ -98,7 +99,7 @@ model User {
 }
 
 model Helper { 
-  id                    String    @id @db.Uuid
+  id                    String    @id
   experienceDescription String?
   resumeUploaded        String?
   servicesOffered       String[]  @db.Uuid // Array of service_type_ids
@@ -117,14 +118,14 @@ model Helper {
 
 model HelperAvailability {
   id               String             @id @default(uuid()) @db.Uuid
-  helperId         String             @db.Uuid
+  helperId         String             
   startDatetime    DateTime           @db.Timestamp()
   endDatetime      DateTime           @db.Timestamp()
   availabilityType String             @db.VarChar(50)
   status           String             @default("pending") @db.VarChar(50)
   requestReason    String?
   rejectionReason  String?
-  approvedById     String?            @db.Uuid
+  approvedById     String?            
   createdAt        DateTime           @default(now()) @db.Timestamp()
   updatedAt        DateTime           @default(now()) @updatedAt @db.Timestamp()
 
@@ -180,8 +181,8 @@ model ServiceDetail {
 
 model Booking {
   id                 String        @id @default(uuid()) @db.Uuid
-  customerId         String        @db.Uuid
-  helperId          String?       @db.Uuid
+  customerId         String        
+  helperId          String?       
   serviceTypeId     String        @db.Uuid
   location          String
   scheduledStartTime DateTime      @db.Timestamp()
@@ -260,10 +261,10 @@ model Refund {
 
 model BlacklistedUser {
   id            String    @id @default(uuid()) @db.Uuid
-  userId        String    @unique @db.Uuid
+  userId        String    @unique 
   reason        String
   blacklistedAt DateTime  @default(now()) @db.Timestamp()
-  blacklistedBy String    @db.Uuid
+  blacklistedBy String    
   isPermanent   Boolean   @default(false)
   expiryDate    DateTime? @db.Timestamp()
 
