@@ -66,12 +66,12 @@ export async function POST(req: Request) {
         console.error('Error creating user:', error)
         return new Response('Error: Failed to create user', {status: 500,})
     }
-    const client = await clerkClient();
-    await client.users.updateUserMetadata(payload.id, {
-      publicMetadata: {
-        role: "customer",
-      }
-    });
+    // const client = await clerkClient();
+    // await client.users.updateUserMetadata(payload.id, {
+    //   publicMetadata: {
+    //     role: "undefined",
+    //   }
+    // });
   }
 
   return new Response('Webhook received', { status: 200 })

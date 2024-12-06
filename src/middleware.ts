@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { useRouter } from "next/navigation";
 import { NextResponse } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
@@ -7,6 +8,10 @@ const isPublicRoute = createRouteMatcher([
   "/select-role",
   "/booking(.*)"
 ]);
+
+const isVerfiedRoute = createRouteMatcher([
+  "/select-role"  
+])
 
 const isAdminRoute = createRouteMatcher([
   "/dashboard/chart", 
@@ -47,6 +52,34 @@ export default clerkMiddleware(async (auth, request) => {
   if (!userId && isPublicRoute(request)) {
     return redirectToSignIn()
   }
+
+  const role = (await auth()).sessionClaims?.metadata?.role;
+  if (!role) {
+    // If trying to access any public route except /select-role, redirect to /select-role
+    if (isPublicRoute(request) && request.nextUrl.pathname !== '/select-role') {
+      const url = new URL("/select-role", request.url);
+      return NextResponse.redirect(url);
+    }
+    
+    // If trying to access routes that require a role, redirect to /select-role
+    if (
+      isAdminRoute(request) || 
+      isCustomerRoute(request) || 
+      isHelperRoute(request) || 
+      isSharedRoute(request)
+    ) {
+      const url = new URL("/select-role", request.url);
+      return NextResponse.redirect(url);
+    }
+    
+    return NextResponse.next();
+  }
+
+  if (isVerfiedRoute(request)) {
+    const url = new URL("/", request.url);
+    return NextResponse.redirect(url);
+  }
+
 
   if (
     isAdminRoute(request) &&
