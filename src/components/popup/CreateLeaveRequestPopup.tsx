@@ -51,10 +51,10 @@ export function CreateLeaveRequestPopup() {
                   label="Availability Type"
                   id="availability_type"
                   options={[
-                    "Vacation",
-                    "Sick Leave",
-                    "Personal Leave",
-                    "Unavailable",
+                    { id: "vacation", name: "Vacation" },
+                    { id: "sick_leave", name: "Sick Leave" },
+                    { id: "personal_leave", name: "Personal Leave" },
+                    { id: "unavailable", name: "Unavailable" },
                   ]}
                   placeholder="Select Service Category"
                   value={field.value ?? ""}

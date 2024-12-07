@@ -1,105 +1,141 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import Pagination from "./Pagination";
 import SearchBarAndFilter from "./SearchBarAndFilter";
 import DetailServiceRow from "./DetailServiceRow";
-type DetailService = {
-  id: string;
-  category: string;
-  value: number;
-  description?: string;
-  basePrice: number;
-};
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { UpdateServiceDetailPopup } from "@/components/popup/UpdateServiceDetailPopup";
+import { set } from "zod";
 
 const columns = [
-  { header: "CATEGORY", className: "w-[210px] hidden md:table-cell" },
-  { header: "VALUE", className: "w-[160px] hidden md:table-cell" },
-  { header: "DESCRIPTION", className: "w-[640px] hidden md:table-cell" },
-  { header: "BASE PRICE", className: "w-[150px] hidden md:table-cell" },
+  { header: "TYPE", className: "w-[210px] hidden md:table-cell" },
+  { header: "TITLE", className: "w-[350px] hidden md:table-cell" },
+  { header: "ADDITIONAL PRICE", className: "w-[300px] hidden md:table-cell" },
+  { header: "MULTIPLY PRICE", className: "w-[300px] hidden md:table-cell" },
 ];
 
-const DetailServicesData: DetailService[] = [
+const DetailServicesData: ServiceDetail[] = [
   {
     id: "1",
-    category: "Number of Bedroom",
-    value: 1,
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam leo sapien, eleifend a orci posuere, ti",
-    basePrice: 40,
+    serviceTypeId: "Number of Bedroom",
+    title: 1,
+    additionalPrice: 0,
+    multiplyPrice: 1,
+    serviceType: {
+      name: "Cleaning",
+    },
   },
   {
     id: "2",
-    category: "Number of Bedroom",
-    value: 2,
-    description:
-      "In finibus ullamcorper ultricies. Nam scelerisque tellus in quam dictum sollicitudin. Etiam scelerisque",
-    basePrice: 55,
+    serviceTypeId: "Number of Bedroom",
+    title: 1,
+    additionalPrice: 0,
+    multiplyPrice: 1,
+    serviceType: {
+      name: "Cleaning",
+    },
   },
   {
     id: "3",
-    category: "Number of Bedroom",
-    value: 3,
-    description:
-      "Interdum et malesuada fames ac ante ipsum primis in faucibus. In pulvinar maximus urna, non eleme",
-    basePrice: 45,
+    serviceTypeId: "Number of Bedroom",
+    title: 1,
+    additionalPrice: 0,
+    multiplyPrice: 1,
+    serviceType: {
+      name: "Cleaning",
+    },
   },
   {
     id: "4",
-    category: "Number of Bedroom",
-    value: 4,
-    description:
-      "Vivamus nec nisl vitae erat sollicitudin porta vitae ut purus. Pellentesque habitant morbi tristique sen",
-    basePrice: 50,
+    serviceTypeId: "Number of Bedroom",
+    title: 1,
+    additionalPrice: 0,
+    multiplyPrice: 1,
+    serviceType: {
+      name: "Cleaning",
+    },
   },
   {
     id: "5",
-    category: "Number of Bedroom",
-    value: 5,
-    description:
-      "In finibus ullamcorper ultricies. Nam scelerisque tellus in quam dictum sollicitudin. Etiam scelerisque",
-    basePrice: 50,
+    serviceTypeId: "Number of Bedroom",
+    title: 1,
+    additionalPrice: 0,
+    multiplyPrice: 1,
+    serviceType: {
+      name: "Cleaning",
+    },
   },
 ];
 
 const DetailServiceTable = () => {
+  const [selectedServiceDetailId, setSelectedServiceDetailId] = useState<
+    string | null
+  >(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const url = "http://localhost:3000/api/service-detail";
+
+  const fetchData = async (): Promise<ServiceDetail[]> => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
+  };
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["serviceDetails"],
+    queryFn: fetchData,
+  });
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Filter by");
   const [searchBy, setSearchBy] = useState("Category");
 
-  // Filter
-  const applyFilter = (data: DetailService[]) => {
-    if (filter === "Price: Low to High") {
-      return [...data].sort((a, b) => a.basePrice - b.basePrice);
+  const applyFilter = (data: ServiceDetail[]) => {
+    if (filter === "+ Price: Low to High") {
+      return [...data].sort((a, b) => a.additionalPrice - b.additionalPrice);
     }
-    if (filter === "Price: High to Low") {
-      return [...data].sort((a, b) => b.basePrice - a.basePrice);
+    if (filter === "+ Price: High to Low") {
+      return [...data].sort((a, b) => b.additionalPrice - a.additionalPrice);
     }
-
+    if (filter === "+ Price: Low to High") {
+      return [...data].sort((a, b) => a.multiplyPrice - b.multiplyPrice);
+    }
+    if (filter === "x Price: High to Low") {
+      return [...data].sort((a, b) => b.multiplyPrice - a.multiplyPrice);
+    }
     return data;
   };
 
-  // Search
   const handleSearch = (term: string) => {
     setSearchTerm(term);
     setCurrentPage(1);
   };
 
-  const filteredData = DetailServicesData.filter((category) => {
+  const filteredData = (data ?? []).filter((category) => {
     const term = searchTerm.toLowerCase();
-    if (searchBy === "Category")
-      return category.category.toLowerCase().includes(term);
-    if (searchBy === "Description")
-      return category.description?.toLowerCase().includes(term);
-    if (searchBy === "Value") return category.value.toString().includes(term);
+    if (searchBy === "Type")
+      return category.serviceType?.name.toLowerCase().includes(term);
+    if (searchBy === "Multiply Price")
+      return category.multiplyPrice.toString().includes(term);
+    if (searchBy === "Additional Price")
+      return category.additionalPrice.toString().includes(term);
     return true;
   });
 
   const finalData = applyFilter(filteredData);
 
-  // Pagination
   const itemsPerPage = 10;
   const totalPages = Math.ceil(finalData.length / itemsPerPage);
+
   const currentData = finalData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -108,6 +144,12 @@ const DetailServiceTable = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
+
+  const handleRowClick = (id: string) => {
+    setSelectedServiceDetailId(id);
+    setIsDialogOpen(true);
+  };
+
   return (
     <>
       <SearchBarAndFilter
@@ -128,8 +170,12 @@ const DetailServiceTable = () => {
         ))}
       </div>
       <div className="flex overflow-hidden flex-col max-xl:mt-4 rounded-lg justify-center w-full max-md:max-w-full">
-        {currentData.map((category: DetailService, index: any) => (
-          <DetailServiceRow key={category.id} {...category} />
+        {currentData.map((category: ServiceDetail, index: any) => (
+          <DetailServiceRow
+            key={category.id}
+            {...category}
+            onRowClick={handleRowClick}
+          />
         ))}
       </div>
       <Pagination
@@ -138,7 +184,14 @@ const DetailServiceTable = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+      <UpdateServiceDetailPopup
+        id={selectedServiceDetailId}
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+      />
     </>
   );
 };
+
 export default DetailServiceTable;

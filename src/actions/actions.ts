@@ -21,10 +21,14 @@ export async function addHelper(
       user: {
         create: {
           fullName,
+          email,
           dateOfBirth,
           gender,
           phoneNumber,
           address,
+          status: "active",
+          numberOfViolations: 0,
+          id: randomUUID(),
         },
       },
       salaryExpectation,

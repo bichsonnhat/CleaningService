@@ -1,8 +1,9 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "gender" VARCHAR(10),
     "fullName" VARCHAR(150) NOT NULL,
+    "email" VARCHAR(150) NOT NULL,
     "dateOfBirth" DATE NOT NULL,
     "identifyCard" TEXT,
     "address" TEXT,
@@ -17,7 +18,7 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Helper" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "experienceDescription" TEXT,
     "resumeUploaded" TEXT,
     "servicesOffered" UUID[],
@@ -34,14 +35,14 @@ CREATE TABLE "Helper" (
 -- CreateTable
 CREATE TABLE "HelperAvailability" (
     "id" UUID NOT NULL,
-    "helperId" UUID NOT NULL,
+    "helperId" TEXT NOT NULL,
     "startDatetime" TIMESTAMP NOT NULL,
     "endDatetime" TIMESTAMP NOT NULL,
     "availabilityType" VARCHAR(50) NOT NULL,
     "status" VARCHAR(50) NOT NULL DEFAULT 'pending',
     "requestReason" TEXT,
     "rejectionReason" TEXT,
-    "approvedById" UUID,
+    "approvedById" TEXT,
     "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -73,34 +74,23 @@ CREATE TABLE "ServiceType" (
 );
 
 -- CreateTable
-CREATE TABLE "RoomPricing" (
+CREATE TABLE "ServiceDetail" (
     "id" UUID NOT NULL,
     "serviceTypeId" UUID NOT NULL,
-    "roomType" VARCHAR(50) NOT NULL,
-    "roomCount" INTEGER,
+    "title" TEXT NOT NULL,
     "additionalPrice" DECIMAL(10,2) NOT NULL DEFAULT 0,
+    "multiplyPrice" DECIMAL(10,2) NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "RoomPricing_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "DurationPrice" (
-    "id" UUID NOT NULL,
-    "serviceTypeId" UUID NOT NULL,
-    "durationHours" INTEGER NOT NULL,
-    "priceMultiplier" DECIMAL(3,2) NOT NULL DEFAULT 1.00,
-    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "DurationPrice_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ServiceDetail_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Booking" (
     "id" UUID NOT NULL,
-    "customerId" UUID NOT NULL,
-    "helperId" UUID,
-    "serviceTypeId" UUID NOT NULL,
+    "customerId" TEXT NOT NULL,
+    "helperId" TEXT,
+    "serviceCategoryId" UUID NOT NULL,
     "location" TEXT NOT NULL,
     "scheduledStartTime" TIMESTAMP NOT NULL,
     "scheduledEndTime" TIMESTAMP NOT NULL,
@@ -119,13 +109,7 @@ CREATE TABLE "Booking" (
 CREATE TABLE "BookingDetail" (
     "id" UUID NOT NULL,
     "bookingId" UUID NOT NULL,
-    "durationPriceId" UUID NOT NULL,
-    "bedroomCount" INTEGER NOT NULL DEFAULT 0,
-    "bathroomCount" INTEGER NOT NULL DEFAULT 0,
-    "kitchenCount" INTEGER NOT NULL DEFAULT 0,
-    "livingRoomCount" INTEGER NOT NULL DEFAULT 0,
-    "specialRequirements" TEXT,
-    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "serviceDetailId" UUID NOT NULL,
 
     CONSTRAINT "BookingDetail_pkey" PRIMARY KEY ("id")
 );
@@ -180,15 +164,18 @@ CREATE TABLE "Refund" (
 -- CreateTable
 CREATE TABLE "BlacklistedUser" (
     "id" UUID NOT NULL,
-    "userId" UUID NOT NULL,
+    "userId" TEXT NOT NULL,
     "reason" TEXT NOT NULL,
     "blacklistedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "blacklistedBy" UUID NOT NULL,
+    "blacklistedBy" TEXT NOT NULL,
     "isPermanent" BOOLEAN NOT NULL DEFAULT false,
     "expiryDate" TIMESTAMP,
 
     CONSTRAINT "BlacklistedUser_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE INDEX "HelperAvailability_helperId_startDatetime_endDatetime_idx" ON "HelperAvailability"("helperId", "startDatetime", "endDatetime");
@@ -204,18 +191,6 @@ CREATE UNIQUE INDEX "ServiceCategory_name_key" ON "ServiceCategory"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ServiceType_categoryId_name_key" ON "ServiceType"("categoryId", "name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "RoomPricing_serviceTypeId_roomType_roomCount_key" ON "RoomPricing"("serviceTypeId", "roomType", "roomCount");
-
--- CreateIndex
-CREATE UNIQUE INDEX "DurationPrice_serviceTypeId_durationHours_key" ON "DurationPrice"("serviceTypeId", "durationHours");
-
--- CreateIndex
-CREATE UNIQUE INDEX "BookingDetail_bookingId_key" ON "BookingDetail"("bookingId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "BookingDetail_durationPriceId_key" ON "BookingDetail"("durationPriceId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "BookingContract_bookingId_key" ON "BookingContract"("bookingId");
@@ -236,10 +211,7 @@ ALTER TABLE "HelperAvailability" ADD CONSTRAINT "HelperAvailability_approvedById
 ALTER TABLE "ServiceType" ADD CONSTRAINT "ServiceType_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "ServiceCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RoomPricing" ADD CONSTRAINT "RoomPricing_serviceTypeId_fkey" FOREIGN KEY ("serviceTypeId") REFERENCES "ServiceType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "DurationPrice" ADD CONSTRAINT "DurationPrice_serviceTypeId_fkey" FOREIGN KEY ("serviceTypeId") REFERENCES "ServiceType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ServiceDetail" ADD CONSTRAINT "ServiceDetail_serviceTypeId_fkey" FOREIGN KEY ("serviceTypeId") REFERENCES "ServiceType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -248,13 +220,13 @@ ALTER TABLE "Booking" ADD CONSTRAINT "Booking_customerId_fkey" FOREIGN KEY ("cus
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_helperId_fkey" FOREIGN KEY ("helperId") REFERENCES "Helper"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Booking" ADD CONSTRAINT "Booking_serviceTypeId_fkey" FOREIGN KEY ("serviceTypeId") REFERENCES "ServiceType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Booking" ADD CONSTRAINT "Booking_serviceCategoryId_fkey" FOREIGN KEY ("serviceCategoryId") REFERENCES "ServiceCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BookingDetail" ADD CONSTRAINT "BookingDetail_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BookingDetail" ADD CONSTRAINT "BookingDetail_durationPriceId_fkey" FOREIGN KEY ("durationPriceId") REFERENCES "DurationPrice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "BookingDetail" ADD CONSTRAINT "BookingDetail_serviceDetailId_fkey" FOREIGN KEY ("serviceDetailId") REFERENCES "ServiceDetail"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BookingContract" ADD CONSTRAINT "BookingContract_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

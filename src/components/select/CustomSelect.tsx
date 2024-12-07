@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 interface CustomSelectProps {
   label: string;
   id: string;
-  options: string[];
+  options: { id: string; name: string }[];
   placeholder: string;
   value?: string;
   onChange?: (value: string) => void;
@@ -33,10 +33,10 @@ const CustomSelect = forwardRef<HTMLButtonElement, CustomSelectProps>(
         >
           {label.toUpperCase()}
         </Label>
-        <Select value={value} onValueChange={onChange}>
+        <Select value={value} onValueChange={(val) => onChange?.(val)}>
           <SelectTrigger
             className={cn(
-              `font-Averta-Regular h-[50px] text-[16px] text-[#88939D] border-2`,
+              `font-Averta-Regular h-[50px] text-[16px] text-[#4F6071] border-2`,
               error ? "border-red-500 focus:ring-red-500" : "border-[#E5E7EB]",
               className
             )}
@@ -47,8 +47,8 @@ const CustomSelect = forwardRef<HTMLButtonElement, CustomSelectProps>(
           </SelectTrigger>
           <SelectContent>
             {options.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}
+              <SelectItem key={option.id} value={option.id.toString()}>
+                {option.name}
               </SelectItem>
             ))}
           </SelectContent>

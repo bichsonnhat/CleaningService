@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import SearchBar from "./SearhBar";
+import SearchBar from "./SearchBar";
 import JobHistoryRow from "./JobHistoryRow";
 import Pagination from "./Pagination";
 

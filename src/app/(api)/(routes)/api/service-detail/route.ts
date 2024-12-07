@@ -5,15 +5,15 @@ import { serviceDetailSchema } from "./service-detail.schema";
 
 export async function GET() {
   try {
-    const serviceDetails = await prisma.serviceDetail.findMany();
-
-    return NextResponse.json(
-      {
-        status: "success",
-        data: serviceDetails,
+    const serviceDetails = await prisma.serviceDetail.findMany({
+      include: {
+        serviceType: {
+          select: { name: true },
+        },
       },
-      { status: 200 }
-    );
+    });
+
+    return NextResponse.json(serviceDetails);
   } catch (error) {
     console.error("Error fetching service details", error);
     return NextResponse.json(
@@ -72,13 +72,7 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(
-      {
-        status: "success",
-        data: serviceDetail,
-      },
-      { status: 201 }
-    );
+    return NextResponse.json(serviceDetail);
   } catch (error) {
     console.error("Error creating service detail:", error);
     return NextResponse.json(

@@ -29,7 +29,9 @@ const Select = () => {
 
   useEffect(() => {
     const fetchUserData = async (url: string) => {
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        cache: "force-cache"
+      });
       const data = await res.json();
       setServiceCategories(data);
     }

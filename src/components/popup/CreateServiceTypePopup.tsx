@@ -15,8 +15,57 @@ import {
   createServiceTypeData,
   serviceTypeSchema,
 } from "@/schema/serviceTypeSchema";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 export function CreateServiceTypePopup() {
+  const queryClient = useQueryClient();
+
+  const fetchServiceCategorysUrl =
+    "http://localhost:3000/api/service-categories";
+
+  const createServiceTypeUrl = "http://localhost:3000/api/service-types";
+
+  const [ServiceCategories, setServiceCategories] = useState<ServiceCategory[]>(
+    []
+  );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const fetchServiceCategories = async () => {
+    try {
+      const response = await fetch(fetchServiceCategorysUrl);
+      if (!response.ok) {
+        throw new Error("Error fetching service categories");
+      }
+      const data = await response.json();
+      setServiceCategories(data);
+    } catch (error) {
+      console.error("Error fetching service categories:", error);
+    }
+  };
+  const createServiceType = async (data: createServiceTypeData) => {
+    try {
+      const response = await fetch(createServiceTypeUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error("Error creating service type");
+      }
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Error creating service type:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchServiceCategories();
+  }, []);
+
   const form = useForm<createServiceTypeData>({
     mode: "onSubmit",
     resolver: zodResolver(serviceTypeSchema),
@@ -28,14 +77,34 @@ export function CreateServiceTypePopup() {
     formState: { errors },
   } = form;
 
-  const onSubmitHandle = (data: createServiceTypeData) => {
-    console.log(data);
+  const onSubmitHandle = async (data: createServiceTypeData) => {
+    try {
+      console.log("Submitting data:", data);
+      await createServiceType(data);
+      console.log("Service type created successfully.");
+      queryClient.invalidateQueries({ queryKey: ["serviceTypes"] });
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Error while creating service type:", error);
+      alert("Failed to create service type. Please try again.");
+    }
   };
 
+  const options = ServiceCategories.map((ServiceCategory) => ({
+    id: ServiceCategory.id,
+    name: ServiceCategory.name,
+  }));
+
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Create Type</Button>
+        <Button
+          className="px-7 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose text-center text-white"
+          variant="default"
+          onClick={() => setIsDialogOpen(true)}
+        >
+          Create Type
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -44,17 +113,17 @@ export function CreateServiceTypePopup() {
         <form onSubmit={handleSubmit(onSubmitHandle)}>
           <div className="flex flex-col justify-center items-center gap-6 py-4">
             <Controller
-              name="service_category_id"
+              name="categoryId"
               control={control}
               render={({ field }) => (
                 <CustomSelect
                   label="SERVICE CATEGORY"
                   id="service-category"
-                  options={["Home Cleaning", "Other Services"]}
+                  options={options}
                   placeholder="Select Service Category"
                   value={field.value ?? ""}
                   onChange={field.onChange}
-                  error={errors.service_category_id?.message}
+                  error={errors.categoryId?.message}
                   ref={field.ref}
                 ></CustomSelect>
               )}
@@ -66,7 +135,7 @@ export function CreateServiceTypePopup() {
               render={({ field }) => (
                 <CustomInput
                   label="Name"
-                  placeholder="Enter Category Name"
+                  placeholder="Enter Type Name"
                   id="name"
                   className="w-full"
                   value={field.value ?? ""}
@@ -77,7 +146,7 @@ export function CreateServiceTypePopup() {
             />
 
             <Controller
-              name="base_price"
+              name="basePrice"
               control={control}
               render={({ field }) => (
                 <CustomInput
@@ -88,7 +157,7 @@ export function CreateServiceTypePopup() {
                   type="number"
                   value={field.value ?? ""}
                   onChange={field.onChange}
-                  error={errors.base_price?.message}
+                  error={errors.basePrice?.message}
                 ></CustomInput>
               )}
             />
