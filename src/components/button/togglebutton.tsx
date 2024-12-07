@@ -40,7 +40,7 @@ export function ToggleButton({
         alt={contentText}
         width={32}
         height={32}
-        className="mb-2 m-auto md:h-[3.89vw] md:w-[3.89vw]"
+        className="mb-2 m-auto max-h-[56px] max-w-[56px] min-h-[16px] min-w-[16px] md:h-[4.2vw] md:w-[4.2vw]"
       />
       <span className={`text-lg`}>{contentText}</span>
       <span className="text-base font-Averta-Semibold text-[#9FA7B0] mt-1">
