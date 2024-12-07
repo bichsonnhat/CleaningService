@@ -12,7 +12,7 @@ import CustomInput from "../input/CustomInput";
 import CustomSelect from "../select/CustomSelect";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { serviceDetailSchema } from "@/schema/serviceDetailSchema";
+import { ClipLoader } from "react-spinners";
 import { useEffect } from "react";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import {
@@ -160,7 +160,13 @@ export function UpdateServiceTypePopup({
           <DialogTitle>Update Service Detail</DialogTitle>
         </DialogHeader>
         {!id || !typeData || isFetchTypePending ? (
-          <div>Loading...</div>
+          <div className="w-full h-full flex justify-center items-center">
+            <ClipLoader
+              color="#000000"
+              loading={isFetchTypePending}
+              size={80}
+            ></ClipLoader>
+          </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmitHandle)}>
             <div className="flex flex-col justify-center items-center gap-6 py-4">

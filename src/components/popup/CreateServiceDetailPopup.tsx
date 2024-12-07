@@ -98,7 +98,7 @@ export function CreateServiceDetailPopup() {
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button
-          className="px-7 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose text-center text-white"
+          className="px-7 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] font-Averta-Bold tracking-normal leading-loose text-center text-white"
           variant="default"
           onClick={() => setIsDialogOpen(true)}
         >
