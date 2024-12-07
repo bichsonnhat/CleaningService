@@ -19,10 +19,10 @@ const prisma = new PrismaClient();
 
 async function main() {
     for (let user of userData) {
-        await prisma.$executeRaw`INSERT INTO "User" ("id", "gender", "fullName", 
+        await prisma.$executeRaw`INSERT INTO "User" ("id", "gender", "fullName", "email",
             "dateOfBirth", "identifyCard", "address", "phoneNumber", "createdAt", "updatedAt", "status", 
             "numberOfViolations") 
-            VALUES (${user.id}::uuid, ${user.gender}, ${user.fullName}, ${user.dateOfBirth}::timestamp, ${user.identifyCard}, ${user.address}, 
+            VALUES (${user.id}::uuid, ${user.gender}, ${user.fullName}, ${user.email} , ${user.dateOfBirth}::timestamp, ${user.identifyCard}, ${user.address}, 
             ${user.phoneNumber}, ${user.createdAt}, ${user.updatedAt}, ${user.status}, ${user.numberOfViolations})`;
     }
 

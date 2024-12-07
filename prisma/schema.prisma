@@ -147,6 +147,7 @@ model ServiceCategory {
   
   // Relations
   serviceTypes ServiceType[]
+  bookings     Booking[]
 }
 
 model ServiceType {
@@ -160,7 +161,6 @@ model ServiceType {
 
   // Relations
   category      ServiceCategory  @relation(fields: [categoryId], references: [id])
-  bookings      Booking[]
   serviceDetails ServiceDetail[]
 
   @@unique([categoryId, name])
@@ -183,7 +183,7 @@ model Booking {
   id                 String        @id @default(uuid()) @db.Uuid
   customerId         String        
   helperId          String?       
-  serviceTypeId     String        @db.Uuid
+  serviceCategoryId     String        @db.Uuid
   location          String
   scheduledStartTime DateTime      @db.Timestamp()
   scheduledEndTime  DateTime      @db.Timestamp()
@@ -198,7 +198,7 @@ model Booking {
   // Relations
   customer          User            @relation("CustomerBookings", fields: [customerId], references: [id])
   helper            Helper?         @relation(fields: [helperId], references: [id])
-  serviceType       ServiceType     @relation(fields: [serviceTypeId], references: [id])
+  serviceCategory   ServiceCategory @relation(fields: [serviceCategoryId], references: [id])
   bookingDetails    BookingDetail[]
   bookingContract   BookingContract?
   refunds           Refund[]

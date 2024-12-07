@@ -24,7 +24,7 @@ const isAdminRoute = createRouteMatcher([
   "/dashboard/feedback",
   "/dashboard/issue",
   "/dashboard/refund",
-  "/api(.*)"
+  // "/api(.*)"
 ]);
 
 const isCustomerRoute = createRouteMatcher([

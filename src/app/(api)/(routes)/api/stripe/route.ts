@@ -7,8 +7,6 @@ export async function GET() {
     try {
         const user = await currentUser();
 
-        console.log("Current user:  ", user);
-
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
         }

@@ -1,11 +1,8 @@
 // app/api/services/route.ts
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db';
-import { currentUser } from '@clerk/nextjs/server';
 
 export async function GET() {
-  const user = await currentUser();
-  console.log('Current User:', user);
   try {
     const services = await prisma.serviceCategory.findMany();
     return NextResponse.json(services);
