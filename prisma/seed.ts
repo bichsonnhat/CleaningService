@@ -55,9 +55,9 @@ async function main() {
 
     for (let booking of bookingData) {
         await prisma.$executeRaw`INSERT INTO "Booking" ("id", "customerId", "helperId", 
-            "serviceTypeId", "location", "scheduledStartTime", "scheduledEndTime", "status", "cancellationReason", "totalPrice", 
+            "serviceCategoryId", "location", "scheduledStartTime", "scheduledEndTime", "status", "cancellationReason", "totalPrice", 
             "paymentStatus", "paymentMethod", "createdAt", "updatedAt") 
-            VALUES (${booking.id}::uuid, ${booking.customerId}::uuid, ${booking.helperId}::uuid, ${booking.serviceTypeId}::uuid, ${booking.location}, ${booking.scheduledStartTime}::timestamp, 
+            VALUES (${booking.id}::uuid, ${booking.customerId}::uuid, ${booking.helperId}::uuid, ${booking.serviceCategoryId}::uuid, ${booking.location}, ${booking.scheduledStartTime}::timestamp, 
             ${booking.scheduledEndTime}::timestamp, ${booking.status}, ${booking.cancellationReason}, ${booking.totalPrice}, ${booking.paymentStatus}, ${booking.paymentMethod}, ${booking.createdAt}, 
             ${booking.updatedAt})`;
     }

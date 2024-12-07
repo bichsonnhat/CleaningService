@@ -90,7 +90,7 @@ CREATE TABLE "Booking" (
     "id" UUID NOT NULL,
     "customerId" TEXT NOT NULL,
     "helperId" TEXT,
-    "serviceTypeId" UUID NOT NULL,
+    "serviceCategoryId" UUID NOT NULL,
     "location" TEXT NOT NULL,
     "scheduledStartTime" TIMESTAMP NOT NULL,
     "scheduledEndTime" TIMESTAMP NOT NULL,
@@ -220,7 +220,7 @@ ALTER TABLE "Booking" ADD CONSTRAINT "Booking_customerId_fkey" FOREIGN KEY ("cus
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_helperId_fkey" FOREIGN KEY ("helperId") REFERENCES "Helper"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Booking" ADD CONSTRAINT "Booking_serviceTypeId_fkey" FOREIGN KEY ("serviceTypeId") REFERENCES "ServiceType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Booking" ADD CONSTRAINT "Booking_serviceCategoryId_fkey" FOREIGN KEY ("serviceCategoryId") REFERENCES "ServiceCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BookingDetail" ADD CONSTRAINT "BookingDetail_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const bookings = await prisma.booking.findMany({
       include: {
-        serviceType: true
+        serviceCategory: true
       }
     });
     return NextResponse.json(bookings);
