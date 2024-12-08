@@ -16,7 +16,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import ClipLoader from "react-spinners/ClipLoader";
-import { ToastContainer, toast } from "react-toastify";
+import { useToast } from "@/hooks/use-toast";
 
 // export type Feedback = {
 //   id: number;
@@ -48,6 +48,9 @@ export type Feedback2 = {
 };
 
 export default function FeedbackTable() {
+  const role = "Customer"; // sau này sẽ thay bằng role của user
+  const { toast } = useToast();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Filter by");
@@ -137,8 +140,12 @@ export default function FeedbackTable() {
 
   const handleDeleteFeedback = async () => {
     if (checkedRows.length === 0) {
-      toast.error("Please select feedback to delete");
-      console.log("Please select feedback to delete");
+      //toast.error("Please select feedback to delete");
+      toast({
+        variant: "destructive",
+        title: "Please select feedback to delete",
+      });
+      //console.log("Please select feedback to delete");
     } else {
       try {
         setDeleting(true);
@@ -149,13 +156,19 @@ export default function FeedbackTable() {
             });
           })
         );
-        toast.success("Delete feedback successfully!");
+        //toast.success("Delete feedback successfully!");
+        toast({ title: "Delete feedback successfully!" });
         setFeedbacks((prev) =>
           (prev || []).filter((feedback) => !checkedRows.includes(feedback.id))
         );
+        setCheckedRows([]);
         console.log("Delete feedback successfully!");
       } catch (error) {
-        toast.error("Failed to delete some feedback");
+        //toast.error("Failed to delete some feedback");
+        toast({
+          variant: "destructive",
+          title: "Failed to delete some feedback",
+        });
         console.error(error);
       } finally {
         setDeleting(false);
@@ -217,13 +230,21 @@ export default function FeedbackTable() {
       <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded ">
         <div className="flex flex-col w-full rounded ">
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 ">
-            {currentData.map((feedback: Feedback2, index: any) => (
-              <FeedbackRow
-                key={feedback.id}
-                feedback={feedback}
-                onCheckboxToggle={handleCheckboxToggle}
-              />
-            ))}
+            {feedbacks == null || feedbacks.length === 0 ? (
+              <div className="flex justify-center items-center w-full bg-white">
+                {role == "Admin"
+                  ? "We have no feedback"
+                  : "This customer has no feedback"}
+              </div>
+            ) : (
+              currentData.map((feedback: Feedback2, index: any) => (
+                <FeedbackRow
+                  key={feedback.id}
+                  feedback={feedback}
+                  onCheckboxToggle={handleCheckboxToggle}
+                />
+              ))
+            )}
           </div>
         </div>
       </div>
