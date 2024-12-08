@@ -3,7 +3,7 @@ type FilterDropdownProps = {
   onFilterChange: (filter: string) => void;
 };
 const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
-  const options = ["Home Cleaning", "Other Services", "Filter by"];
+  const options = ["Base Price ↑", "Base Price ↓", "None"];
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Filter by");
   const openDropdown = () => {

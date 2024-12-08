@@ -137,12 +137,16 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const data = await request.json();
+    const { id } = params;
+
     await prisma.serviceDetail.delete({
       where: {
-        id: data.id,
+        id: id,
       },
     });
 

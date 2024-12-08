@@ -18,6 +18,7 @@ import {
 } from "@/schema/serviceDetailSchema";
 import { useEffect } from "react";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { ClipLoader } from "react-spinners";
 
 export function UpdateServiceDetailPopup({
   id,
@@ -157,7 +158,13 @@ export function UpdateServiceDetailPopup({
           <DialogTitle>Update Service Detail</DialogTitle>
         </DialogHeader>
         {!id || !detailData || isFetchDetailPending ? (
-          <div>Loading...</div>
+          <div className="w-full h-full flex justify-center items-center">
+            <ClipLoader
+              color="#000000"
+              loading={isFetchDetailPending}
+              size={80}
+            ></ClipLoader>
+          </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmitHandle)}>
             <div className="flex flex-col justify-center items-center gap-6 py-4">

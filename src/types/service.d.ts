@@ -20,24 +20,28 @@ type ServiceTypeRowProps = {
     name: string;
   };
   onRowClick: (id: string) => void;
+  onCheckboxToggle?: (id: string, checked: boolean) => void;
+  isLoading?: boolean;
 };
 
 type DetailServiceRowProps = {
   id: string;
   serviceTypeId: string;
-  title: number;
+  title: string;
   additionalPrice: number;
   multiplyPrice: number;
   serviceType?: {
     name: string;
   };
   onRowClick: (id: string) => void;
+  onCheckboxToggle?: (id: string, checked: boolean) => void;
+  isLoading?: boolean;
 };
 
 type ServiceDetail = {
   id: string;
   serviceTypeId: string;
-  title: number;
+  title: string;
   additionalPrice: number;
   multiplyPrice: number;
   serviceType?: {
