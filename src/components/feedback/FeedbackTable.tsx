@@ -19,15 +19,6 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 import QuickPopupFeedback from "../quickpopup/QuickPopupFeedback";
-import { set } from "zod";
-
-// export type Feedback = {
-//   id: number;
-//   customerName: string;
-//   sentiment: "Positive" | "Negative" | "Neutral";
-//   message: string;
-//   createdAt: string;
-// };
 
 export type Feedback2 = {
   id: string;
@@ -52,7 +43,7 @@ export type Feedback2 = {
 
 export default function FeedbackTable() {
   const role = "Customer"; // sau này sẽ thay bằng role của user
-  const userId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
+  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
   const { toast } = useToast();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -149,7 +140,6 @@ export default function FeedbackTable() {
 
   const handleDeleteFeedback = async () => {
     if (checkedRows.length === 0) {
-      //toast.error("Please select feedback to delete");
       toast({
         variant: "destructive",
         title: "Please select feedback to delete",
@@ -165,7 +155,6 @@ export default function FeedbackTable() {
             });
           })
         );
-        //toast.success("Delete feedback successfully!");
         toast({ title: "Delete feedback successfully!" });
         setFeedbacks((prev) =>
           (prev || []).filter((feedback) => !checkedRows.includes(feedback.id))
@@ -173,7 +162,6 @@ export default function FeedbackTable() {
         setCheckedRows([]);
         console.log("Delete feedback successfully!");
       } catch (error) {
-        //toast.error("Failed to delete some feedback");
         toast({
           variant: "destructive",
           title: "Failed to delete some feedback",

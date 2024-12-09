@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -10,15 +10,61 @@ interface QuickPopupAdminProps {
 import { useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CreateFeedbackDto } from "@/app/(api)/(routes)/api/feedback/feedback.schema";
-import { Feedback2 } from "../feedback/FeedbackTable";
 import { useRouter } from "next/navigation";
+import BookingDropdown from "../feedback/BookingSelectionDropDown";
+
+export type BookingCanFeedback = {
+  id: string;
+  customerId: string;
+  helperId: string;
+  serviceTypeId: string;
+  location: string;
+  scheduledStartTime: string;
+  scheduledEndTime: string;
+  status: string;
+  cancellationReason?: string;
+  totalPrice: number;
+  paymentStatus: string;
+  paymentMethod?: string;
+  createdAt: string;
+  updatedAt: string;
+  customer: {
+    fullName: string;
+  };
+  helper: {
+    user: {
+      fullName: string;
+    };
+  };
+  serviceType: {
+    name: string;
+  };
+};
 
 const QuickPopupFeedback: React.FC<QuickPopupAdminProps> = ({
   toggle,
   mutate,
 }) => {
+  const [bookings, setBookings] = useState<BookingCanFeedback[] | null>(null);
+  const [selectedBooking, setSelectedBooking] =
+    useState<BookingCanFeedback | null>(null);
+  const fetchFeedback = async () => {
+    const response = await fetch(`/api/bookings/can-feedback`);
+    const data = await response.json();
+    setBookings(data);
+    console.log("Booking can feedback response: ", data);
+  };
+
+  useEffect(() => {
+    fetchFeedback();
+  }, []);
+  const handleSelectBooking = (booking: any) => {
+    console.log("Selected booking:", booking);
+    setSelectedBooking(booking);
+  };
+
   const role = "Customer"; // sau này sẽ thay bằng role của user
-  const userId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
+  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
   const router = useRouter();
   const { toast } = useToast();
 
@@ -63,13 +109,6 @@ const QuickPopupFeedback: React.FC<QuickPopupAdminProps> = ({
   };
 
   const handleSubmit = async () => {
-    if (rating === 0) {
-      toast({
-        variant: "destructive",
-        description: "Please provide a rating.",
-      });
-      return;
-    }
     if (title === "") {
       toast({
         variant: "destructive",
@@ -78,22 +117,38 @@ const QuickPopupFeedback: React.FC<QuickPopupAdminProps> = ({
       return;
     }
 
+    if (rating === 0) {
+      toast({
+        variant: "destructive",
+        description: "Please provide a rating.",
+      });
+      return;
+    }
+
+    if (!selectedBooking) {
+      toast({
+        variant: "destructive",
+        description: "Please select a booking.",
+      });
+      return;
+    }
+
     const feedbackData: CreateFeedbackDto = {
       title,
       helperRating: rating,
       description,
-      booking_id: "5d8b0ceb-d7dd-4a41-8d62-ffb9d8c7f143",
+      booking_id: selectedBooking.id,
       reportedBy: false,
     };
 
     setCreating(true);
     try {
       const response = await fetch("/api/feedback", {
-        method: "POST", // Sử dụng phương thức POST
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", // Đảm bảo nội dung là JSON
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(feedbackData), // Chuyển đổi feedbackData thành chuỗi JSON
+        body: JSON.stringify(feedbackData),
       });
 
       if (!response.ok) {
@@ -103,8 +158,6 @@ const QuickPopupFeedback: React.FC<QuickPopupAdminProps> = ({
       toast({
         description: "Feedback submitted successfully!",
       });
-      //closeParentPopup();
-      //router.refresh();
       mutate(userId, role);
 
       setTitle("");
@@ -120,6 +173,21 @@ const QuickPopupFeedback: React.FC<QuickPopupAdminProps> = ({
       setCreating(false);
     }
   };
+
+  if (!bookings)
+    return (
+      <div
+        className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50"
+        onClick={toggle}
+      >
+        <div
+          className="relative flex flex-col items-center justify-center bg-white rounded-lg shadow-lg p-[20px] md:px-[50px] md:py-[30px] w-fit xl:w-[50%] h-[90%]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <ClipLoader color="#1a78f2" loading={true} size={150} />
+        </div>
+      </div>
+    );
 
   return (
     <div
@@ -153,34 +221,11 @@ const QuickPopupFeedback: React.FC<QuickPopupAdminProps> = ({
             <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
               order selection
             </p>
-            <div className="flex flex-row h-fit justify-between p-[13px] border-[#d3d8dd] border-2 rounded-lg">
-              <div className="flex flex-row gap-[10px] items-center justify-center">
-                <Image
-                  src="/images/About/Google.png"
-                  alt="avatar"
-                  width={20}
-                  height={20}
-                  className="max-lg:hidden"
-                />
-                <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
-                  Long Nhat dep trai
-                </p>
-              </div>
-              <div className="flex flex-col divide-y-2 h-full">
-                <p className="text-[#1d2c4c] opacity-50 text-sm leading-[19px] tracking-tight font-Averta-Semibold">
-                  <span className="text-[#677482]">8 AM</span> -{" "}
-                  <span className="text-[#677482]">6 PM</span>
-                </p>
-                <p className="text-[#1d2c4c] opacity-50 text-sm leading-[19px] tracking-tight font-Averta-Semibold text-center">
-                  10/29/2024
-                </p>
-              </div>
-              <div className="bg-[#1a78f2] bg-opacity-20 py-2 px-3 rounded-md flex justify-center items-center">
-                <p className="text-[#1a78f2] text-xs font-bold">
-                  Home Cleaning
-                </p>
-              </div>
-            </div>
+            <BookingDropdown
+              bookings={bookings}
+              defaultBooking={bookings[0]}
+              onSelectBooking={handleSelectBooking}
+            />
           </div>
           <div className="flex flex-col w-full h-fit gap-[11px] p-[16px]">
             <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
