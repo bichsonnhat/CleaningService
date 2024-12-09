@@ -188,6 +188,7 @@ model Booking {
   scheduledStartTime DateTime      @db.Timestamp()
   scheduledEndTime  DateTime      @db.Timestamp()
   status            String        @default("pending") @db.VarChar(50)
+  bookingNote        String?
   cancellationReason String?
   totalPrice        Decimal       @db.Decimal(10, 2)
   paymentStatus     String        @default("pending") @db.VarChar(50)
