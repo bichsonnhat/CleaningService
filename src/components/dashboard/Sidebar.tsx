@@ -168,13 +168,13 @@ const Sidebar: React.FC = () => {
       icon: "/images/Dashboard/Sidebar/InActive/Service.svg",
       activeIcon: "/images/Dashboard/Sidebar/Active/Service.svg",
       label: "Service",
-      href: "/dashboard/service/detail",
+      href: "/dashboard/service/category",
       children: [
         {
           icon: "/images/Dashboard/Sidebar/InActive/C.svg",
           activeIcon: "/images/Dashboard/Sidebar/Active/C.svg",
-          label: "Type",
-          href: "/dashboard/service/type",
+          label: "Category",
+          href: "/dashboard/service/category",
         },
         {
           icon: "/images/Dashboard/Sidebar/InActive/D.svg",
@@ -201,6 +201,12 @@ const Sidebar: React.FC = () => {
       activeIcon: "/images/Dashboard/Sidebar/Active/Refund.svg",
       label: "Refund",
       href: "/dashboard/refund",
+    },
+    {
+      icon: "/images/Dashboard/Sidebar/InActive/LeaveRequest.svg",
+      activeIcon: "/images/Dashboard/Sidebar/Active/LeaveRequest.svg",
+      label: "Leave Requests",
+      href: "/dashboard/leave-request",
     },
   ];
 
