@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FeedbackRow from "./FeedbackRow";
 import Pagination from "../employee/Pagination";
 import SearchBarAndFilter from "./SearchBarAndFilter";
@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "../ui/button";
+import QuickPopupFeedback from "../quickpopup/QuickPopupFeedback";
+import { set } from "zod";
 
 // export type Feedback = {
 //   id: number;
@@ -49,6 +52,7 @@ export type Feedback2 = {
 
 export default function FeedbackTable() {
   const role = "Customer"; // sau này sẽ thay bằng role của user
+  const userId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
   const { toast } = useToast();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,17 +62,22 @@ export default function FeedbackTable() {
   const [checkedRows, setCheckedRows] = useState<string[]>([]);
   const [deleting, setDeleting] = useState(false);
 
+  const [toggleFeedback, setToggleFeedback] = useState(false);
+  const toggleFeedbackPopup = () => {
+    setToggleFeedback(!toggleFeedback);
+  };
+
   const [feedbacks, setFeedbacks] = useState<Feedback2[] | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch("/api/feedback");
-      const data = await response.json();
-      setFeedbacks(data);
-      console.log("Feedback response: ", data);
-    };
+  const fetchData = async (id: string, role: string) => {
+    const response = await fetch(`/api/feedback?role=${role}&userId=${id}`);
+    const data = await response.json();
+    setFeedbacks(data);
+    console.log("Feedback response: ", data);
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchData(userId, role);
   }, []);
 
   // filter
@@ -191,40 +200,64 @@ export default function FeedbackTable() {
           setSearchBy={setSearchBy}
           onFilterChange={setFilter}
         />
-
-        <AlertDialog>
-          <AlertDialogTrigger>
-            <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+        <div className="flex flex-row justify-start items-start gap-4 max-xl:w-full">
+          {role === "Customer" ? (
+            <Button
+              onClick={toggleFeedbackPopup}
+              className="flex flex-row gap-2 items-center justify-center px-4 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white"
+            >
               <Image
                 src="/images/Dashboard/Feedback/Trash.svg"
                 alt=""
                 width={18}
                 height={18}
               />
-              Delete
-            </div>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This action will delete the
-                feedback permanently.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction asChild>
-                <button
-                  onClick={() => handleDeleteFeedback()}
-                  className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
-                >
+              Create feedback
+            </Button>
+          ) : (
+            <></>
+          )}
+
+          <AlertDialog>
+            <AlertDialogTrigger>
+              {deleting ? (
+                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                  <ClipLoader color="#fff" loading={true} size={30} />
+                </div>
+              ) : (
+                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                  <Image
+                    src="/images/Dashboard/Feedback/Trash.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                  />
                   Delete
-                </button>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+                </div>
+              )}
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This action will delete the
+                  feedback permanently.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <button
+                    onClick={() => handleDeleteFeedback()}
+                    className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </div>
 
       <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded ">
@@ -255,6 +288,9 @@ export default function FeedbackTable() {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+      {toggleFeedback && (
+        <QuickPopupFeedback toggle={toggleFeedbackPopup} mutate={fetchData} />
+      )}
     </>
   );
 }
