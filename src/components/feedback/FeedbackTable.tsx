@@ -283,7 +283,11 @@ export default function FeedbackTable() {
         onPageChange={handlePageChange}
       />
       {toggleFeedback && (
-        <QuickPopupFeedback toggle={toggleFeedbackPopup} mutate={fetchData} />
+        <QuickPopupFeedback
+          toggle={toggleFeedbackPopup}
+          mutate={fetchData}
+          defaultBookingId={null}
+        />
       )}
     </>
   );

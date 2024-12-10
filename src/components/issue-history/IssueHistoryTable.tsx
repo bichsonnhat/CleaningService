@@ -14,8 +14,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Feedback2 } from "../feedback/FeedbackTable";
+import { Feedback2, Role } from "../feedback/FeedbackTable";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useToast } from "@/hooks/use-toast";
+import QuickPopupAdmin from "../quickpopup/QuickPopupAdmin";
+import QuickPopupCustomer from "../quickpopup/QuickPopupCustomer";
+import QuickPopupHelper from "../quickpopup/QuickPopupHelper";
+import CreateIssuePopup from "../quickpopup/CreateIssuePopup";
 
 export type Issue = {
   id: number;
@@ -26,16 +31,26 @@ export type Issue = {
 };
 
 export default function IssueHistoryTable() {
-  const [issueData, setIssueData] = useState<Feedback2[]>([]);
+  const role = Role.Helper;
+  const userId = "0066dc01-cdd4-4243-9f4e-778bcfa4458f";
+  const { toast } = useToast();
 
+  const [issueData, setIssueData] = useState<Feedback2[] | null>(null);
+
+  const [toggleIssue, setToggleIssue] = useState(false);
+  const toggleIssuePopup = () => {
+    setToggleIssue(!toggleIssue);
+  };
+
+  const fetchIssueHistory = async () => {
+    const response = await fetch(
+      `/api/feedback?role=${role}&userId=${userId}&reportedBy="true"`
+    );
+    const data = await response.json();
+    console.log("Issue History: ", data);
+    setIssueData(data);
+  };
   useEffect(() => {
-    const fetchIssueHistory = async () => {
-      const response = await fetch(`/api/feedback`);
-      const data = await response.json();
-      console.log("Issue History: ", data);
-      setIssueData(data);
-    };
-
     fetchIssueHistory();
   }, []);
 
@@ -43,6 +58,9 @@ export default function IssueHistoryTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Filter by");
   const [searchBy, setSearchBy] = useState("Name");
+
+  const [deleting, setDeleting] = useState(false);
+  const [checkedRows, setCheckedRows] = useState<string[]>([]);
 
   // filter
   const applyFilter = (data: any) => {
@@ -65,18 +83,20 @@ export default function IssueHistoryTable() {
   };
 
   // search by
-  const filteredData = issueData.filter((Issue) => {
-    switch (searchBy) {
-      case "Helper":
-        return Issue.booking.helper.user.fullName
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      default:
-        return Issue.booking.helper.user.fullName
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-    }
-  });
+  const filteredData = Array.isArray(issueData)
+    ? issueData.filter((Issue) => {
+        switch (searchBy) {
+          case "Helper":
+            return Issue.booking.helper.user.fullName
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+          default:
+            return Issue.booking.helper.user.fullName
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+        }
+      })
+    : [];
 
   const finalData = applyFilter(filteredData);
 
@@ -93,7 +113,49 @@ export default function IssueHistoryTable() {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
 
-  if (issueData.length === 0)
+  const handleCheckboxToggle = (id: string, isChecked: boolean) => {
+    setCheckedRows((prevCheckedRows) =>
+      isChecked
+        ? [...prevCheckedRows, id]
+        : prevCheckedRows.filter((rowId) => rowId !== id)
+    );
+  };
+
+  const handleDeleteIssue = async () => {
+    if (checkedRows.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "Please select issue to delete",
+      });
+    } else {
+      try {
+        setDeleting(true);
+        await Promise.all(
+          checkedRows.map((id) => {
+            return fetch(`/api/feedback/${id}`, {
+              method: "DELETE",
+            });
+          })
+        );
+        toast({ title: "Delete issue successfully!" });
+        setIssueData((prev) =>
+          (prev || []).filter((issue) => !checkedRows.includes(issue.id))
+        );
+        setCheckedRows([]);
+        console.log("Delete issue successfully!");
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Failed to delete some issue",
+        });
+        console.error(error);
+      } finally {
+        setDeleting(false);
+      }
+    }
+  };
+
+  if (!issueData)
     return (
       <div className="flex justify-center items-center w-full h-[500px]">
         <ClipLoader color="#2A88F5" loading={true} size={30} />
@@ -110,7 +172,7 @@ export default function IssueHistoryTable() {
         />
         <div className="flex flex-row gap-2">
           <button
-            onClick={() => alert("Open popup Create Issue")}
+            onClick={toggleIssuePopup}
             className="flex flex-row gap-2 items-center justify-center px-8 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white"
           >
             <Image
@@ -123,15 +185,21 @@ export default function IssueHistoryTable() {
           </button>
           <AlertDialog>
             <AlertDialogTrigger>
-              <div className="flex flex-row gap-2 items-center justify-center px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-80 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
-                <Image
-                  src="/images/Dashboard/Feedback/Trash.svg"
-                  alt=""
-                  width={18}
-                  height={18}
-                />
-                Delete
-              </div>
+              {deleting ? (
+                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                  <ClipLoader color="#fff" loading={true} size={30} />
+                </div>
+              ) : (
+                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                  <Image
+                    src="/images/Dashboard/Feedback/Trash.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                  />
+                  Delete
+                </div>
+              )}
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -144,7 +212,10 @@ export default function IssueHistoryTable() {
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction asChild>
-                  <button className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
+                  <button
+                    onClick={() => handleDeleteIssue()}
+                    className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
+                  >
                     Delete
                   </button>
                 </AlertDialogAction>
@@ -155,9 +226,21 @@ export default function IssueHistoryTable() {
       </div>
 
       <div className="flex overflow-hidden flex-col justify-center mt-3.5 w-full max-md:max-w-full">
-        {currentData.map((issue: Feedback2, index: any) => (
-          <IssueRow key={issue.id} issueData={issue} />
-        ))}
+        {Array.isArray(issueData) && issueData.length > 0 ? (
+          currentData.map((issue: Feedback2) => (
+            <IssueRow
+              key={issue.id}
+              issueData={issue}
+              onCheckboxToggle={handleCheckboxToggle}
+            />
+          ))
+        ) : (
+          <div className="flex justify-center items-center w-full bg-white">
+            <p className="text-lg font-Averta-Semibold text-neutral-900">
+              This helper has no issue history
+            </p>
+          </div>
+        )}
       </div>
 
       <Pagination
@@ -166,6 +249,13 @@ export default function IssueHistoryTable() {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+      {toggleIssue && (
+        <CreateIssuePopup
+          toggle={toggleIssuePopup}
+          mutate={fetchIssueHistory}
+          defaultBookingId={null}
+        />
+      )}
     </>
   );
 }

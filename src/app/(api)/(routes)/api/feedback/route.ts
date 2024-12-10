@@ -28,11 +28,13 @@ export async function GET(req: Request) {
   let feedback;
 
   if (role === "Customer") {
-    // Lấy feedback theo customerId
     feedback = await prisma.feedback.findMany({
+      orderBy: {
+        updated_at: "desc",
+      },
       where: {
         booking: {
-          customerId: userId, // Lọc theo customerId
+          customerId: userId,
         },
         reportedBy: false,
       },
@@ -58,8 +60,10 @@ export async function GET(req: Request) {
       },
     });
   } else if (role === "Admin") {
-    // Lấy tất cả feedback
     feedback = await prisma.feedback.findMany({
+      orderBy: {
+        updated_at: "desc",
+      },
       where: {
         reportedBy: reportedBy,
       },
@@ -85,8 +89,10 @@ export async function GET(req: Request) {
       },
     });
   } else if (role === "Helper") {
-    // Lấy feedback theo helperId
     feedback = await prisma.feedback.findMany({
+      orderBy: {
+        updated_at: "desc",
+      },
       where: {
         booking: {
           helperId: userId,

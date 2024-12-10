@@ -10,11 +10,53 @@ export async function GET(
     if (params.id === "can-feedback") {
       const customerId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
       bookings = await prisma.booking.findMany({
+        orderBy: {
+          scheduledStartTime: "desc",
+        },
         where: {
           customerId: customerId,
           status: "completed",
           feedbacks: {
-            none: {},
+            none: {
+              reportedBy: false,
+            },
+          },
+        },
+        include: {
+          customer: {
+            select: {
+              fullName: true,
+            },
+          },
+          helper: {
+            select: {
+              user: {
+                select: {
+                  fullName: true,
+                },
+              },
+            },
+          },
+          serviceType: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+    } else if ((params.id = "can-issue")) {
+      const helperId = "0066dc01-cdd4-4243-9f4e-778bcfa4458f";
+      bookings = await prisma.booking.findMany({
+        orderBy: {
+          scheduledStartTime: "desc",
+        },
+        where: {
+          helperId: helperId,
+          status: "completed",
+          feedbacks: {
+            none: {
+              reportedBy: true,
+            },
           },
         },
         include: {

@@ -37,20 +37,14 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
     scheduledStartTime: Date,
     scheduledEndTime: Date
   ): string => {
-    const startHour = scheduledStartTime
-      .getUTCHours()
-      .toString()
-      .padStart(2, "0");
+    const startHour = scheduledStartTime.getHours().toString().padStart(2, "0");
     const startMinute = scheduledStartTime
-      .getUTCMinutes()
+      .getMinutes()
       .toString()
       .padStart(2, "0");
 
-    const endHour = scheduledEndTime.getUTCHours().toString().padStart(2, "0");
-    const endMinute = scheduledEndTime
-      .getUTCMinutes()
-      .toString()
-      .padStart(2, "0");
+    const endHour = scheduledEndTime.getHours().toString().padStart(2, "0");
+    const endMinute = scheduledEndTime.getMinutes().toString().padStart(2, "0");
 
     return `${startHour}:${startMinute} - ${endHour}:${endMinute}`;
   };
@@ -80,14 +74,14 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
                   alt="avatar"
                   width={20}
                   height={20}
-                  className="max-lg:hidden"
+                  className=""
                 />
-                <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
+                <p className="text-[#4f6071] text-sm xl:text-base font-Averta-Semibold leading-[23px] tracking-tight">
                   {selectedBooking.helper.user.fullName}
                 </p>
               </div>
               <div className="flex flex-col gap-1 w-[30%] h-full text-center">
-                <p className="text-[#1d2c4c] opacity-50 text-sm leading-[19px] tracking-tight font-Averta-Semibold relative">
+                <p className="text-[#1d2c4c] opacity-50 text-xs xl:text-sm leading-[19px] tracking-tight font-Averta-Semibold relative">
                   {formatBookingTime(
                     new Date(selectedBooking.scheduledStartTime),
                     new Date(selectedBooking.scheduledEndTime)
@@ -95,7 +89,7 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
                   {/* <span className="absolute bottom-0 left-1/2 w-[60%] h-[2px] bg-[#d3d8dd] transform -translate-x-1/2"></span> */}
                   <span className="block w-[60%] h-[1px] bg-[#d3d8dd] mx-auto"></span>
                 </p>
-                <p className="text-[#1d2c4c] opacity-50 text-sm leading-[19px] tracking-tight font-Averta-Semibold">
+                <p className="text-[#1d2c4c] opacity-50 text-xs xl:text-sm leading-[19px] tracking-tight font-Averta-Semibold">
                   {formatBookingDate(
                     new Date(selectedBooking.scheduledStartTime)
                   )}
@@ -111,13 +105,15 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
               </div>
             </div>
           ) : (
-            <p className="text-sm">Select a booking</p>
+            <p className="text-[#9ea7af] text-base font-Averta-Semibold leading-[23px] tracking-tight">
+              There are no bookings available
+            </p>
           )}
         </div>
       </div>
 
       {/* Dropdown Items */}
-      {isOpen && (
+      {isOpen && bookings.length > 0 && (
         <div className="absolute mt-2 w-full bg-white border border-[#d3d8dd] rounded-lg shadow-lg z-10">
           {bookings.map((booking, index) => (
             <div
