@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Checkbox } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 import { Feedback2 } from "../feedback/FeedbackTable";
 
 interface IssueRowProps {
   issueData: Feedback2;
+  onCheckboxToggle?: (id: string, checked: boolean) => void;
 }
 
-const IssueRow: React.FC<IssueRowProps> = ({ issueData }) => {
+const IssueRow: React.FC<IssueRowProps> = ({ issueData, onCheckboxToggle }) => {
   const router = useRouter();
+
+  const [isChecked, setIsChecked] = useState(false);
 
   function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -22,6 +25,14 @@ const IssueRow: React.FC<IssueRowProps> = ({ issueData }) => {
     return `${hour}:${minute} - ${day}/${month}/${year}`;
   }
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setIsChecked(checked);
+    if (onCheckboxToggle) {
+      onCheckboxToggle(issueData.id, checked);
+    }
+  };
+
   return (
     <div
       onClick={() => router.push(`issue/${issueData.id}`)}
@@ -33,6 +44,8 @@ const IssueRow: React.FC<IssueRowProps> = ({ issueData }) => {
       >
         <div className="max-xl:absolute flex overflow-hidden items-center justify-end xl:justify-center max-xl:mt-2 pl-px w-full min-h-[48px]">
           <Checkbox
+            checked={isChecked}
+            onChange={handleCheckboxChange}
             onClick={(e) => e.stopPropagation()}
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}

@@ -41,8 +41,14 @@ export type Feedback2 = {
   };
 };
 
+export enum Role {
+  Admin = "Admin",
+  Customer = "Customer",
+  Helper = "Helper",
+}
+
 export default function FeedbackTable() {
-  const role = "Customer"; // sau này sẽ thay bằng role của user
+  const role: Role = Role.Customer; // sau này sẽ thay bằng role của user
   const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
   const { toast } = useToast();
 
@@ -253,7 +259,7 @@ export default function FeedbackTable() {
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 ">
             {feedbacks == null || feedbacks.length === 0 ? (
               <div className="flex justify-center items-center w-full bg-white">
-                {role == "Admin"
+                {role == Role.Admin
                   ? "We have no feedback"
                   : "This customer has no feedback"}
               </div>

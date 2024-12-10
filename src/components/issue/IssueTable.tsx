@@ -16,13 +16,20 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Feedback2 } from "../feedback/FeedbackTable";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useToast } from "@/hooks/use-toast";
 
 export default function IssueTable() {
-  const [issueData2, setIssueData2] = useState<Feedback2[]>([]);
+  const role = "Admin";
+  const userId = "0066dc01-cdd4-4243-9f4e-778bcfa4458f";
+  const { toast } = useToast();
+
+  const [issueData2, setIssueData2] = useState<Feedback2[] | null>(null);
 
   useEffect(() => {
     const fetchFeedback = async () => {
-      const response = await fetch(`/api/feedback`);
+      const response = await fetch(
+        `/api/feedback?role=${role}&userId=${userId}&reportedBy=true`
+      );
       const data = await response.json();
       console.log("Issue: ", data);
       setIssueData2(data);
@@ -35,6 +42,9 @@ export default function IssueTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Filter by");
   const [searchBy, setSearchBy] = useState("Helper");
+
+  const [deleting, setDeleting] = useState(false);
+  const [checkedRows, setCheckedRows] = useState<string[]>([]);
 
   // filter
   const applyFilter = (data: any) => {
@@ -57,18 +67,20 @@ export default function IssueTable() {
   };
 
   // search by
-  const filteredData = issueData2.filter((Issue) => {
-    switch (searchBy) {
-      case "Helper":
-        return Issue.booking.helper.user.fullName
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      default:
-        return Issue.booking.helper.user.fullName
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-    }
-  });
+  const filteredData = issueData2
+    ? issueData2.filter((Issue) => {
+        switch (searchBy) {
+          case "Helper":
+            return Issue.booking.helper.user.fullName
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+          default:
+            return Issue.booking.helper.user.fullName
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+        }
+      })
+    : [];
 
   const finalData = applyFilter(filteredData);
 
@@ -85,7 +97,49 @@ export default function IssueTable() {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
 
-  if (issueData2.length === 0)
+  const handleCheckboxToggle = (id: string, isChecked: boolean) => {
+    setCheckedRows((prevCheckedRows) =>
+      isChecked
+        ? [...prevCheckedRows, id]
+        : prevCheckedRows.filter((rowId) => rowId !== id)
+    );
+  };
+
+  const handleDeleteIssue = async () => {
+    if (checkedRows.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "Please select issue to delete",
+      });
+    } else {
+      try {
+        setDeleting(true);
+        await Promise.all(
+          checkedRows.map((id) => {
+            return fetch(`/api/feedback/${id}`, {
+              method: "DELETE",
+            });
+          })
+        );
+        toast({ title: "Delete issue successfully!" });
+        setIssueData2((prev) =>
+          (prev || []).filter((issue) => !checkedRows.includes(issue.id))
+        );
+        setCheckedRows([]);
+        console.log("Delete issue successfully!");
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Failed to delete some issue",
+        });
+        console.error(error);
+      } finally {
+        setDeleting(false);
+      }
+    }
+  };
+
+  if (!issueData2)
     return (
       <div className="flex justify-center items-center w-full h-[500px]">
         <ClipLoader color="#2A88F5" loading={true} size={30} />
@@ -103,15 +157,21 @@ export default function IssueTable() {
         <div className="flex gap-2">
           <AlertDialog>
             <AlertDialogTrigger>
-              <div className="flex flex-row gap-2 items-center justify-center px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-80 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
-                <Image
-                  src="/images/Dashboard/Feedback/Trash.svg"
-                  alt=""
-                  width={18}
-                  height={18}
-                />
-                Delete
-              </div>
+              {deleting ? (
+                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                  <ClipLoader color="#fff" loading={true} size={30} />
+                </div>
+              ) : (
+                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                  <Image
+                    src="/images/Dashboard/Feedback/Trash.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                  />
+                  Delete
+                </div>
+              )}
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -124,7 +184,10 @@ export default function IssueTable() {
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction asChild>
-                  <button className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
+                  <button
+                    onClick={() => handleDeleteIssue()}
+                    className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
+                  >
                     Delete
                   </button>
                 </AlertDialogAction>
@@ -137,9 +200,21 @@ export default function IssueTable() {
       <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded max-md:max-w-full">
         <div className="flex flex-col w-full rounded max-md:max-w-full">
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 max-md:max-w-full">
-            {currentData.map((issue: Feedback2, index: any) => (
-              <IssueRow key={issue.id} issueData={issue} />
-            ))}
+            {issueData2.length === 0 ? (
+              <div className="flex justify-center items-center w-full bg-white">
+                <p className="text-lg font-Averta-Semibold text-neutral-900">
+                  We have no issue
+                </p>
+              </div>
+            ) : (
+              currentData.map((issue: Feedback2) => (
+                <IssueRow
+                  key={issue.id}
+                  issueData={issue}
+                  onCheckboxToggle={handleCheckboxToggle}
+                />
+              ))
+            )}
           </div>
         </div>
       </div>

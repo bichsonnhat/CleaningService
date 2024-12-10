@@ -5,6 +5,8 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const role = searchParams.get("role");
   const userId = searchParams.get("userId");
+  const reportedByString = searchParams.get("reportedBy");
+  const reportedBy = reportedByString === "true" ? true : false;
 
   //  if (!role) {
   //    return NextResponse.json({ error: "Role is required" }, { status: 400 });
@@ -23,30 +25,6 @@ export async function GET(req: Request) {
       { status: 400 }
     );
   }
-
-  // const feedback = await prisma.feedback.findMany({
-  //   include: {
-  //     booking: {
-  //       select:{
-  //         customer: {
-  //           select:{
-  //             fullName: true,
-  //           }
-  //         },
-  //         helper: {
-  //           select:{
-  //             user: {
-  //               select:{
-  //                 fullName: true,
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   },
-  //   where: role === "Customer" ? { booking: { customerId: userId } } : {},
-  // });
   let feedback;
 
   if (role === "Customer") {
@@ -56,6 +34,7 @@ export async function GET(req: Request) {
         booking: {
           customerId: userId, // Lọc theo customerId
         },
+        reportedBy: false,
       },
       include: {
         booking: {
@@ -81,6 +60,39 @@ export async function GET(req: Request) {
   } else if (role === "Admin") {
     // Lấy tất cả feedback
     feedback = await prisma.feedback.findMany({
+      where: {
+        reportedBy: reportedBy,
+      },
+      include: {
+        booking: {
+          select: {
+            customer: {
+              select: {
+                fullName: true,
+              },
+            },
+            helper: {
+              select: {
+                user: {
+                  select: {
+                    fullName: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  } else if (role === "Helper") {
+    // Lấy feedback theo helperId
+    feedback = await prisma.feedback.findMany({
+      where: {
+        booking: {
+          helperId: userId,
+        },
+        reportedBy: true,
+      },
       include: {
         booking: {
           select: {
