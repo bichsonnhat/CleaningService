@@ -17,8 +17,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useToast } from "@/hooks/use-toast";
+import { Role } from "../feedback/FeedbackTable";
+import QuickPopupReturn from "../quickpopup/QuickPopupReturn";
 
-export type Refund2 = {
+export type Refund = {
   id: string;
   booking_id: string;
   requested_by: boolean;
@@ -33,30 +36,33 @@ export type Refund2 = {
   };
 };
 
-export type Refund = {
-  id: number;
-  customerName: string;
-  status: "Refunded" | "Declined" | "Pending";
-  reason: string;
-  createAt: string;
-};
 export default function RefundTable() {
-  const [refunds, setRefunds] = useState<Refund2[]>([]);
-  useEffect(() => {
-    const fetchRefund = async () => {
-      const response = await fetch(`/api/refunds`);
-      const data = await response.json();
-      console.log("Refunds: ", data);
-      setRefunds(data);
-    };
+  const role = Role.Admin;
+  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
+  const { toast } = useToast();
 
+  const [refunds, setRefunds] = useState<Refund[] | null>(null);
+  const fetchRefund = async () => {
+    const response = await fetch(`/api/refunds?role=${role}&userId=${userId}`);
+    const data = await response.json();
+    console.log("Refunds: ", data);
+    setRefunds(data);
+  };
+  useEffect(() => {
     fetchRefund();
   }, []);
+
+  const [toggleRefund, setToggleRefund] = useState(false);
+  const toggleRefundPopup = () => {
+    setToggleRefund(!toggleRefund);
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("Filter by");
   const [searchBy, setSearchBy] = useState("Name");
+  const [checkedRows, setCheckedRows] = useState<string[]>([]);
+  const [deleting, setDeleting] = useState(false);
   // filter
   const applyFilter = (data: any) => {
     switch (filter) {
@@ -77,22 +83,27 @@ export default function RefundTable() {
     }
   };
   // search by
-  const filteredData = refunds.filter((Refund) => {
-    switch (searchBy) {
-      case "Customer":
-        return Refund.booking.customer.fullName
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-      case "Status":
-        return Refund.status.toLowerCase().includes(searchTerm.toLowerCase());
-      // case "Reason":
-      //     return Refund.reason.toLowerCase().includes(searchTerm.toLowerCase());
-      default:
-        return Refund.booking.customer.fullName
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-    }
-  });
+  const filteredData =
+    refunds && Array.isArray(refunds)
+      ? refunds.filter((Refund) => {
+          switch (searchBy) {
+            case "Customer":
+              return Refund.booking.customer.fullName
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase());
+            case "Status":
+              return Refund.status
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase());
+            // case "Reason":
+            //     return Refund.reason.toLowerCase().includes(searchTerm.toLowerCase());
+            default:
+              return Refund.booking.customer.fullName
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase());
+          }
+        })
+      : [];
   const finalData = applyFilter(filteredData);
 
   // pagination
@@ -105,8 +116,50 @@ export default function RefundTable() {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
+  const handleDeleteRefund = async () => {
+    if (checkedRows.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "Please select refund to delete",
+      });
+      //console.log("Please select feedback to delete");
+    } else {
+      try {
+        setDeleting(true);
+        await Promise.all(
+          checkedRows.map((id) => {
+            return fetch(`/api/refunds/${id}`, {
+              method: "DELETE",
+            });
+          })
+        );
+        toast({ title: "Delete refund successfully!" });
+        setRefunds((prev) =>
+          (prev || []).filter((refund) => !checkedRows.includes(refund.id))
+        );
+        setCheckedRows([]);
+        console.log("Delete refund successfully!");
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Failed to delete some refund",
+        });
+        console.error(error);
+      } finally {
+        setDeleting(false);
+      }
+    }
+  };
 
-  if (refunds.length === 0)
+  const handleCheckboxToggle = (id: string, isChecked: boolean) => {
+    setCheckedRows((prevCheckedRows) =>
+      isChecked
+        ? [...prevCheckedRows, id]
+        : prevCheckedRows.filter((rowId) => rowId !== id)
+    );
+  };
+
+  if (!refunds)
     return (
       <div className="flex justify-center items-center w-full h-[500px]">
         <ClipLoader color="#2A88F5" loading={true} size={30} />
@@ -122,7 +175,7 @@ export default function RefundTable() {
         />
         <div className="flex flex-row justify-start items-start gap-4 max-xl:w-full">
           <button
-            onClick={() => alert("Open popup Create Refund")}
+            onClick={toggleRefundPopup}
             className="flex flex-row gap-2 items-center justify-center px-8 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white"
           >
             <Image
@@ -135,15 +188,21 @@ export default function RefundTable() {
           </button>
           <AlertDialog>
             <AlertDialogTrigger>
-              <div className="flex flex-row gap-2 items-center justify-center px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
-                <Image
-                  src="/images/Dashboard/Feedback/Trash.svg"
-                  alt=""
-                  width={18}
-                  height={18}
-                />
-                Delete
-              </div>
+              {deleting ? (
+                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                  <ClipLoader color="#fff" loading={true} size={30} />
+                </div>
+              ) : (
+                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                  <Image
+                    src="/images/Dashboard/Feedback/Trash.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                  />
+                  Delete
+                </div>
+              )}
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -156,7 +215,10 @@ export default function RefundTable() {
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction asChild>
-                  <button className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
+                  <button
+                    onClick={() => handleDeleteRefund()}
+                    className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
+                  >
                     Delete
                   </button>
                 </AlertDialogAction>
@@ -168,9 +230,23 @@ export default function RefundTable() {
       <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded max-md:max-w-full">
         <div className="flex flex-col w-full rounded max-md:max-w-full">
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 max-md:max-w-full">
-            {currentData.map((refund: Refund2, index: any) => (
-              <RefundRow key={refund.id} refund={refund} />
-            ))}
+            {Array.isArray(refunds) && refunds.length > 0 ? (
+              currentData.map((refund: Refund) => (
+                <RefundRow
+                  key={refund.id}
+                  refund={refund}
+                  onCheckboxToggle={handleCheckboxToggle}
+                />
+              ))
+            ) : (
+              <div className="flex justify-center items-center w-full bg-white">
+                <p className="text-lg font-Averta-Semibold text-neutral-900">
+                  {role == Role.Admin
+                    ? "We have no refund request"
+                    : "There are no refund request"}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -180,6 +256,13 @@ export default function RefundTable() {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+      {toggleRefund && (
+        <QuickPopupReturn
+          toggle={toggleRefundPopup}
+          mutate={fetchRefund}
+          defaultBookingId={null}
+        />
+      )}
     </>
   );
 }

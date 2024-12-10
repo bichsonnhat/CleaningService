@@ -13,7 +13,6 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { CreateFeedbackDto } from "@/app/(api)/(routes)/api/feedback/feedback.schema";
 import { useRouter } from "next/navigation";
 import BookingDropdown from "../feedback/BookingSelectionDropDown";
-import { set } from "zod";
 
 export type BookingCanFeedback = {
   id: string;

@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Checkbox } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
-import { Refund2 } from "./RefundTable";
+import { Refund } from "./RefundTable";
 interface RefundRowProps {
-  refund: Refund2;
+  refund: Refund;
+  onCheckboxToggle?: (id: string, checked: boolean) => void;
 }
-const RefundRow: React.FC<RefundRowProps> = ({ refund }) => {
+const RefundRow: React.FC<RefundRowProps> = ({ refund, onCheckboxToggle }) => {
   const router = useRouter();
   //const bgColor = isEven ? 'bg-white' : 'bg-[#f5f7ff]';
+  const [isChecked, setIsChecked] = useState(false);
   const statusColor =
     refund.status === "Refunded"
       ? "bg-[#ccf0eb] text-[#00b69b]"
@@ -28,6 +30,14 @@ const RefundRow: React.FC<RefundRowProps> = ({ refund }) => {
     return `${hours}:${minutes} - ${day}/${month}/${year}`;
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setIsChecked(checked);
+    if (onCheckboxToggle) {
+      onCheckboxToggle(refund.id, checked);
+    }
+  };
+
   return (
     <div
       onClick={() => router.push(`refund/${refund.id}`)}
@@ -39,6 +49,8 @@ const RefundRow: React.FC<RefundRowProps> = ({ refund }) => {
       >
         <div className="max-xl:absolute  flex overflow-hidden items-center justify-end xl:justify-center max-xl:mt-2 pl-px w-full min-h-[48px]">
           <Checkbox
+            checked={isChecked}
+            onChange={handleCheckboxChange}
             onClick={(e) => e.stopPropagation()}
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
