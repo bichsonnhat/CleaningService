@@ -1,3 +1,4 @@
+import { BookingStatus } from "@/components/quickpopup/QuickPopupAdmin";
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 
@@ -61,10 +62,44 @@ export async function GET(req: Request) {
   return NextResponse.json(refunds);
 }
 
+// export async function POST(req: Request) {
+//   const data = await req.json();
+//   const newFeedback = await prisma.refund.create({
+//     data,
+//   });
+//   return NextResponse.json(newFeedback);
+// }
+
 export async function POST(req: Request) {
-  const data = await req.json();
-  const newFeedback = await prisma.refund.create({
-    data,
-  });
-  return NextResponse.json(newFeedback);
+  try {
+    const data = await req.json();
+
+    if (!data.booking_id) {
+      return NextResponse.json(
+        { error: "Missing booking_id in request body" },
+        { status: 400 }
+      );
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const newRefund = await tx.refund.create({
+        data,
+      });
+
+      await tx.booking.update({
+        where: { id: data.booking_id },
+        data: { status: "requested" },
+      });
+
+      return newRefund;
+    });
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("Error creating refund:", error);
+    return NextResponse.json(
+      { error: "Failed to create refund" },
+      { status: 500 }
+    );
+  }
 }

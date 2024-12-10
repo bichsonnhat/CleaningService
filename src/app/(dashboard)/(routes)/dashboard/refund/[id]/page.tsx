@@ -14,7 +14,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
-import { Refund } from "@/components/refund/RefundTable";
+import { Refund, RefundStatus } from "@/components/refund/RefundTable";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
 import { Role } from "@/components/feedback/FeedbackTable";
@@ -57,9 +57,9 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
     },
   ];
   const statusColor =
-    detail?.status === "Refunded"
+    detail?.status === RefundStatus.Refunded
       ? "bg-[#ccf0eb] text-[#00b69b]"
-      : detail?.status === "Declined"
+      : detail?.status === RefundStatus.Declined
       ? "bg-[#fcd7d4] text-[#ef3826]"
       : "bg-[#fce7af] text-[#FF9500]";
 
@@ -84,7 +84,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: "refunded", resolved_at: new Date() }),
+        body: JSON.stringify({ status: status, resolved_at: new Date() }),
       });
       //const data = await response.json();
       fetchDetail(params.id);

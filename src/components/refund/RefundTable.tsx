@@ -36,8 +36,14 @@ export type Refund = {
   };
 };
 
+export enum RefundStatus {
+  Pending = "pending",
+  Refunded = "refunded",
+  Declined = "declined",
+}
+
 export default function RefundTable() {
-  const role = Role.Admin;
+  const role = Role.Customer;
   const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
   const { toast } = useToast();
 
@@ -174,18 +180,20 @@ export default function RefundTable() {
           onFilterChange={setFilter}
         />
         <div className="flex flex-row justify-start items-start gap-4 max-xl:w-full">
-          <button
-            onClick={toggleRefundPopup}
-            className="flex flex-row gap-2 items-center justify-center px-8 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white"
-          >
-            <Image
-              src="/images/icons/outline_plus.svg"
-              alt=""
-              width={18}
-              height={18}
-            />
-            Create Refund
-          </button>
+          {role == Role.Customer && (
+            <button
+              onClick={toggleRefundPopup}
+              className="flex flex-row gap-2 items-center justify-center px-8 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white"
+            >
+              <Image
+                src="/images/icons/outline_plus.svg"
+                alt=""
+                width={18}
+                height={18}
+              />
+              Create Refund
+            </button>
+          )}
           <AlertDialog>
             <AlertDialogTrigger>
               {deleting ? (

@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import { Checkbox } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
-import { Refund } from "./RefundTable";
+import { Refund, RefundStatus } from "./RefundTable";
 interface RefundRowProps {
   refund: Refund;
   onCheckboxToggle?: (id: string, checked: boolean) => void;
 }
 const RefundRow: React.FC<RefundRowProps> = ({ refund, onCheckboxToggle }) => {
   const router = useRouter();
-  //const bgColor = isEven ? 'bg-white' : 'bg-[#f5f7ff]';
   const [isChecked, setIsChecked] = useState(false);
   const statusColor =
-    refund.status === "Refunded"
+    refund.status === RefundStatus.Refunded
       ? "bg-[#ccf0eb] text-[#00b69b]"
-      : refund.status === "Declined"
+      : refund.status === RefundStatus.Declined
       ? "bg-[#fcd7d4] text-[#ef3826]"
       : "bg-[#fce7af] text-[#FF9500]";
 

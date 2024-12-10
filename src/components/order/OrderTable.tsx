@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 import OrderRow from "./OrderRow";
 import Pagination from "./Pagination";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export type Booking = {
   id: string;
@@ -55,7 +56,7 @@ const columns = [
 ];
 
 const OrderTable = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<Booking[] | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("/api/bookings");
@@ -77,18 +78,22 @@ const OrderTable = () => {
     setCurrentPage(1);
   };
 
-  const filteredData = bookings.filter((order) => {
-    const term = searchTerm.toLowerCase();
+  const filteredData = Array.isArray(bookings)
+    ? bookings.filter((order) => {
+        const term = searchTerm.toLowerCase();
 
-    if (searchBy === "Customer")
-      return order.customer.fullName.toLowerCase().includes(term);
-    if (searchBy === "Helper")
-      return order.helper.user.fullName.toLowerCase().includes(term);
-    if (searchBy === "Price") return order.totalPrice.toString().includes(term);
-    if (searchBy === "Status") return order.status.toLowerCase().includes(term);
+        if (searchBy === "Customer")
+          return order.customer.fullName.toLowerCase().includes(term);
+        if (searchBy === "Helper")
+          return order.helper.user.fullName.toLowerCase().includes(term);
+        if (searchBy === "Price")
+          return order.totalPrice.toString().includes(term);
+        if (searchBy === "Status")
+          return order.status.toLowerCase().includes(term);
 
-    return order.customer.fullName.toLowerCase().includes(term);
-  });
+        return order.customer.fullName.toLowerCase().includes(term);
+      })
+    : [];
 
   // Pagination
   const itemsPerPage = 10;
@@ -101,6 +106,13 @@ const OrderTable = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
+
+  if (!bookings)
+    return (
+      <div className="flex justify-center items-center w-full h-[500px]">
+        <ClipLoader color="#2A88F5" loading={true} size={30} />
+      </div>
+    );
 
   return (
     <>
@@ -119,9 +131,17 @@ const OrderTable = () => {
       </div>
 
       <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
-        {currentData.map((booking: Booking, index: any) => (
-          <OrderRow key={booking.id} booking={booking} />
-        ))}
+        {bookings == null || bookings.length === 0 ? (
+          <div className="flex justify-center items-center w-full py-8 bg-white">
+            <p className="text-lg font-Averta-Semibold text-neutral-900">
+              We have no booking
+            </p>
+          </div>
+        ) : (
+          currentData.map((booking: Booking, index: any) => (
+            <OrderRow key={booking.id} booking={booking} />
+          ))
+        )}
       </div>
 
       <Pagination
