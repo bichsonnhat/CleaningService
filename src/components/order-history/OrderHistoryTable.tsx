@@ -7,16 +7,16 @@ import { Booking } from "../order/OrderTable";
 import { Role } from "../feedback/FeedbackTable";
 import ClipLoader from "react-spinners/ClipLoader";
 
-type OrderHistory = {
-  id: string;
-  helperName: string;
-  location: string;
-  scheduledStartTime: Date;
-  scheduledEndTime: Date;
-  helperRating?: number | null;
-  totalPrice: number;
-  status: "Pending" | "In Progress" | "Cancelled" | "Completed";
-};
+// type OrderHistory = {
+//   id: string;
+//   helperName: string;
+//   location: string;
+//   scheduledStartTime: Date;
+//   scheduledEndTime: Date;
+//   helperRating?: number | null;
+//   totalPrice: number;
+//   status: "Pending" | "In Progress" | "Cancelled" | "Completed";
+// };
 
 const columns = [
   { header: "HELPER", className: "w-[210px] hidden md:table-cell" },

@@ -31,6 +31,7 @@ export type Order = {
   };
   feedbacks: {
     id: string;
+    reportedBy: boolean;
   }[];
   refunds: {
     id: string;

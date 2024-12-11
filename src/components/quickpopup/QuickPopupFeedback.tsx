@@ -173,7 +173,9 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
       if (mutate) {
         mutate(userId, role);
       }
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
 
       setTitle("");
       setRating(0);
@@ -245,6 +247,7 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
                 bookings[0]
               }
               onSelectBooking={handleSelectBooking}
+              reportedBy={false}
             />
           </div>
           <div className="flex flex-col w-full h-fit gap-[11px] p-[16px]">

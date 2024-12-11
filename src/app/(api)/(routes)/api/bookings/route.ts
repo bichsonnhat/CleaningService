@@ -35,7 +35,9 @@ export async function GET(req: Request) {
           },
           feedbacks: {
             select: {
+              id: true,
               helperRating: true,
+              reportedBy: true,
             },
           },
         },
@@ -65,7 +67,41 @@ export async function GET(req: Request) {
           },
           feedbacks: {
             select: {
+              id: true,
               helperRating: true,
+              reportedBy: true,
+            },
+          },
+        },
+      });
+    } else if (role === "Helper") {
+      bookings = await prisma.booking.findMany({
+        where: {
+          helperId: userId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          customer: {
+            select: {
+              fullName: true,
+            },
+          },
+          helper: {
+            select: {
+              user: {
+                select: {
+                  fullName: true,
+                },
+              },
+            },
+          },
+          feedbacks: {
+            select: {
+              id: true,
+              helperRating: true,
+              reportedBy: true,
             },
           },
         },

@@ -146,6 +146,8 @@ export async function GET(
           feedbacks: {
             select: {
               id: true,
+              helperRating: true,
+              reportedBy: true,
             },
           },
           refunds: {

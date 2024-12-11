@@ -45,10 +45,6 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
   const handleToggleAdminPopup = () => {
     setToggleAdminPopup(!toggleAdminPopup);
   };
-  const [toggleHelperPopup, setToggleHelperPopup] = useState(false);
-  const handleToggleHelperPopup = () => {
-    setToggleHelperPopup(!toggleHelperPopup);
-  };
 
   // Phần trăm hoàn thành
   const percentage = (booking.feedbacks[0]?.helperRating ?? 0) * 20; //thêm rating chỗ này

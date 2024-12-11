@@ -95,7 +95,9 @@ const QuickPopupReturn: React.FC<QuickPopupReturnProps> = ({
       if (mutate) {
         mutate(userId, role);
       }
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
 
       setReason("");
       toggle();

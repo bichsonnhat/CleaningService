@@ -14,12 +14,14 @@ type BookingDropdownProps = {
   bookings: BookingCanFeedback[];
   defaultBooking?: BookingCanFeedback;
   onSelectBooking?: (booking: BookingCanFeedback) => void;
+  reportedBy?: boolean | false;
 };
 
 const BookingDropdown: React.FC<BookingDropdownProps> = ({
   bookings,
   defaultBooking,
   onSelectBooking,
+  reportedBy,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] =
@@ -77,7 +79,9 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
                   className=""
                 />
                 <p className="text-[#4f6071] text-sm xl:text-base font-Averta-Semibold leading-[23px] tracking-tight">
-                  {selectedBooking.helper.user.fullName}
+                  {reportedBy === false
+                    ? selectedBooking.helper.user.fullName
+                    : selectedBooking.customer.fullName}
                 </p>
               </div>
               <div className="flex flex-col gap-1 w-[30%] h-full text-center">

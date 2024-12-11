@@ -103,7 +103,15 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
         </Button>
       ) : (
         <Button
-          onClick={() => router.push(`feedback/${booking?.feedbacks[0].id}`)}
+          onClick={() =>
+            router.push(
+              `feedback/${
+                booking?.feedbacks?.find(
+                  (feedback) => feedback.reportedBy === false
+                )?.id
+              }`
+            )
+          }
           className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
         >
           Go to feedback
@@ -184,7 +192,9 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
         toast({ description: "Booking cancelled successfully" });
         setCancelService(false);
         // fetchBooking();
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         toast({ description: "Failed to cancel booking" });
       }
