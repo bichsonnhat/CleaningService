@@ -55,7 +55,7 @@ export async function POST(req: Request) {
   // Call POST /api/users to create a new user
   if (eventType === 'user.created') {
     try {
-      const response = await fetch('http://localhost:3000/api/users', {
+      const response = await fetch('/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
