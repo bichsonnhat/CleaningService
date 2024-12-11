@@ -39,7 +39,7 @@ export type BookingCanFeedback = {
 
 interface CreateFeedbackPopupProps {
   toggle: () => void;
-  mutate: (id: string, role: string) => void;
+  mutate?: (id: string, role: string) => void;
   defaultBookingId: string | null;
 }
 
@@ -170,7 +170,10 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
       toast({
         description: "Feedback submitted successfully!",
       });
-      mutate(userId, role);
+      if (mutate) {
+        mutate(userId, role);
+      }
+      window.location.reload();
 
       setTitle("");
       setRating(0);
@@ -204,7 +207,9 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
   return (
     <div
       className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50"
-      onClick={toggle}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
     >
       <div
         className="relative flex flex-col bg-white rounded-lg shadow-lg p-[20px] md:px-[50px] md:py-[30px] w-fit xl:w-[50%] h-fit max-h-[95%] gap-[20px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"

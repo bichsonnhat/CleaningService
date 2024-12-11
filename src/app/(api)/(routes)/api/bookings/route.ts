@@ -1,34 +1,76 @@
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 //Get all bookings
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const role = searchParams.get("role");
+  const userId = searchParams.get("userId");
+  if (!role || !userId) {
+    return NextResponse.json(
+      { error: "role and userId are required" },
+      { status: 400 }
+    );
+  }
+  let bookings;
   try {
-    const bookings = await prisma.booking.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      include: {
-        customer: {
-          select: {
-            fullName: true,
-          },
+    if (role === "Admin") {
+      bookings = await prisma.booking.findMany({
+        orderBy: {
+          createdAt: "desc",
         },
-        helper: {
-          select: {
-            user: {
-              select: {
-                fullName: true,
+        include: {
+          customer: {
+            select: {
+              fullName: true,
+            },
+          },
+          helper: {
+            select: {
+              user: {
+                select: {
+                  fullName: true,
+                },
               },
             },
           },
-        },
-        feedbacks: {
-          select: {
-            helperRating: true,
+          feedbacks: {
+            select: {
+              helperRating: true,
+            },
           },
         },
-      },
-    });
+      });
+    } else if (role === "Customer") {
+      bookings = await prisma.booking.findMany({
+        where: {
+          customerId: userId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          customer: {
+            select: {
+              fullName: true,
+            },
+          },
+          helper: {
+            select: {
+              user: {
+                select: {
+                  fullName: true,
+                },
+              },
+            },
+          },
+          feedbacks: {
+            select: {
+              helperRating: true,
+            },
+          },
+        },
+      });
+    }
     return NextResponse.json(bookings);
   } catch (error) {
     console.error("Error fetching bookings: ", error);

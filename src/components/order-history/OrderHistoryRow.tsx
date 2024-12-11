@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Star from "../employee/Star";
 import Link from "next/link";
 import { Booking } from "../order/OrderTable";
+import { BookingStatus } from "../quickpopup/QuickPopupAdmin";
+import QuickPopupCustomer from "../quickpopup/QuickPopupCustomer";
 
 type OrderHistoryRowProps = {
   booking: Booking;
@@ -27,14 +29,20 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
   ).toLocaleDateString("en-US");
 
   const statusColor =
-    booking.status === "pending"
+    booking.status === BookingStatus.Pending
       ? "bg-[#FFD154] text-[#FF9500]"
-      : booking.status === "inprogress"
+      : booking.status === BookingStatus.InProgress
       ? "bg-[#1A78F2] text-[#1A78F2]"
-      : booking.status === "cancelled"
+      : booking.status === BookingStatus.Cancelled
       ? "bg-[#EF3826] text-[#EF3826]"
-      : booking.status === "completed"
+      : booking.status === BookingStatus.Completed
       ? "bg-[#00B69B] text-[#00B69B]"
+      : booking.status === BookingStatus.Requested
+      ? "bg-[#F87171] text-[#B91C1C]"
+      : booking.status === BookingStatus.Refunded
+      ? "bg-[#60A5FA] text-[#1D4ED8]"
+      : booking.status === BookingStatus.Declined
+      ? "bg-[#F97316] text-[#C2410C]"
       : "";
 
   const percentage = (booking.feedbacks[0]?.helperRating ?? 0) * 20;
@@ -63,8 +71,16 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
     );
   };
 
+  const [toggleCustomerPopup, setToggleCustomerPopup] = useState(false);
+  const handleToggleCustomerPopup = () => {
+    setToggleCustomerPopup(!toggleCustomerPopup);
+  };
+
   return (
-    <div className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto items-start md:items-center p-2.5 cursor-pointer">
+    <div
+      onClick={handleToggleCustomerPopup}
+      className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto items-start md:items-center p-2.5 cursor-pointer"
+    >
       <div className="w-full md:w-[210px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="md:hidden font-bold">HELPER: </span>
@@ -128,6 +144,14 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
           </div>
         </div>
       </div>
+      {toggleCustomerPopup && (
+        <QuickPopupCustomer
+          toggle={handleToggleCustomerPopup}
+          bookingId={booking.id}
+          // mutate={fetchRefund}
+          // defaultBookingId={null}
+        />
+      )}
     </div>
   );
 };

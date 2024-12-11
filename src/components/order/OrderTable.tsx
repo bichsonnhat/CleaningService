@@ -4,6 +4,7 @@ import SearchBar from "./SearchBar";
 import OrderRow from "./OrderRow";
 import Pagination from "./Pagination";
 import ClipLoader from "react-spinners/ClipLoader";
+import { Role } from "../feedback/FeedbackTable";
 
 export type Booking = {
   id: string;
@@ -56,10 +57,15 @@ const columns = [
 ];
 
 const OrderTable = () => {
+  const role = Role.Admin;
+  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
+
   const [bookings, setBookings] = useState<Booking[] | null>(null);
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/bookings");
+      const response = await fetch(
+        `/api/bookings?role=${role}&userId=${userId}`
+      );
       const data = await response.json();
       setBookings(data);
       console.log("Booking response: ", data);

@@ -82,7 +82,7 @@ export async function GET(
         },
       });
     } else if (params.id === "can-refund") {
-      const customerId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
+      const customerId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
       bookings = await prisma.booking.findMany({
         orderBy: {
           scheduledStartTime: "desc",
@@ -144,6 +144,11 @@ export async function GET(
             },
           },
           feedbacks: {
+            select: {
+              id: true,
+            },
+          },
+          refunds: {
             select: {
               id: true,
             },

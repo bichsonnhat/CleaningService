@@ -41,10 +41,6 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
       ? "bg-[#F97316] text-[#C2410C]"
       : "";
 
-  const [toggleCustomerPopup, setToggleCustomerPopup] = useState(false);
-  const handleToggleCustomerPopup = () => {
-    setToggleCustomerPopup(!toggleCustomerPopup);
-  };
   const [toggleAdminPopup, setToggleAdminPopup] = useState(false);
   const handleToggleAdminPopup = () => {
     setToggleAdminPopup(!toggleAdminPopup);
