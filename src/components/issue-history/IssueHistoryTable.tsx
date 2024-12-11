@@ -32,7 +32,7 @@ export type Issue = {
 
 export default function IssueHistoryTable() {
   const role = Role.Helper;
-  const userId = "0066dc01-cdd4-4243-9f4e-778bcfa4458f";
+  const userId = "c11a7445-a49d-45be-9212-f546fb788acc";
   const { toast } = useToast();
 
   const [issueData, setIssueData] = useState<Feedback2[] | null>(null);
@@ -61,6 +61,25 @@ export default function IssueHistoryTable() {
 
   const [deleting, setDeleting] = useState(false);
   const [checkedRows, setCheckedRows] = useState<string[]>([]);
+
+  const columns = [
+    {
+      header: "",
+      className: "w-[50px] flex-[1] hidden md:table-cell",
+    },
+    {
+      header: "HELPER",
+      className: "w-[130px] flex-[3] hidden md:table-cell ",
+    }, // Thông tin thường dài, cần rộng hơn
+    {
+      header: "TITLE",
+      className: "w-[130px] flex-[10] hidden md:table-cell ",
+    }, // Số liệu ngắn, đủ hẹp
+    {
+      header: "DATE",
+      className: "w-[120px] flex-[3] hidden md:table-cell text-start",
+    },
+  ];
 
   // filter
   const applyFilter = (data: any) => {
@@ -226,6 +245,16 @@ export default function IssueHistoryTable() {
       </div>
 
       <div className="flex overflow-hidden flex-col justify-center mt-3.5 w-full max-md:max-w-full">
+        <div className="lg:flex hidden gap-3 w-full bg-[#f5f5f5] h-[48px] items-center p-2.5 ">
+          {columns.map((col, index) => (
+            <div
+              key={index}
+              className={`${col.className} text-left text-[#202224] text-sm font-Averta-Bold`}
+            >
+              {col.header}
+            </div>
+          ))}
+        </div>
         {Array.isArray(issueData) && issueData.length > 0 ? (
           currentData.map((issue: Feedback2) => (
             <IssueRow

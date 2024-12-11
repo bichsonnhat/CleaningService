@@ -67,9 +67,9 @@ const RefundRow: React.FC<RefundRowProps> = ({ refund, onCheckboxToggle }) => {
       </div>
 
       <div
-        className={`flex flex-[1] flex-col shrink justify-center xl:pl-6 mr-2 text-xs font-bold text-center whitespace-nowrap w-[125px]`}
+        className={`flex flex-[3] flex-col shrink justify-center xl:pl-6 mr-2 text-xs font-bold text-center whitespace-nowrap w-[125px]`}
       >
-        <div className="flex flex-1 items-center">
+        <div className="flex flex-1 items-center xl:justify-center">
           <div className="flex flex-row px-3 py-4 items-center justify-start my-auto w-fit">
             <span className="xl:hidden font-bold mr-2">STATUS: </span>
             <div

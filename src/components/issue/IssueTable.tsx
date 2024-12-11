@@ -46,6 +46,25 @@ export default function IssueTable() {
   const [deleting, setDeleting] = useState(false);
   const [checkedRows, setCheckedRows] = useState<string[]>([]);
 
+  const columns = [
+    {
+      header: "",
+      className: "w-[50px] flex-[1] hidden md:table-cell",
+    },
+    {
+      header: "HELPER",
+      className: "w-[130px] flex-[3] hidden md:table-cell ",
+    }, // Thông tin thường dài, cần rộng hơn
+    {
+      header: "TITLE",
+      className: "w-[130px] flex-[10] hidden md:table-cell ",
+    }, // Số liệu ngắn, đủ hẹp
+    {
+      header: "DATE",
+      className: "w-[120px] flex-[3] hidden md:table-cell text-start",
+    },
+  ];
+
   // filter
   const applyFilter = (data: any) => {
     switch (filter) {
@@ -198,6 +217,16 @@ export default function IssueTable() {
       </div>
 
       <div className="flex flex-col justify-center mt-3.5 w-full bg-white rounded max-md:max-w-full">
+        <div className="lg:flex hidden gap-3 w-full bg-[#f5f5f5] h-[48px] items-center p-2.5 ">
+          {columns.map((col, index) => (
+            <div
+              key={index}
+              className={`${col.className} text-left text-[#202224] text-sm font-Averta-Bold`}
+            >
+              {col.header}
+            </div>
+          ))}
+        </div>
         <div className="flex flex-col w-full rounded max-md:max-w-full">
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 max-md:max-w-full">
             {issueData2.length === 0 ? (
