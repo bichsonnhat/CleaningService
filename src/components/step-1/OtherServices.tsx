@@ -1,29 +1,63 @@
 "use client";
-import React, { useState } from "react";
+import { bookingStore } from "@/utils/store/booking.store";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const OtherServices = () => {
-  const services: string[] = ["BabySitting", "Caretaking", "House Keeping"];
-  const forHowLong = [
-    {
-      time: "1-3 hours",
-      price: "$xx",
-    },
-    {
-      time: "3-5 hours",
-      price: "$xx",
-    },
-    {
-      time: "Half a Day",
-      price: "$xxx",
-    },
-    {
-      time: "A Day",
-      price: "$xx",
-    },
-  ];
+  const [services, setServices] = useState([]);
+  const [forHowLong, setForHowLong] = useState<
+    { name: string; price: string }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/service-detail`
+        );
+        const data = await response.json();
+
+        // Service details
+        const services = data
+          .filter((item: any) => item.serviceType.name === "Service details")
+          .map((item: any) => item.title);
+        setServices(services);
+
+        // For how long?
+        const howLong = data
+          .filter((item: any) => item.serviceType.name === "For how long?")
+          .map((item: any) => ({
+            name: item.title,
+            price: `$${item.additionalPrice}`,
+          }));
+        setForHowLong(howLong);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const [selectedService, setSelectedService] = useState<number>(0);
   const [selectedHowLong, setHowLong] = useState<number>(0);
+
+  const router = useRouter();
+
+  const updateBookingData = bookingStore(
+    (state: any) => state.updateBookingData
+  );
+
+  const handleNext = () => {
+    updateBookingData({
+      bookingInfomation: [
+        { name: "Service details", value: services[selectedService] },
+        { name: "For how long?", value: forHowLong[selectedHowLong].name },
+      ],
+    });
+
+    router.push("/booking/step-2");
+  };
 
   const handleSelect = (index: number, type: "service" | "howLong"): void => {
     if (type === "service") setSelectedService(index);
@@ -77,7 +111,7 @@ const OtherServices = () => {
                   }`}
                 >
                   <span className="font-Averta-Semibold text-[20px] leading-[26px]">
-                    {item.time}
+                    {item.name}
                   </span>
                 </div>
                 <span className="text-[#88939D] text-[14px] leading-[19px]">
@@ -87,7 +121,10 @@ const OtherServices = () => {
             ))}
           </div>
 
-          <button className="px-16 py-2 bg-[#1b78f2] rounded-[8px] text-lg font-Averta-Semibold tracking-normal leading-loose text-center text-white">
+          <button
+            onClick={handleNext}
+            className="px-16 py-2 bg-[#1b78f2] rounded-[8px] text-lg font-Averta-Semibold tracking-normal leading-loose text-center text-white hover:bg-opacity-80"
+          >
             Next
           </button>
         </div>
