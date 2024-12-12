@@ -1,53 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import Star from "../employee/Star";
 import Link from "next/link";
+import { Booking } from "../order/OrderTable";
+import { BookingStatus } from "../quickpopup/QuickPopupAdmin";
+import QuickPopupCustomer from "../quickpopup/QuickPopupCustomer";
 
 type OrderHistoryRowProps = {
-  id: string;
-  helperName: string;
-  location: string;
-  scheduledStartTime: Date;
-  scheduledEndTime: Date;
-  helperRating?: number | null;
-  totalPrice: number;
-  status: "Pending" | "In Progress" | "Cancelled" | "Completed";
+  booking: Booking;
 };
 
-const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
-  id,
-  helperName,
-  location,
-  scheduledEndTime,
-  scheduledStartTime,
-  helperRating,
-  totalPrice,
-  status,
-}) => {
-  const startTimeString: string = scheduledStartTime.toLocaleTimeString([], {
+const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
+  const startTimeString: string = new Date(
+    booking.scheduledStartTime
+  ).toLocaleTimeString([], {
     hour: "numeric",
     minute: "numeric",
     hour12: true,
   });
-  const endTimeString: string = scheduledEndTime.toLocaleTimeString([], {
+  const endTimeString: string = new Date(
+    booking.scheduledEndTime
+  ).toLocaleTimeString([], {
     hour: "numeric",
     minute: "numeric",
     hour12: true,
   });
-  const dateString: string = scheduledStartTime.toLocaleDateString("en-US");
+  const dateString: string = new Date(
+    booking.scheduledStartTime
+  ).toLocaleDateString("en-US");
 
   const statusColor =
-    status === "Pending"
+    booking.status === BookingStatus.Pending
       ? "bg-[#FFD154] text-[#FF9500]"
-      : status === "In Progress"
+      : booking.status === BookingStatus.InProgress
       ? "bg-[#1A78F2] text-[#1A78F2]"
-      : status === "Cancelled"
+      : booking.status === BookingStatus.Cancelled
       ? "bg-[#EF3826] text-[#EF3826]"
-      : status === "Completed"
+      : booking.status === BookingStatus.Completed
       ? "bg-[#00B69B] text-[#00B69B]"
+      : booking.status === BookingStatus.Requested
+      ? "bg-[#F87171] text-[#B91C1C]"
+      : booking.status === BookingStatus.Refunded
+      ? "bg-[#60A5FA] text-[#1D4ED8]"
+      : booking.status === BookingStatus.Declined
+      ? "bg-[#F97316] text-[#C2410C]"
       : "";
 
-  // Phần trăm hoàn thành
-  const percentage = (helperRating ?? 0) * 20;
+  const percentage =
+    (booking.feedbacks.find((fb) => !fb.reportedBy)?.helperRating ?? 0) * 20;
   const filledStars = Math.floor(percentage / 20);
 
   // Hàm render ngôi sao
@@ -73,19 +72,27 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
     );
   };
 
+  const [toggleCustomerPopup, setToggleCustomerPopup] = useState(false);
+  const handleToggleCustomerPopup = () => {
+    setToggleCustomerPopup(!toggleCustomerPopup);
+  };
+
   return (
-    <div className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto items-start md:items-center p-2.5 cursor-pointer">
+    <div
+      onClick={handleToggleCustomerPopup}
+      className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto items-start md:items-center p-2.5 cursor-pointer"
+    >
       <div className="w-full md:w-[210px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="md:hidden font-bold">HELPER: </span>
-          {helperName}
+          {booking.helper.user.fullName}
         </div>
       </div>
 
       <div className="w-full md:w-[340px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="md:hidden font-bold">ADDRESS: </span>
-          {location}
+          {booking.location}
         </div>
       </div>
 
@@ -108,7 +115,12 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
           <span className="md:hidden font-bold text-[#202224]">RATING:</span>
           {renderRating()}
           <div className="mt-1">
-            {helperRating !== null ? `${helperRating} out of 5 stars` : "N/A"}
+            {(() => {
+              const feedback = booking.feedbacks.find((fb) => !fb.reportedBy);
+              return feedback
+                ? feedback.helperRating + " out of 5 stars"
+                : "N/A";
+            })()}
           </div>
         </div>
       </div>
@@ -116,7 +128,7 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
       <div className="w-full md:w-[120px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224cc]">
           <span className="md:hidden font-bold">PRICE: </span>
-          {`$${totalPrice}`}
+          {`${booking.totalPrice}/vnđ`}
         </div>
       </div>
 
@@ -127,11 +139,19 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({
             className={`md:w-[100px] text-center flex relative gap-4 justify-between items-start px-4 py-1.5 min-h-[27px] ${statusColor}  bg-opacity-20 rounded-md`}
           >
             <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px]">
-              {status}
+              {booking.status}
             </div>
           </div>
         </div>
       </div>
+      {toggleCustomerPopup && (
+        <QuickPopupCustomer
+          toggle={handleToggleCustomerPopup}
+          bookingId={booking.id}
+          // mutate={fetchRefund}
+          // defaultBookingId={null}
+        />
+      )}
     </div>
   );
 };

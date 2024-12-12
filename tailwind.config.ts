@@ -114,7 +114,8 @@ const config = withMT({
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-}) satisfies Config;
+  plugins: [require("tailwindcss-animate"), require("tailwind-scrollbar")],
+} satisfies Config;
+
 
 export default config;

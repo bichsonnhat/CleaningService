@@ -3,6 +3,11 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
+interface CreateIssuePopupProps {
+  toggle: () => void;
+  mutate?: (id: string, role: string) => void;
+  defaultBookingId: string | null;
+}
 import { useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CreateFeedbackDto } from "@/app/(api)/(routes)/api/feedback/feedback.schema";
@@ -37,13 +42,7 @@ export type BookingCanFeedback = {
   };
 };
 
-interface CreateFeedbackPopupProps {
-  toggle: () => void;
-  mutate?: (id: string, role: string) => void;
-  defaultBookingId: string | null;
-}
-
-const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
+const CreateIssuePopup: React.FC<CreateIssuePopupProps> = ({
   toggle,
   mutate,
   defaultBookingId,
@@ -51,15 +50,15 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
   const [bookings, setBookings] = useState<BookingCanFeedback[] | null>(null);
   const [selectedBooking, setSelectedBooking] =
     useState<BookingCanFeedback | null>(null);
-  const fetchFeedback = async () => {
-    const response = await fetch(`/api/bookings/can-feedback`);
+  const fetchBookingCanIssue = async () => {
+    const response = await fetch(`/api/bookings/can-issue`);
     const data = await response.json();
     setBookings(data);
-    console.log("Booking can feedback response: ", data);
+    console.log("Booking can issue response: ", data);
   };
 
   useEffect(() => {
-    fetchFeedback();
+    fetchBookingCanIssue();
   }, []);
   useEffect(() => {
     if (bookings && bookings.length > 0) {
@@ -70,12 +69,13 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
     }
     console.log("Selected booking: ", selectedBooking);
   }, [bookings]);
+
   const handleSelectBooking = (booking: any) => {
     console.log("Selected booking:", booking);
     setSelectedBooking(booking);
   };
 
-  const role = "Customer"; // sau này sẽ thay bằng role của user
+  const role = "Helper"; // sau này sẽ thay bằng role của user
   const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
   const router = useRouter();
   const { toast } = useToast();
@@ -129,14 +129,6 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
       return;
     }
 
-    if (rating === 0) {
-      toast({
-        variant: "destructive",
-        description: "Please provide a rating.",
-      });
-      return;
-    }
-
     if (!selectedBooking) {
       toast({
         variant: "destructive",
@@ -145,12 +137,12 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
       return;
     }
 
-    const feedbackData: CreateFeedbackDto = {
+    const issueData: CreateFeedbackDto = {
       title,
-      helperRating: rating,
+      helperRating: 0,
       description,
       booking_id: selectedBooking.id,
-      reportedBy: false,
+      reportedBy: true,
     };
 
     setCreating(true);
@@ -160,15 +152,15 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(feedbackData),
+        body: JSON.stringify(issueData),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit feedback");
+        throw new Error("Failed to submit Issue");
       }
 
       toast({
-        description: "Feedback submitted successfully!",
+        description: "Issue submitted successfully!",
       });
       if (mutate) {
         mutate(userId, role);
@@ -209,9 +201,7 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
   return (
     <div
       className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50"
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
+      onClick={(e) => e.stopPropagation()}
     >
       <div
         className="relative flex flex-col bg-white rounded-lg shadow-lg p-[20px] md:px-[50px] md:py-[30px] w-fit xl:w-[50%] h-fit max-h-[95%] gap-[20px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
@@ -228,15 +218,21 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
           </button>
         </div>
         <div className="flex flex-col justify-center items-center text-[28px] md:text-[32px] max-md:p-2">
-          <p className="text-[#1a78f2] font-Averta-Bold leading-[62px] self-start">
-            - Rate our Services
+          <p className="text-[#1a78f2] max-xl:text-2xl font-Averta-Bold xl:leading-[62px] self-start">
+            - Document a Customer Interaction Issue
           </p>
-          <p className="text-[#170f49] font-Averta-Bold leading-[62px]">
-            Fill the form to submit your feedback
+          <p className="text-[#170F49] text-sm xl:text-base">
+            “Your experience matters—share any incidents
+          </p>
+          <p className="text-[#170F49] text-sm xl:text-base">
+            to help us maintain a respectful work environment”
+          </p>
+          <p className="text-[#170f49] max-xl:text-2xl font-Averta-Bold leading-[62px]">
+            Fill the form to submit your Issue
           </p>
         </div>
         <div className="flex flex-col w-[90%] justify-center items-center mx-auto">
-          <div className="flex flex-col w-full h-fit gap-[11px] px-[16px] py-[13px]">
+          <div className="flex flex-col w-full h-fit gap-[11px] xl:px-[16px] py-[13px]">
             <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
               order selection
             </p>
@@ -247,49 +243,28 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
                 bookings[0]
               }
               onSelectBooking={handleSelectBooking}
-              reportedBy={false}
+              reportedBy={true}
             />
           </div>
-          <div className="flex flex-col w-full h-fit gap-[11px] p-[16px]">
+          <div className="flex flex-col w-full h-fit gap-[11px] xl:p-[16px]">
             <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
               title
             </p>
             <input
               className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight border-[2px] p-[15px] rounded-lg border-[#d3d8dd]"
-              placeholder="Type your feedback title"
+              placeholder="Type your issue title"
               onChange={(e) => {
                 setTitle(e.target.value);
                 console.log("Title: ", e.target.value);
               }}
             />
           </div>
-          <div className="flex flex-col w-full h-fit gap-[11px] p-[16px]">
+          <div className="flex flex-col w-full h-fit gap-[11px] max-xl:mt-4 xl:p-[16px]">
             <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
-              your service rating
-            </p>
-            <div className="flex flex-row h-fit py-[13px]">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Image
-                  key={star}
-                  src={
-                    rating >= star
-                      ? "/images/QuickPopUp/StarRating.svg"
-                      : "/images/QuickPopUp/UnRating.svg"
-                  }
-                  alt="star"
-                  width={35}
-                  height={35}
-                  onClick={() => handleRating(star)}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col w-full h-fit gap-[11px] p-[16px]">
-            <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
-              Feedback content (Optional)
+              Description (Optional)
             </p>
             <textarea
-              placeholder="Type your feedback content"
+              placeholder="Type your issue description"
               className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight border-[#d3d8dd] border-2 rounded-lg min-h-[130px] px-[10px] py-[16px] resize-none"
               onChange={(e) => {
                 setDescription(e.target.value);
@@ -313,4 +288,4 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
   );
 };
 
-export default QuickPopupFeedback;
+export default CreateIssuePopup;
