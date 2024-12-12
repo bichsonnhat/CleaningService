@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { BookingCanFeedback } from "../quickpopup/QuickPopupFeedback";
 
-type BookingInfo = {
-  avatar: string;
-  name: string;
-  timeRange: string;
-  date: string;
-  service: string;
-};
+// type BookingInfo = {
+//   avatar: string;
+//   name: string;
+//   timeRange: string;
+//   date: string;
+//   service: string;
+// };
 
 type BookingDropdownProps = {
   bookings: BookingCanFeedback[];
@@ -103,7 +103,7 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
               <div className="flex items-center justify-end w-[30%]">
                 <div className="bg-[#1a78f2] bg-opacity-20 py-2 px-3 rounded-md flex justify-center items-center">
                   <p className="text-[#1a78f2] text-xs font-bold">
-                    {selectedBooking.serviceType.name}
+                    {selectedBooking.serviceCategory.name}
                   </p>
                 </div>
               </div>
@@ -156,7 +156,7 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
               <div className="flex items-center justify-end w-[30%]">
                 <div className="bg-[#1a78f2] bg-opacity-20 py-2 px-3 rounded-md flex justify-center items-center">
                   <p className="text-[#1a78f2] text-xs font-bold">
-                    {booking.serviceType.name}
+                    {booking.serviceCategory.name}
                   </p>
                 </div>
               </div>

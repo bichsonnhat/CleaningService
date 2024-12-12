@@ -21,7 +21,9 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
 
   const [booking, setBooking] = useState<Order | null>(null);
   const fetchBooking = async () => {
-    const response = await fetch(`/api/bookings/${bookingId}`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/${bookingId}`
+    );
     const data = await response.json();
     setBooking(data);
     console.log("Booking: ", data);
@@ -176,16 +178,19 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
 
     try {
       setHandling(true);
-      const response = await fetch(`/api/bookings/${bookingId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cancellationReason: cancelReason,
-          status: BookingStatus.Cancelled,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/${bookingId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cancellationReason: cancelReason,
+            status: BookingStatus.Cancelled,
+          }),
+        }
+      );
 
       if (response.ok) {
         toast({ description: "Booking cancelled successfully" });
@@ -289,7 +294,7 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
                   </p>
                   <div className="flex flex-row h-fit justify-between p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
                     <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
-                      {booking.serviceType.name}
+                      {booking.serviceCategory.name}
                     </p>
                   </div>
                 </div>
@@ -299,7 +304,7 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
                   </p>
                   <div className="flex flex-col w-full h-[90px] gap-[11px] p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
                     <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
-                      {booking.serviceType.description}
+                      {booking.serviceCategory.description}
                     </p>
                   </div>
                 </div>

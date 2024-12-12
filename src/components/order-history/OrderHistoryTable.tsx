@@ -7,17 +7,6 @@ import { Booking } from "../order/OrderTable";
 import { Role } from "../feedback/FeedbackTable";
 import ClipLoader from "react-spinners/ClipLoader";
 
-// type OrderHistory = {
-//   id: string;
-//   helperName: string;
-//   location: string;
-//   scheduledStartTime: Date;
-//   scheduledEndTime: Date;
-//   helperRating?: number | null;
-//   totalPrice: number;
-//   status: "Pending" | "In Progress" | "Cancelled" | "Completed";
-// };
-
 const columns = [
   { header: "HELPER", className: "w-[210px] hidden md:table-cell" },
   { header: "ADDRESS", className: "w-[340px] hidden md:table-cell" },
@@ -29,11 +18,13 @@ const columns = [
 
 const OrderHistoryTable = () => {
   const role = Role.Customer;
-  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
+  const userId = "fa21339b-a224-466b-bf76-043a207ad160";
 
   const [bookings, setBookings] = useState<Booking[] | null>(null);
   const fetchData = async () => {
-    const response = await fetch(`/api/bookings?role=${role}&userId=${userId}`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${role}&userId=${userId}`
+    );
     const data = await response.json();
     setBookings(data);
     console.log("Booking history response: ", data);

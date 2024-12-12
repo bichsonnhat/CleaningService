@@ -37,7 +37,7 @@ export type BookingCanFeedback = {
       fullName: string;
     };
   };
-  serviceType: {
+  serviceCategory: {
     name: string;
   };
 };
@@ -51,7 +51,9 @@ const CreateIssuePopup: React.FC<CreateIssuePopupProps> = ({
   const [selectedBooking, setSelectedBooking] =
     useState<BookingCanFeedback | null>(null);
   const fetchBookingCanIssue = async () => {
-    const response = await fetch(`/api/bookings/can-issue`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/can-issue`
+    );
     const data = await response.json();
     setBookings(data);
     console.log("Booking can issue response: ", data);
@@ -147,13 +149,16 @@ const CreateIssuePopup: React.FC<CreateIssuePopupProps> = ({
 
     setCreating(true);
     try {
-      const response = await fetch("/api/feedback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(issueData),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/feedback`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(issueData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to submit Issue");

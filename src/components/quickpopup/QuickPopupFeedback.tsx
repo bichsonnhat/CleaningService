@@ -32,7 +32,7 @@ export type BookingCanFeedback = {
       fullName: string;
     };
   };
-  serviceType: {
+  serviceCategory: {
     name: string;
   };
 };
@@ -52,7 +52,9 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
   const [selectedBooking, setSelectedBooking] =
     useState<BookingCanFeedback | null>(null);
   const fetchFeedback = async () => {
-    const response = await fetch(`/api/bookings/can-feedback`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/can-feedback`
+    );
     const data = await response.json();
     setBookings(data);
     console.log("Booking can feedback response: ", data);
@@ -76,7 +78,7 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
   };
 
   const role = "Customer"; // sau này sẽ thay bằng role của user
-  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
+  const userId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
   const router = useRouter();
   const { toast } = useToast();
 
@@ -155,13 +157,16 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
 
     setCreating(true);
     try {
-      const response = await fetch("/api/feedback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(feedbackData),
-      });
+      const response = await fetch(
+        "${process.env.NEXT_PUBLIC_API_URL}/api/feedback",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(feedbackData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to submit feedback");

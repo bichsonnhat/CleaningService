@@ -35,7 +35,9 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
   const [detail, setDetail] = useState<Refund | null>(null);
   const [fetchStatus, setFetchStatus] = useState<number>();
   const fetchDetail = async (id: string) => {
-    const response = await fetch(`/api/refunds/${id}`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/refunds/${id}`
+    );
     const data = await response.json();
     setDetail(data);
     // console.log("Check refund detail", data);
@@ -79,13 +81,16 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
   const handleRefund = async (status: string) => {
     setHandling(true);
     try {
-      const response = await fetch(`/api/refunds/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: status, resolved_at: new Date() }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/refunds/${params.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: status, resolved_at: new Date() }),
+        }
+      );
       //const data = await response.json();
       fetchDetail(params.id);
       toast({
