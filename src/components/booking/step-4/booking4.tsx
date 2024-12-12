@@ -1,9 +1,11 @@
+"use client";
 import { ToggleButton } from "@/components/button/togglebutton";
 import { ToggleButtonGroup } from "@/components/button/togglebuttongroup";
 import { InputWithLabel } from "@/components/input/inputwithlabel";
 import { MultiLineInput } from "@/components/input/multipleline-input";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { bookingStore } from "@/utils/store/booking.store";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const getInOpitonsButtons = [
@@ -16,19 +18,19 @@ const getInOpitonsButtons = [
 const deepCleanOptionsButtons = [
   {
     contentText: "Inside fridge",
-    price: "35",
+    price: 35,
     imageSrc: "/images/BookingPage/step-4/Fridge.svg",
     imageSrc2: "/images/BookingPage/step-4/FridgeBlue.svg",
   },
   {
     contentText: "Inside oven",
-    price: "35",
+    price: 35,
     imageSrc: "/images/BookingPage/step-4/Oven.svg",
     imageSrc2: "/images/BookingPage/step-4/OvenBlue.svg",
   },
   {
     contentText: "Inside cabinets",
-    price: "35",
+    price: 35,
     imageSrc: "/images/BookingPage/step-4/Cabinets.svg",
     imageSrc2: "/images/BookingPage/step-4/CabinetsBlue.svg",
   },
@@ -40,6 +42,12 @@ const yesNoOptionsButtons = [
 ];
 
 const Booking4 = () => {
+  const bookingData = bookingStore((state: any) => state.bookingData);
+  const bookingUpdate = bookingStore((state: any) => state.updateBookingData);
+  const route = useRouter();
+  const handleRoute = () => {
+    route.push("/booking/step-5");
+  };
   return (
     <div>
       <div className="min-h-screen w-full">
@@ -64,6 +72,9 @@ const Booking4 = () => {
                 inputPlaceholder="Enter a Location"
                 inputId="location"
                 inputWidth="40vw"
+                onChange={(e) =>
+                  bookingUpdate({ bookingAdress: e.target.value })
+                }
               />
               <div className="md:ml-2 mt-2 md:mt-0">
                 <InputWithLabel
@@ -73,6 +84,7 @@ const Booking4 = () => {
                   inputPlaceholder=""
                   inputId="aptNum"
                   inputWidth="13.125vw"
+                  onChange={(e) => bookingUpdate({ APT: e.target.value })}
                 />
               </div>
             </div>
@@ -101,6 +113,7 @@ const Booking4 = () => {
                 {deepCleanOptionsButtons.map((button, index) => (
                   <ToggleButton
                     key={index}
+                    bookingData={bookingData}
                     contentText={button.contentText}
                     price={button.price}
                     imageSrc={button.imageSrc}
@@ -132,14 +145,14 @@ const Booking4 = () => {
           </div>
 
           <div className="grid justify-center items-center mt-[45px]">
-            {/* <Input type="text" placeholder="What types of pets? Some of our cleaners have pet allergies."
-              className="w-full md:w-[56.25vw] min-w-[325px] h-[55px] text-base font-Averta-Regular" /> */}
             <MultiLineInput
+              disabled={!bookingData.anyPet}
               hasLabel={false}
               inputPlaceholder="What types of pets? Some of our cleaners have pet allergies."
               inputId="notesPet"
               inputHeight="h-[55px]"
               inputWidth="w-full md:w-[56.25vw] min-w-[325px]"
+              onChange={(e) => bookingUpdate({ petNote: e.target.value })}
             />
             <div className="mt-[30px]">
               <MultiLineInput
@@ -150,12 +163,18 @@ const Booking4 = () => {
                 inputId="notes"
                 inputHeight="h-[100px]"
                 inputWidth="w-full md:w-[56.25vw] min-w-[325px]"
+                onChange={(e) =>
+                  bookingUpdate({ additionalNote: e.target.value })
+                }
               />
             </div>
 
             <div className="flex justify-center items-center mt-[55px] pb-[50px]">
-              <Button className="md:w-[12.5vw] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">
-                Place order
+              <Button
+                className="max-sm:hidden md:w-[12.5vw] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]"
+                onClick={handleRoute}
+              >
+                Next
               </Button>
             </div>
           </div>

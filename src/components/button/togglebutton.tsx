@@ -2,14 +2,16 @@
 
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { bookingStore } from "@/utils/store/booking.store";
+import { BookingData } from "@/types/booking";
 
 interface ToggleButtonProps {
   contentText: string;
-  price: string;
+  price: number;
   imageSrc: string;
   imageSrc2: string;
   className: string;
+  bookingData: BookingData;
 }
 
 export function ToggleButton({
@@ -18,11 +20,31 @@ export function ToggleButton({
   imageSrc,
   imageSrc2,
   className,
+  bookingData,
 }: ToggleButtonProps) {
-  const [isToggled, setIsToggled] = useState(false);
+  const bookingUpdate = bookingStore((state: any) => state.updateBookingData);
+  const isIncluded = bookingData.anySpecificSpot?.includes(contentText);
 
   const handleToggle = () => {
-    setIsToggled(!isToggled);
+    if (!isIncluded) {
+      bookingUpdate({
+        anySpecificSpot: [...(bookingData.anySpecificSpot || []), contentText],
+      });
+      bookingUpdate({
+        totalPrice: bookingData.totalPrice
+          ? bookingData.totalPrice + price
+          : price,
+      });
+    } else {
+      bookingUpdate({
+        anySpecificSpot: bookingData.anySpecificSpot?.filter(
+          (item: string) => item !== contentText
+        ),
+      });
+      bookingUpdate({
+        totalPrice: bookingData.totalPrice ? bookingData.totalPrice - price : 0,
+      });
+    }
   };
 
   return (
@@ -30,13 +52,13 @@ export function ToggleButton({
       onClick={handleToggle}
       className={`${className} p-4 inline-grid items-center justify-center
              ${
-               isToggled
+               isIncluded
                  ? "border-[#1A78F2] text-[#1A78F2]"
                  : "border-[#d3d8dd] text-[#4f6071]"
              }`}
     >
       <Image
-        src={isToggled ? imageSrc2 : imageSrc}
+        src={isIncluded ? imageSrc2 : imageSrc}
         alt={contentText}
         width={32}
         height={32}
