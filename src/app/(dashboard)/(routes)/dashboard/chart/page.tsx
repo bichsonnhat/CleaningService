@@ -1,130 +1,92 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChartTable } from "@/components/chart/ChartTable";
 import Dropdown from "@/components/chart/DropDown";
 import { InfoCard } from "@/components/chart/InfoCard";
 import { Chart } from "@/components/chart/Chart";
 import Pagination from "@/components/chart/Pagination";
+import { IBookingResponse, IUserResponse } from "@/utils/interfaces";
 
-const chartData = [
-  {
-    titleInfo: "Total User",
-    dataInfo: "40,689",
-    urliconInfo: "/images/Chart/totalUser.svg",
-    changeInfo: "Up from yesterday",
-    percentageChangeInfo: "8.5%",
-    trend: "up" as "up",
-  },
-  {
-    titleInfo: "Total Order",
-    dataInfo: "89",
-    urliconInfo: "/images/Chart/totalOrder.svg",
-    changeInfo: "Down from yesterday",
-    percentageChangeInfo: "22.5%",
-    trend: "down" as "down",
-  },
-  {
-    titleInfo: "Total Income",
-    dataInfo: "$22,689",
-    urliconInfo: "/images/Chart/totalIncome.svg",
-    changeInfo: "Up from yesterday",
-    percentageChangeInfo: "8.5%",
-    trend: "up" as "up",
-  },
-  {
-    titleInfo: "Total Pending",
-    dataInfo: "19",
-    urliconInfo: "/images/Chart/totalPending.svg",
-    changeInfo: "Down from yesterday",
-    percentageChangeInfo: "18.5%",
-    trend: "down" as "down",
-  },
-];
-
-const chartTableData = [
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:16 PM",
-    service_fee: "$100.00",
-    status: "Completed" as "Completed",
-  },
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:17 PM",
-    service_fee: "$100.00",
-    status: "Processing" as "Processing",
-  },
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:18 PM",
-    service_fee: "$100.00",
-    status: "Completed" as "Completed",
-  },
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:19 PM",
-    service_fee: "$100.00",
-    status: "Processing" as "Processing",
-  },
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:20 PM",
-    service_fee: "$100.00",
-    status: "Completed" as "Completed",
-  },
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:21 PM",
-    service_fee: "$100.00",
-    status: "Processing" as "Processing",
-  },
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:22 PM",
-    service_fee: "$100.00",
-    status: "Completed" as "Completed",
-  },
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:23 PM",
-    service_fee: "$100.00",
-    status: "Processing" as "Processing",
-  },
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:24 PM",
-    service_fee: "$100.00",
-    status: "Completed" as "Completed",
-  },
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:25 PM",
-    service_fee: "$100.00",
-    status: "Processing" as "Processing",
-  },
-  {
-    service_name: "Gardening",
-    location: "6096 hahaha",
-    date_time: "21.10.2024 - 15:26 PM",
-    service_fee: "$100.00",
-    status: "Processing" as "Processing",
-  },
-];
 const ChartPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-  const totalPages = Math.ceil(chartTableData.length / itemsPerPage);
   const [filter, setFilter] = useState("None");
+  const itemsPerPage = 5;
+
+  const [totalIncome, setTotalIncome] = useState(Array(12).fill(0));
+  const [totalPeding, setTotalPending] = useState(0);
+  const [user, setUser] = useState<IUserResponse[]>([]);
+  const [chartTableData, setChartTableData] = useState<
+    {
+      service_name: string;
+      location: string;
+      date_time: string;
+      service_fee: number;
+      status: string;
+    }[]
+  >([]);
+  const [chartCardData] = useState<
+    {
+      titleInfo: string;
+      dataInfo: string;
+      urliconInfo: string;
+      percentageChangeInfo: string;
+      trend: string;
+    }[]
+  >([
+    {
+      titleInfo: "Total User",
+      dataInfo: "",
+      urliconInfo: "/images/Chart/totalUser.svg",
+      percentageChangeInfo: "",
+      trend: "",
+    },
+    {
+      titleInfo: "Total Order",
+      dataInfo: "",
+      urliconInfo: "/images/Chart/totalOrder.svg",
+      percentageChangeInfo: "",
+      trend: "",
+    },
+    {
+      titleInfo: "Total Income",
+      dataInfo: "",
+      urliconInfo: "/images/Chart/totalIncome.svg",
+      percentageChangeInfo: "",
+      trend: "",
+    },
+    {
+      titleInfo: "Total Pending",
+      dataInfo: "",
+      urliconInfo: "/images/Chart/totalPending.svg",
+      percentageChangeInfo: "",
+      trend: "",
+    },
+  ]);
+
+  const mappingChartData = (responseDatas: IBookingResponse[]) => {
+    const chartData = responseDatas.map((data) => {
+      const formattedDateTime = new Date(
+        data.scheduledStartTime
+      ).toLocaleString("en-US", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+      return {
+        service_name: data.serviceType.name,
+        location: data.location,
+        date_time: formattedDateTime,
+        service_fee: data.totalPrice,
+        status: data.status,
+      };
+    });
+    setChartTableData(chartData);
+  };
+
+  const totalPages = Math.ceil(chartTableData.length / itemsPerPage);
   const currentData = [...chartTableData];
 
   const finalData =
@@ -146,11 +108,129 @@ const ChartPage = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
+
+  useEffect(() => {
+    const fetchBookingData = async (url: string) => {
+      const res = await fetch(url, {
+        cache: "force-cache",
+      });
+      const data = await res.json();
+      mappingChartData(data);
+    };
+    const fetchUserData = async (url: string) => {
+      const res = await fetch(url, {
+        cache: "force-cache",
+      });
+      const data = await res.json();
+      setUser(data);
+    };
+    fetchBookingData("/api/bookings");
+    fetchUserData("/api/users");
+  }, []);
+
+  useEffect(() => {
+    const newTotalIncome = Array(12).fill(0);
+    chartTableData.forEach((data) => {
+      if (data.status === "Completed") {
+        const month = new Date(data.date_time).getMonth();
+        newTotalIncome[month] += Number(data.service_fee);
+      }
+      if (data.status === "Pending") {
+        setTotalPending((prev) => prev + 1);
+      }
+    });
+    setTotalIncome(newTotalIncome);
+  }, [chartTableData]);
+
+  useEffect(() => {
+    const totalUserToday = user.filter((data) => {
+      const today = new Date();
+      const createdAt = new Date(data.createdAt);
+      return today.getDate() === createdAt.getDate();
+    }).length;
+
+    const totalUserYesterday = user.filter((data) => {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const createdAt = new Date(data.createdAt);
+      return yesterday.getDate() === createdAt.getDate();
+    }).length;
+
+    const totalOrderToday = chartTableData.filter((data) => {
+      const today = new Date();
+      const date = new Date(data.date_time);
+      return today.getDate() === date.getDate();
+    }).length;
+
+    const totalOrderYesterday = chartTableData.filter((data) => {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const date = new Date(data.date_time);
+      return yesterday.getDate() === date.getDate();
+    }).length;
+
+    const totalIncomeToday = chartTableData.filter((data) => {
+      const today = new Date();
+      const date = new Date(data.date_time);
+      return today.getDate() === date.getDate();
+    }).length;
+
+    const totalIncomeYesterday = chartTableData.filter((data) => {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const date = new Date(data.date_time);
+      return yesterday.getDate() === date.getDate();
+    }).length;
+
+    const totalPendingToday = chartTableData.filter((data) => {
+      const today = new Date();
+      const date = new Date(data.date_time);
+      return today.getDate() === date.getDate();
+    }).length;
+
+    const totalPendingYesterday = chartTableData.filter((data) => {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const date = new Date(data.date_time);
+      return yesterday.getDate() === date.getDate();
+    }).length;
+
+    const percentageUserChange =
+      ((totalUserToday - totalUserYesterday) / totalUserYesterday) * 100;
+    const percentageOrderChange =
+      ((totalOrderToday - totalOrderYesterday) / totalOrderYesterday) * 100;
+    const percentageIncomeChange =
+      ((totalIncomeToday - totalIncomeYesterday) / totalIncomeYesterday) * 100;
+    const percentagePendingChange =
+      ((totalPendingToday - totalPendingYesterday) / totalPendingYesterday) *
+      100;
+
+    chartCardData[0].dataInfo = user.length.toString();
+    chartCardData[0].percentageChangeInfo = `${percentageUserChange.toFixed(
+      2
+    )}%`;
+    chartCardData[0].trend = percentageUserChange > 1 ? "up" : "down";
+    chartCardData[1].dataInfo = chartTableData.length.toString();
+    chartCardData[1].percentageChangeInfo = `${percentageOrderChange.toFixed(
+      2
+    )}%`;
+    chartCardData[1].trend = percentageOrderChange > 1 ? "up" : "down";
+    chartCardData[2].dataInfo = `$${totalIncome.reduce((a, b) => a + b, 0)}`;
+    chartCardData[2].percentageChangeInfo = `${percentageIncomeChange.toFixed(
+      2
+    )}%`;
+    chartCardData[2].trend = percentageIncomeChange > 1 ? "up" : "down";
+    chartCardData[3].dataInfo = totalPeding.toString();
+    chartCardData[3].percentageChangeInfo = `${percentagePendingChange.toFixed(
+      2
+    )}%`;
+    chartCardData[3].trend = percentagePendingChange > 1 ? "up" : "down";
+  }, [user, chartTableData]);
   return (
     <>
       <div className="flex flex-col gap-[30px] h-full w-full">
         <div className="grid grid-cols-2 sm:flex sm:flex-row justify-between h-fit max-sm:gap-4">
-          {chartData.map((chart) => (
+          {chartCardData.map((chart) => (
             <InfoCard key={chart.titleInfo} {...chart} />
           ))}
         </div>
@@ -159,10 +239,9 @@ const ChartPage = () => {
             <div className="text-[#202224] text-2xl font-bold leading-tight text-left">
               Total Income Details
             </div>
-            {/* <Dropdown/> */}
           </div>
           <div className="w-[95%] m-auto my-[25px] h-[90%]">
-            <Chart />
+            <Chart totalIncome={totalIncome} />
           </div>
         </div>
         <div className="bg-white rounded-xl h">

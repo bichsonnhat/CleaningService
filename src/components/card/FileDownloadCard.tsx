@@ -13,10 +13,10 @@ const FileDownloadCard: React.FC<FileDownloadCardProps> = ({
 }) => {
   return (
     <div className="border-2 bg-white h-auto mx-[1vw] border-dashed border-gray-300 rounded-lg px-4 py-4 flex">
-      <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-between w-full gap-2 flex-wrap">
         <div className="flex items-center gap-3">
           <Image
-            src="/images/file_doc.png"
+            src="/images/Dashboard/Personal/file_doc.png"
             alt="upload"
             width={24}
             height={24}
@@ -24,7 +24,7 @@ const FileDownloadCard: React.FC<FileDownloadCardProps> = ({
           <span className="text-sm text-gray-700">{fileName}</span>
         </div>
 
-        <Eclipse width={3} height={3} className="mx-2 my-auto" />
+        <Eclipse width={3} height={3} className="my-auto" />
 
         <div className="flex items-center gap-2 mr-auto">
           <button className="text-blue-500 hover:text-blue-600 text-sm font-medium">

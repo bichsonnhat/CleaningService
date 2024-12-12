@@ -11,75 +11,103 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useRouter } from "next/navigation";
+import { bookingStore } from "@/utils/store/booking.store";
 
 const timeSlots = [
   {
     type: "specific",
     time: "Flexible",
+    value: 0,
   },
   {
     type: "standard",
     time: "08:00am",
+    value: 8,
   },
   {
     type: "standard",
     time: "08:30am",
+    value: 8.5,
   },
   {
     type: "standard",
     time: "09:00am",
+    value: 9,
   },
   {
     type: "standard",
     time: "09:30am",
+    value: 9.5,
   },
   {
     type: "standard",
     time: "10:00am",
+    value: 10,
   },
 ];
 
-//asume that this day get from step-2
-const day = new Date().getDate();
-//asume that this month get from step-2
-const month = new Date().getMonth();
-
-//generate array of days in month
-const daysInMonth = new Date(new Date().getFullYear(), month + 1, 0).getDate();
-const days = Array.from({ length: daysInMonth }, (_, i) => ({
-  dayInMonth: (i + 1).toString(),
-  active: i + 1 === day,
-}));
-const orderedDays = [...days.slice(day - 1), ...days.slice(0, day - 1)];
-
-const displayDays = orderedDays.map((day) => {
-  return (
-    <CarouselItem className="basis-1/7 pl-4" key={day.dayInMonth}>
-      <Card>
-        <CardContent
-          className={`flex justify-center items-center pt-[23px] bg-white h-[55px] w-[132px] rounded-[10px] font-Averta-Semibold text-xl border-2 transition duration-300 
-          ${
-            day.active
-              ? "text-[#1A78F2] border-[#1A78F2]"
-              : "text-[#4f6071] border-[#d3d8dd]"
-          } hover:text-white hover:bg-[#1A78F2]`}
-        >
-          {day.dayInMonth}
-        </CardContent>
-      </Card>
-    </CarouselItem>
-  );
-});
-
 const Step_3 = () => {
-  const [timeSelected, setTimeSelected] = useState<string>("");
+  const bookingData = bookingStore((state: any) => state.bookingData);
+
+  const [timeSelected, setTimeSelected] = useState<number>(0);
+  const bookingUpdate = bookingStore((state: any) => state.updateBookingData);
+
+  const router = useRouter();
+  const handleRouteExit = () => {
+    router.push("/");
+  };
+  const handleRoute = () => {
+    router.push("/booking/step-4");
+  };
+
+  const handleClick = (time: number) => {
+    setTimeSelected(time);
+    bookingUpdate({ bookingTiming: timeSelected });
+  };
+
+  // const day = new Date(bookingData.bookingDate).getDate();
+  const day = new Date().getDate();
+
+  // const month = new Date(bookingData.bookingDate).getMonth();
+  const month = new Date().getMonth();
+
+  const daysInMonth = new Date(
+    new Date().getFullYear(),
+    month + 1,
+    0
+  ).getDate();
+  const days = Array.from({ length: daysInMonth }, (_, i) => ({
+    dayInMonth: (i + 1).toString(),
+    active: i + 1 === day,
+  }));
+  const orderedDays = [...days.slice(day - 1), ...days.slice(0, day - 1)];
+
+  const displayDays = orderedDays.map((day) => {
+    return (
+      <CarouselItem className="basis-1/7 pl-4" key={day.dayInMonth}>
+        <Card>
+          <CardContent
+            className={`flex justify-center items-center pt-[23px] bg-white h-[55px] w-[132px] rounded-[10px] font-Averta-Semibold text-xl border-2 transition duration-300 
+            ${
+              day.active
+                ? "text-[#1A78F2] border-[#1A78F2]"
+                : "text-[#4f6071] border-[#d3d8dd]"
+            } hover:text-white hover:bg-[#1A78F2]`}
+          >
+            {day.dayInMonth}
+          </CardContent>
+        </Card>
+      </CarouselItem>
+    );
+  });
   return (
     <div className="h-full w-full">
-      <div className="sm:hidden w-full h-[70px] flex flex-row bg-white justify-end items-end pr-5">
+      <div className="sm:hidden w-full h-[70px] flex flex-row bg-white justify-end items-end pr-10">
         <div className="h-full w-[5.2%]">
           <div
             className="h-full w-full flex justify-center items-center hover:cursor-pointer"
-            onClick={() => console.log("deptrai")}
+            onClick={handleRouteExit}
           >
             <Image
               src="/images/ProgressBar/Group.svg"
@@ -111,11 +139,11 @@ const Step_3 = () => {
             <Button
               key={slot.time}
               className={`bg-white h-[73px] w-[400px] rounded-[10px] font-Averta-Semibold text-xl border-2 hover:text-white ${
-                timeSelected === slot.time
+                timeSelected === slot.value
                   ? "border-[#1A78F2] text-[#1A78F2]"
                   : "bg-white text-[#4F6071]"
               }`}
-              onClick={() => setTimeSelected(slot.time)}
+              onClick={() => handleClick(slot.value)}
             >
               <div className="grid grid-cols-2">
                 <p className="text-base font-Averta-Semibold leading-[23px] tracking-tight text-left">
@@ -133,11 +161,11 @@ const Step_3 = () => {
             <Button
               key={slot.time}
               className={`bg-white h-[73px] w-[400px] rounded-[10px] font-Averta-Semibold text-base leading-[23px] tracking-tight border-2 hover:text-white ${
-                timeSelected === slot.time
+                timeSelected === slot.value
                   ? "border-[#1A78F2] text-[#1A78F2]"
                   : "bg-white text-[#4F6071]"
               }`}
-              onClick={() => setTimeSelected(slot.time)}
+              onClick={() => handleClick(slot.value)}
             >
               {slot.time}
             </Button>
@@ -146,7 +174,10 @@ const Step_3 = () => {
       </div>
 
       <div className="max-sm:hidden flex justify-center items-center mt-[35px]">
-        <Button className="w-[165px] h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold">
+        <Button
+          className="w-[165px] h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
+          onClick={handleRoute}
+        >
           Next
         </Button>
       </div>

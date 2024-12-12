@@ -20,10 +20,7 @@ export async function GET(
     });
 
     if (serviceDetail === null) {
-      return NextResponse.json(
-        { status: "error", error: "Service detail not found" },
-        { status: 404 }
-      );
+      return NextResponse.json(serviceDetail);
     }
 
     return NextResponse.json(serviceDetail);
@@ -130,13 +127,7 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(
-      {
-        status: "success",
-        data: serviceDetail,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(serviceDetail);
   } catch (error) {
     console.error("Error updating service detail:", error);
     return NextResponse.json(
@@ -146,12 +137,16 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const data = await request.json();
+    const { id } = params;
+
     await prisma.serviceDetail.delete({
       where: {
-        id: data.id,
+        id: id,
       },
     });
 

@@ -5,7 +5,13 @@ type FilterDropdownProps = {
 };
 
 const FilterDropdown: React.FC<FilterDropdownProps> = ({ onFilterChange }) => {
-  const options = ["Price: Low to High", "Price: High to Low", "Filter by"];
+  const options = [
+    "Multiply Price ↑",
+    "Multiply Price ↓",
+    "Additional Price ↑",
+    "Additional Price ↓",
+    "None",
+  ];
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Filter by");
