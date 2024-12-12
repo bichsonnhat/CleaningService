@@ -25,7 +25,6 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
     const data = await response.json();
     setBooking(data);
     console.log("Booking: ", data);
-    console.log("Booking feedback: ", data.feedbacks.length);
   };
   useEffect(() => {
     fetchBooking();
@@ -94,7 +93,7 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
 
   const styleBtn =
     bookingState === BookingStatus.Completed ? (
-      booking && booking.feedbacks.length === 0 ? (
+      booking && !booking.feedbacks.some((fb) => fb.reportedBy === false) ? (
         <Button
           onClick={handleToggleFeedbackPopup}
           className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"

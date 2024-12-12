@@ -45,7 +45,8 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
       ? "bg-[#F97316] text-[#C2410C]"
       : "";
 
-  const percentage = (booking.feedbacks[0]?.helperRating ?? 0) * 20;
+  const percentage =
+    (booking.feedbacks.find((fb) => !fb.reportedBy)?.helperRating ?? 0) * 20;
   const filledStars = Math.floor(percentage / 20);
 
   // Hàm render ngôi sao
@@ -114,13 +115,12 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
           <span className="md:hidden font-bold text-[#202224]">RATING:</span>
           {renderRating()}
           <div className="mt-1">
-            {booking.feedbacks.length !== 0 &&
-            booking.feedbacks[0]?.helperRating !== null
-              ? `${
-                  booking.feedbacks.length !== 0 &&
-                  booking.feedbacks[0]?.helperRating
-                } out of 5 stars`
-              : "N/A"}
+            {(() => {
+              const feedback = booking.feedbacks.find((fb) => !fb.reportedBy);
+              return feedback
+                ? feedback.helperRating + " out of 5 stars"
+                : "N/A";
+            })()}
           </div>
         </div>
       </div>

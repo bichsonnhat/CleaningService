@@ -30,7 +30,9 @@ export type Booking = {
     };
   };
   feedbacks: {
+    id: string;
     helperRating?: number;
+    reportedBy: boolean;
   }[];
 };
 
