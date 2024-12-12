@@ -37,7 +37,7 @@ export async function GET(
               },
             },
           },
-          serviceType: {
+          serviceCategory: {
             select: {
               name: true,
             },
@@ -74,7 +74,7 @@ export async function GET(
               },
             },
           },
-          serviceType: {
+          serviceCategory: {
             select: {
               name: true,
             },
@@ -109,7 +109,7 @@ export async function GET(
               },
             },
           },
-          serviceType: {
+          serviceCategory: {
             select: {
               name: true,
             },
@@ -137,7 +137,7 @@ export async function GET(
               fullName: true,
             },
           },
-          serviceType: {
+          serviceCategory: {
             select: {
               name: true,
               description: true,

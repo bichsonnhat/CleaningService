@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import SearchBar from "./SearhBar";
+import SearchBar from "./SearchBar";
 import JobHistoryRow from "./JobHistoryRow";
 import Pagination from "./Pagination";
 import { Role } from "../feedback/FeedbackTable";
