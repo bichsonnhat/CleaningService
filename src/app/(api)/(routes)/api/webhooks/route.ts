@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       });
     } catch (error) {
         console.error('Error creating user:', error)
-        return new Response('Error: Failed to create user', {status: 500,})
+        return new Response(`Error: Failed to create user, ${error}`, {status: 500,})
     }
     // const client = await clerkClient();
     // await client.users.updateUserMetadata(payload.id, {
