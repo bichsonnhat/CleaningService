@@ -3,18 +3,16 @@ import { useRouter } from "next/navigation";
 import { NextResponse } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
-  "/dashboard(.*)", 
-  "/select", 
+  "/dashboard(.*)",
+  "/select",
   "/select-role",
-  "/booking(.*)"
+  "/booking(.*)",
 ]);
 
-const isVerfiedRoute = createRouteMatcher([
-  "/select-role"  
-])
+const isVerfiedRoute = createRouteMatcher(["/select-role"]);
 
 const isAdminRoute = createRouteMatcher([
-  "/dashboard/chart", 
+  "/dashboard/chart",
   "/dashboard/order",
   "/dashboard/customer",
   "/dashboard/employee",
@@ -28,8 +26,8 @@ const isAdminRoute = createRouteMatcher([
 ]);
 
 const isCustomerRoute = createRouteMatcher([
-  "/dashboard/order-history", 
-  "/dashboard/feedback",  
+  "/dashboard/order-history",
+  "/dashboard/feedback",
   "/dashboard/refund",
 ]);
 
@@ -47,31 +45,31 @@ const isSharedRoute = createRouteMatcher([
 const roles = ["admin", "customer", "helper"];
 
 export default clerkMiddleware(async (auth, request) => {
-  const { userId, redirectToSignIn } = await auth()
+  const { userId, redirectToSignIn } = await auth();
 
   if (!userId && isPublicRoute(request)) {
-    return redirectToSignIn()
+    return redirectToSignIn();
   }
 
   const role = (await auth()).sessionClaims?.metadata?.role;
   if (!role) {
     // If trying to access any public route except /select-role, redirect to /select-role
-    if (isPublicRoute(request) && request.nextUrl.pathname !== '/select-role') {
+    if (isPublicRoute(request) && request.nextUrl.pathname !== "/select-role") {
       const url = new URL("/select-role", request.url);
       return NextResponse.redirect(url);
     }
-    
+
     // If trying to access routes that require a role, redirect to /select-role
     if (
-      isAdminRoute(request) || 
-      isCustomerRoute(request) || 
-      isHelperRoute(request) || 
+      isAdminRoute(request) ||
+      isCustomerRoute(request) ||
+      isHelperRoute(request) ||
       isSharedRoute(request)
     ) {
       const url = new URL("/select-role", request.url);
       return NextResponse.redirect(url);
     }
-    
+
     return NextResponse.next();
   }
 
@@ -79,7 +77,6 @@ export default clerkMiddleware(async (auth, request) => {
     const url = new URL("/", request.url);
     return NextResponse.redirect(url);
   }
-
 
   if (
     isAdminRoute(request) &&
@@ -113,7 +110,6 @@ export default clerkMiddleware(async (auth, request) => {
     const url = new URL("/", request.url);
     return NextResponse.redirect(url);
   }
-
 });
 
 export const config = {

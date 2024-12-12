@@ -30,7 +30,10 @@ const CustomerTable = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("/api/users");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users`
+        );
+
         if (response.ok) {
           const users = await response.json();
 
@@ -45,7 +48,6 @@ const CustomerTable = () => {
             }));
 
           setCustomersData(customers);
-          console.log("CUSTOMERS RESPONSE: ", customers);
         } else {
           console.error("Failed to fetch data: ", response.statusText);
         }
