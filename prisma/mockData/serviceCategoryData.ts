@@ -9,7 +9,7 @@ export const serviceCategoryData = [
     {
       "id": "f6902cb1-da83-4d1e-bd10-4ea641901031",
       "name": "Other Services",
-      "description": "Expert plumbing repairs and installations.",
+      "description": "Expert plumbing repairs, baby-sittings, installations and more.",
       "createdAt": new Date(),
       "isActive": true
     }

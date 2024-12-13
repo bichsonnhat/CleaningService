@@ -35,14 +35,17 @@ const EmployeeTable = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch("/api/helpers");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/helpers`
+        );
+
         if (response.ok) {
           const helpers = await response.json();
-          console.log("HELPERS RESPONSE: ", helpers);
+
           const employees = helpers.map((helper: any) => {
             if (!helper || !helper.user) {
               console.error("Invalid helper data: ", helper);
-              return null; // hoặc xử lý giá trị mặc định
+              return null;
             }
 
             return {
@@ -59,8 +62,6 @@ const EmployeeTable = () => {
           });
 
           setEmployeesData(employees);
-
-          console.log("EMPLOYEE RESPONSE: ", employees);
         } else {
           console.error("Failed to fetch data: ", response.statusText);
         }
@@ -77,13 +78,11 @@ const EmployeeTable = () => {
     switch (filter) {
       case "Best Rating":
         return [...data].sort(
-          (a, b) =>
-            b.completedJobs / b.totalJobs - a.completedJobs / a.totalJobs
+          (a, b) => parseFloat(b.averageRating) - parseFloat(a.averageRating)
         );
       case "Worst Rating":
         return [...data].sort(
-          (a, b) =>
-            a.completedJobs / a.totalJobs - b.completedJobs / b.totalJobs
+          (a, b) => parseFloat(a.averageRating) - parseFloat(b.averageRating)
         );
       default:
         return data;

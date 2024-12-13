@@ -55,7 +55,7 @@ export async function POST(req: Request) {
   // Call POST /api/users to create a new user
   if (eventType === 'user.created') {
     try {
-      const response = await fetch('http://localhost:3000/api/users', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       });
     } catch (error) {
         console.error('Error creating user:', error)
-        return new Response('Error: Failed to create user', {status: 500,})
+        return new Response(`Error: Failed to create user, ${error}`, {status: 500,})
     }
     // const client = await clerkClient();
     // await client.users.updateUserMetadata(payload.id, {

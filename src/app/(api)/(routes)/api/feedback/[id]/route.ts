@@ -10,6 +10,26 @@ export async function GET(
       where: {
         id: params.id,
       },
+      include: {
+        booking: {
+          select:{
+            customer: {
+              select:{
+                fullName: true,
+              }
+            },
+            helper: {
+              select:{
+                user: {
+                  select:{
+                    fullName: true,
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     });
     if (!feedback) {
       return NextResponse.json(

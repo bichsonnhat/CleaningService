@@ -95,6 +95,7 @@ CREATE TABLE "Booking" (
     "scheduledStartTime" TIMESTAMP NOT NULL,
     "scheduledEndTime" TIMESTAMP NOT NULL,
     "status" VARCHAR(50) NOT NULL DEFAULT 'pending',
+    "bookingNote" TEXT,
     "cancellationReason" TEXT,
     "totalPrice" DECIMAL(10,2) NOT NULL,
     "paymentStatus" VARCHAR(50) NOT NULL DEFAULT 'pending',
