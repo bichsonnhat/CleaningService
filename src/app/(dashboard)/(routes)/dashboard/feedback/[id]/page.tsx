@@ -11,7 +11,9 @@ const FeedbackDetail = ({ params }: { params: { id: string } }) => {
   const [detail, setDetail] = useState<Feedback2 | null>(null);
   useEffect(() => {
     const fetchDetail = async (id: string) => {
-      const response = await fetch(`/api/feedback/${id}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/feedback/${id}`
+      );
       const data = await response.json();
       setDetail(data);
       console.log("Check feedback detail", data);
@@ -68,7 +70,7 @@ const FeedbackDetail = ({ params }: { params: { id: string } }) => {
       <div className="flex flex-col w-full rounded max-md:max-w-full pb-6">
         {/* Begin Title */}
         <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center justify-start">
+          <div className="flex flex-row items-center justify-start ">
             <button
               onClick={() => router.back()}
               className="h-full p-6 hover:bg-slate-200 border-r-[1px]"

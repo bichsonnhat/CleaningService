@@ -36,7 +36,7 @@ export type Order = {
   refunds: {
     id: string;
   }[];
-  serviceType: {
+  serviceCategory: {
     name: string;
     description: string;
   };
@@ -64,7 +64,9 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
 
   const [booking, setBooking] = useState<Order | null>(null);
   const fetchBooking = async () => {
-    const response = await fetch(`/api/bookings/${bookingId}`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/${bookingId}`
+    );
     const data = await response.json();
     setBooking(data);
     console.log("Booking: ", data);
@@ -234,7 +236,7 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
                   </p>
                   <div className="flex flex-row h-fit justify-between p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
                     <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
-                      {booking.serviceType.name}
+                      {booking.serviceCategory.name}
                     </p>
                   </div>
                 </div>
@@ -244,7 +246,7 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
                   </p>
                   <div className="flex flex-col w-full h-[90px] gap-[11px] p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
                     <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
-                      {booking.serviceType.description}
+                      {booking.serviceCategory.description}
                     </p>
                   </div>
                 </div>

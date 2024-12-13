@@ -43,13 +43,15 @@ export enum RefundStatus {
 }
 
 export default function RefundTable() {
-  const role = Role.Customer;
-  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
+  const role = Role.Admin;
+  const userId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
   const { toast } = useToast();
 
   const [refunds, setRefunds] = useState<Refund[] | null>(null);
   const fetchRefund = async () => {
-    const response = await fetch(`/api/refunds?role=${role}&userId=${userId}`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/refunds?role=${role}&userId=${userId}`
+    );
     const data = await response.json();
     console.log("Refunds: ", data);
     setRefunds(data);
@@ -158,9 +160,12 @@ export default function RefundTable() {
         setDeleting(true);
         await Promise.all(
           checkedRows.map((id) => {
-            return fetch(`/api/refunds/${id}`, {
-              method: "DELETE",
-            });
+            return fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/api/refunds/${id}`,
+              {
+                method: "DELETE",
+              }
+            );
           })
         );
         toast({ title: "Delete refund successfully!" });

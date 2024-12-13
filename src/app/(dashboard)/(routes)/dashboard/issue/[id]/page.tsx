@@ -40,7 +40,9 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
   const [detail, setDetail] = useState<Feedback2 | null>(null);
   useEffect(() => {
     const fetchDetail = async (id: string) => {
-      const response = await fetch(`/api/feedback/${id}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/feedback/${id}`
+      );
       const data = await response.json();
       setDetail(data);
       console.log("Check issue detail", data);

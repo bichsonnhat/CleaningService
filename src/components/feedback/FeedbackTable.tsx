@@ -48,8 +48,8 @@ export enum Role {
 }
 
 export default function FeedbackTable() {
-  const role: Role = Role.Customer; // sau này sẽ thay bằng role của user
-  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
+  const role: Role = Role.Admin; // sau này sẽ thay bằng role của user
+  const userId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
   const { toast } = useToast();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,7 +67,9 @@ export default function FeedbackTable() {
   const [feedbacks, setFeedbacks] = useState<Feedback2[] | null>(null);
 
   const fetchData = async (id: string, role: string) => {
-    const response = await fetch(`/api/feedback?role=${role}&userId=${id}`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/feedback?role=${role}&userId=${id}`
+    );
     const data = await response.json();
     setFeedbacks(data);
     console.log("Feedback response: ", data);
@@ -179,9 +181,12 @@ export default function FeedbackTable() {
         setDeleting(true);
         await Promise.all(
           checkedRows.map((id) => {
-            return fetch(`/api/feedback/${id}`, {
-              method: "DELETE",
-            });
+            return fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/api/feedback/${id}`,
+              {
+                method: "DELETE",
+              }
+            );
           })
         );
         toast({ title: "Delete feedback successfully!" });
@@ -218,7 +223,7 @@ export default function FeedbackTable() {
           onFilterChange={setFilter}
         />
         <div className="flex flex-row justify-start items-start gap-4 max-xl:w-full">
-          {role === "Customer" ? (
+          {role === Role.Customer ? (
             <Button
               onClick={toggleFeedbackPopup}
               className="flex flex-row gap-2 items-center justify-center px-4 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white"

@@ -351,7 +351,9 @@ const JobHistoryTable = () => {
 
   const [bookings, setBookings] = useState<Booking[] | null>(null);
   const fetchData = async () => {
-    const response = await fetch(`/api/bookings?role=${role}&userId=${userId}`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${role}&userId=${userId}`
+    );
     const data = await response.json();
     setBookings(data);
     console.log("Job history response: ", data);

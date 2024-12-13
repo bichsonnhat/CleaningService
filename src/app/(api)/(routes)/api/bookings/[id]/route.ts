@@ -8,7 +8,7 @@ export async function GET(
   let bookings = null;
   try {
     if (params.id === "can-feedback") {
-      const customerId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
+      const customerId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
       bookings = await prisma.booking.findMany({
         orderBy: {
           scheduledStartTime: "desc",
@@ -42,6 +42,11 @@ export async function GET(
               name: true,
             },
           },
+          // serviceType: {
+          //   select: {
+          //     name: true,
+          //   },
+          // },
         },
       });
     } else if (params.id === "can-issue") {
@@ -52,7 +57,9 @@ export async function GET(
         },
         where: {
           helperId: helperId,
-          status: "completed",
+          status: {
+            notIn: ["pending", "inprogress"],
+          },
           feedbacks: {
             none: {
               reportedBy: true,
@@ -82,7 +89,7 @@ export async function GET(
         },
       });
     } else if (params.id === "can-refund") {
-      const customerId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
+      const customerId = "fa21339b-a224-466b-bf76-043a207ad160";
       bookings = await prisma.booking.findMany({
         orderBy: {
           scheduledStartTime: "desc",

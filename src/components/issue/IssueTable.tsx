@@ -28,7 +28,7 @@ export default function IssueTable() {
   useEffect(() => {
     const fetchFeedback = async () => {
       const response = await fetch(
-        `/api/feedback?role=${role}&userId=${userId}&reportedBy=true`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/feedback?role=${role}&userId=${userId}&reportedBy=true`
       );
       const data = await response.json();
       console.log("Issue: ", data);
@@ -135,9 +135,12 @@ export default function IssueTable() {
         setDeleting(true);
         await Promise.all(
           checkedRows.map((id) => {
-            return fetch(`/api/feedback/${id}`, {
-              method: "DELETE",
-            });
+            return fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/api/feedback/${id}`,
+              {
+                method: "DELETE",
+              }
+            );
           })
         );
         toast({ title: "Delete issue successfully!" });

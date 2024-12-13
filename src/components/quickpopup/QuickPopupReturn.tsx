@@ -21,7 +21,9 @@ const QuickPopupReturn: React.FC<QuickPopupReturnProps> = ({
   const [selectedBooking, setSelectedBooking] =
     useState<BookingCanFeedback | null>(null);
   const fetchFeedback = async () => {
-    const response = await fetch(`/api/bookings/can-refund`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/can-refund`
+    );
     const data = await response.json();
     setBookings(data);
     console.log("Booking can refund response: ", data);
@@ -44,7 +46,7 @@ const QuickPopupReturn: React.FC<QuickPopupReturnProps> = ({
   };
 
   const role = "Customer"; // sau này sẽ thay bằng role của user
-  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
+  const userId = "fa21339b-a224-466b-bf76-043a207ad160";
   const { toast } = useToast();
 
   const [reason, setReason] = useState<string>("");
@@ -77,13 +79,16 @@ const QuickPopupReturn: React.FC<QuickPopupReturnProps> = ({
 
     setCreating(true);
     try {
-      const response = await fetch("/api/refunds", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(refundData),
-      });
+      const response = await fetch(
+        "${process.env.NEXT_PUBLIC_API_URL}/api/refunds",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(refundData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to submit refund");

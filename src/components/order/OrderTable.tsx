@@ -66,7 +66,7 @@ const OrderTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `/api/bookings?role=${role}&userId=${userId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${role}&userId=${userId}`
       );
       const data = await response.json();
       setBookings(data);
