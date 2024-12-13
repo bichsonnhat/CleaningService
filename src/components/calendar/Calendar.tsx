@@ -1,3 +1,4 @@
+import { bookingStore } from "@/utils/store/booking.store";
 import React, { useState } from "react";
 
 interface CalendarProps {
@@ -15,6 +16,9 @@ const Calendar: React.FC<CalendarProps> = ({
     month,
     year = new Date().getFullYear(),
 }) => {
+    const bookingData = bookingStore((state: any) => state.bookingData);
+    const bookingUpdate = bookingStore((state: any) => state.updateBookingData);
+
     const daysInMonth = new Date(year, month, 0).getDate();
     const startDay = new Date(year, month - 1, 1).getDay();
     const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
@@ -52,13 +56,14 @@ const Calendar: React.FC<CalendarProps> = ({
                 setSelectedDay(selectedDate);
             }
         }
+
+        return selectedDate;
     };
 
     const isDateInPast = (day: number) => {
         const dateToCheck = new Date(year, month - 1, day);
         const todayDate = new Date(currentYear, currentMonth - 1, currentDate);
 
-        // Set hours, minutes, seconds, and milliseconds to 0 for accurate date comparison
         dateToCheck.setHours(0, 0, 0, 0);
         todayDate.setHours(0, 0, 0, 0);
 
@@ -84,7 +89,13 @@ const Calendar: React.FC<CalendarProps> = ({
                 return (
                     <div
                         key={day}
-                        onClick={() => handleDayClick(day)}
+                        onClick={() => {
+                            const res = handleDayClick(day);
+                            bookingUpdate({
+                                scheduledStartTime: `${res.year}-${res.month}-${res.day}`,
+                                scheduledEndTime: `${res.year}-${res.month}-${res.day}`,
+                            });
+                        }}
                         className={`lg:w-[132px] lg:h-[55px] p-2 text-center rounded-[10px] border-2 cursor-pointer font-Averta-Semibold pt-[10px] ${
                             isSelected
                                 ? "border-blue-600 shadow-lg"
