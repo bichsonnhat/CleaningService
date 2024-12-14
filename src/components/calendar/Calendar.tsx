@@ -92,8 +92,7 @@ const Calendar: React.FC<CalendarProps> = ({
                         onClick={() => {
                             const res = handleDayClick(day);
                             bookingUpdate({
-                                scheduledStartTime: `${res.year}-${res.month}-${res.day}`,
-                                scheduledEndTime: `${res.year}-${res.month}-${res.day}`,
+                                bookingDate: `${res.year}-${res.month}-${res.day}`,
                             });
                         }}
                         className={`lg:w-[132px] lg:h-[55px] p-2 text-center rounded-[10px] border-2 cursor-pointer font-Averta-Semibold pt-[10px] ${
