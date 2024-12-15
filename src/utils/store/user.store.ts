@@ -1,25 +1,25 @@
 import { auth, currentUser } from '@clerk/nextjs/server';
 
-let userId: string | null = null;
-let role: string | undefined = undefined;
+// Separate the server-only initialization logic
+export async function initializeServerAuth() {
+  const [userInstance, authInstance] = await Promise.all([
+    currentUser(),
+    auth()
+  ]);
 
-export async function initializeGlobalUserId() {
-  const user = await currentUser();
-  userId = user?.id || null;
+  return {
+    userId: userInstance?.id || null,
+    role: authInstance.sessionClaims?.metadata?.role || undefined
+  };
+}
+
+// These functions can be used in server components
+export async function getServerUserId() {
+  const { userId } = await initializeServerAuth();
   return userId;
 }
 
-export async function initializeGlobalUserRole() {
-    role = (await auth()).sessionClaims?.metadata?.role || undefined;
-    return role;
-}
-
-export function getUserId() {
-  return userId;
-}
-
-export function getUserRole() {
+export async function getServerUserRole() {
+  const { role } = await initializeServerAuth();
   return role;
 }
-
-
