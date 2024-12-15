@@ -18,6 +18,7 @@ import { Refund, RefundStatus } from "@/components/refund/RefundTable";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
 import { Role } from "@/components/feedback/FeedbackTable";
+import { getUserRole } from "@/utils/store/user.store";
 // export type Refund = {
 //   id: number;
 //   booking_id: string;
@@ -27,7 +28,7 @@ import { Role } from "@/components/feedback/FeedbackTable";
 //   resolved_at: string;
 // };
 const RefundDetail = ({ params }: { params: { id: string } }) => {
-  const role = Role.Admin;
+  const role = getUserRole();
 
   const { toast } = useToast();
   const router = useRouter();
