@@ -2,7 +2,7 @@
 import Calendar from "@/components/calendar/Calendar";
 import Header from "@/components/header/Header";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
 const Step_2 = () => {
