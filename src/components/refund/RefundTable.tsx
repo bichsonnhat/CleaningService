@@ -20,6 +20,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
 import { Role } from "../feedback/FeedbackTable";
 import QuickPopupReturn from "../quickpopup/QuickPopupReturn";
+import { set } from "zod";
 
 export type Refund = {
   id: string;
@@ -43,8 +44,8 @@ export enum RefundStatus {
 }
 
 export default function RefundTable() {
-  const role = Role.Admin;
-  const userId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
+  const [role, setRole] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
   const { toast } = useToast();
 
   const [refunds, setRefunds] = useState<Refund[] | null>(null);
@@ -56,8 +57,17 @@ export default function RefundTable() {
     console.log("Refunds: ", data);
     setRefunds(data);
   };
+  const fetchUser = async () => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+    );
+    const data = await response.json();
+    setRole(data.role);
+    setUserId(data.userId);
+  }
   useEffect(() => {
     fetchRefund();
+    fetchUser();
   }, []);
 
   const [toggleRefund, setToggleRefund] = useState(false);
@@ -209,7 +219,7 @@ export default function RefundTable() {
           onFilterChange={setFilter}
         />
         <div className="flex flex-row justify-start items-start gap-4 max-xl:w-full">
-          {role == Role.Customer && (
+          {role == "customer" && (
             <button
               onClick={toggleRefundPopup}
               className="flex flex-row gap-2 items-center justify-center px-8 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white"
@@ -288,7 +298,7 @@ export default function RefundTable() {
             ) : (
               <div className="flex justify-center items-center w-full bg-white">
                 <p className="text-lg font-Averta-Semibold text-neutral-900">
-                  {role == Role.Admin
+                  {role == "admin"
                     ? "We have no refund request"
                     : "There are no refund request"}
                 </p>

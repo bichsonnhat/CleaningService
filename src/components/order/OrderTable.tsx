@@ -59,11 +59,11 @@ const columns = [
 ];
 
 const OrderTable = () => {
-  const role = Role.Admin;
-  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
-
   const [bookings, setBookings] = useState<Booking[] | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [role, setRole] = useState<string>("");
   useEffect(() => {
+    fetchUserInfo();
     const fetchData = async () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${role}&userId=${userId}`
@@ -75,6 +75,13 @@ const OrderTable = () => {
 
     fetchData();
   }, []);
+
+  const fetchUserInfo = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const data = await response.json();
+    setRole(data.role);
+    setUserId(data.userId);
+  }
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");

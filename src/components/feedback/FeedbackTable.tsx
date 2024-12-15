@@ -48,8 +48,6 @@ export enum Role {
 }
 
 export default function FeedbackTable() {
-  const role: Role = Role.Admin; // sau này sẽ thay bằng role của user
-  const userId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
   const { toast } = useToast();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,6 +56,8 @@ export default function FeedbackTable() {
   const [searchBy, setSearchBy] = useState("Name");
   const [checkedRows, setCheckedRows] = useState<string[]>([]);
   const [deleting, setDeleting] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [role, setRole] = useState("");
 
   const [toggleFeedback, setToggleFeedback] = useState(false);
   const toggleFeedbackPopup = () => {
@@ -75,7 +75,15 @@ export default function FeedbackTable() {
     console.log("Feedback response: ", data);
   };
 
+  const fetchUserInfo = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const data = await response.json();
+    setUserId(data.userId);
+    setRole(data.role);
+  }
+
   useEffect(() => {
+    fetchUserInfo();
     fetchData(userId, role);
   }, []);
 
@@ -223,7 +231,7 @@ export default function FeedbackTable() {
           onFilterChange={setFilter}
         />
         <div className="flex flex-row justify-start items-start gap-4 max-xl:w-full">
-          {role === Role.Customer ? (
+          {role === "customer" ? (
             <Button
               onClick={toggleFeedbackPopup}
               className="flex flex-row gap-2 items-center justify-center px-4 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white"
@@ -297,7 +305,7 @@ export default function FeedbackTable() {
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 ">
             {feedbacks == null || feedbacks.length === 0 ? (
               <div className="flex justify-center items-center w-full bg-white">
-                {role == Role.Admin
+                {role == "admin"
                   ? "We have no feedback"
                   : "This customer has no feedback"}
               </div>

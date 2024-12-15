@@ -17,10 +17,9 @@ const columns = [
 ];
 
 const OrderHistoryTable = () => {
-  const role = Role.Customer;
-  const userId = "fa21339b-a224-466b-bf76-043a207ad160";
-
   const [bookings, setBookings] = useState<Booking[] | null>(null);
+  const [role, setRole] = useState("");
+  const [userId, setUserId] = useState<string | null>(null);
   const fetchData = async () => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${role}&userId=${userId}`
@@ -29,8 +28,15 @@ const OrderHistoryTable = () => {
     setBookings(data);
     console.log("Booking history response: ", data);
   };
+  const fetchUserInfo = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const data = await response.json();
+    setRole(data.role);
+    setUserId(data.userId);
+  }
   useEffect(() => {
     fetchData();
+    fetchUserInfo();
   }, []);
 
   const [currentPage, setCurrentPage] = useState(1);

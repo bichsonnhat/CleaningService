@@ -18,7 +18,6 @@ import { Refund, RefundStatus } from "@/components/refund/RefundTable";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
 import { Role } from "@/components/feedback/FeedbackTable";
-import { getUserRole } from "@/utils/store/user.store";
 // export type Refund = {
 //   id: number;
 //   booking_id: string;
@@ -28,13 +27,12 @@ import { getUserRole } from "@/utils/store/user.store";
 //   resolved_at: string;
 // };
 const RefundDetail = ({ params }: { params: { id: string } }) => {
-  const role = getUserRole();
-
   const { toast } = useToast();
   const router = useRouter();
 
   const [detail, setDetail] = useState<Refund | null>(null);
   const [fetchStatus, setFetchStatus] = useState<number>();
+  const [role, setRole] = useState<string>("");
   const fetchDetail = async (id: string) => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/refunds/${id}`
@@ -45,8 +43,15 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
     // console.log("Check refund detail", response.status);
     setFetchStatus(response.status);
   };
+
+  const fetchUserInfo = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const data = await response.json();
+    setRole(data.role);
+  }
   useEffect(() => {
     fetchDetail(params.id);
+    fetchUserInfo();
   }, [params.id]);
 
   const [handling, setHandling] = useState(false);
@@ -139,7 +144,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
           </div>
           <div className="flex flex-row pl-4 w-fit">
             {/*  */}
-            {detail.status == "pending" && role == Role.Admin && (
+            {detail.status == "pending" && role == "admin" && (
               <div className="flex flex-row justify-end items-center gap-2">
                 {/* Nút refund */}
                 <AlertDialog>
@@ -206,7 +211,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
                 </AlertDialog>
               </div>
             )}
-            {detail.status == "pending" && role == Role.Customer && (
+            {detail.status == "pending" && role == "customer" && (
               <div className="flex justify-center items-center">
                 <div
                   className={`flex justify-center items-center px-8 py-2 md:w-[130px] rounded-lg ${statusColor} font-Averta-Bold text-[13px]`}

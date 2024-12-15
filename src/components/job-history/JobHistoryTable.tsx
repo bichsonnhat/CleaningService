@@ -346,10 +346,9 @@ const ordersData: JobHistory[] = [
 ];
 
 const JobHistoryTable = () => {
-  const role = Role.Helper;
-  const userId = "0066dc01-cdd4-4243-9f4e-778bcfa4458f";
-
   const [bookings, setBookings] = useState<Booking[] | null>(null);
+  const [role, setRole] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
   const fetchData = async () => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${role}&userId=${userId}`
@@ -358,7 +357,14 @@ const JobHistoryTable = () => {
     setBookings(data);
     console.log("Job history response: ", data);
   };
+  const fetchUserInfo = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const data = await response.json();
+    setRole(data.role);
+    setUserId(data.userId);
+  }
   useEffect(() => {
+    fetchUserInfo();
     fetchData();
   }, []);
 

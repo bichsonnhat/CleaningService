@@ -31,7 +31,7 @@ export type Issue = {
 };
 
 export default function IssueHistoryTable() {
-  const role = Role.Helper;
+  const role = "Role.Helper";
   const userId = "c11a7445-a49d-45be-9212-f546fb788acc";
   const { toast } = useToast();
 
