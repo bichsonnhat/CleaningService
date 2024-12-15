@@ -2,8 +2,24 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import { bookingStore } from "@/utils/store/booking.store";
+import { revalidatePath } from "next/cache";
+import { useRouter } from "next/navigation";
 
 const Booking5Right = () => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const handlePayment = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/stripe');
+      const data = await response.json();
+      router.push(data.url);
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
   const bookingData = bookingStore((state: any) => state.bookingData);
   const [discount, setDiscount] = useState<number>(0);
   const [subTotalPrice, setSubTotalPrice] = useState<number>(0);
@@ -104,7 +120,7 @@ const Booking5Right = () => {
       </div>
 
       <div className="flex justify-center items-center ">
-        <Button className="md:w-1/3 h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">
+        <Button onClick={handlePayment} className="md:w-1/3 h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">
           Place order
         </Button>
       </div>
