@@ -11,7 +11,7 @@ export async function GET() {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const homepageUrl = "http://localhost:3000/";
+        const homepageUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
         const stripeSession = await stripe.checkout.sessions.create({
             success_url: homepageUrl,
             cancel_url: homepageUrl,
