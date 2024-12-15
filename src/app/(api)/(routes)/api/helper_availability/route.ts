@@ -1,6 +1,5 @@
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
-import { helperAvailabilityData } from "../../../../../../prisma/mockData";
 import { helperAvailabilitySchema } from "./helper_availability.shema";
 
 // Get all helper_availability

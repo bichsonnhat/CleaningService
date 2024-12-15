@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from 'next/navigation';
 
 type CustomerRowProps = {
   id: string;
@@ -15,10 +16,11 @@ const CustomerRow: React.FC<CustomerRowProps> = ({
   phone,
   email,
 }) => {
+  const router = useRouter();
   return (
     <div
       className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto items-start md:items-center p-2.5 cursor-pointer"
-      onClick={() => (window.location.href = `/dashboard/customer/${id}`)}
+      onClick={() => router.push(`/dashboard/customer/${id}`)}
     >
       <div className="w-full md:w-[130px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold truncate">

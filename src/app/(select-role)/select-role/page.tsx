@@ -1,15 +1,20 @@
 "use client"
+
 import React from 'react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { userRoleStore} from '@/utils/store/role.store'
 
 const SelectRole = () => {
 
-  const [selectService, setSelectService] = useState('')
+  const [selectService, setSelectService] = useState('');
+
+  const setRole = userRoleStore((state) => state.setRole);
 
   const router = useRouter();
-  const handleRoute = () => {
+  const handleRoute = (role: 'Helper' | 'Customer') => {
+    setRole(role);
     router.push('/update-info')
   }
 
@@ -40,7 +45,7 @@ const SelectRole = () => {
               className='w-[80%] sm:w-[50%] h-full flex flex-col items-center justify-center gap-[10px] hover:cursor-pointer max-sm:pb-5'
               onMouseEnter={() => setSelectService('Helper')}
               onMouseLeave={() => setSelectService('')}
-              onClick={handleRoute}
+              onClick={() => handleRoute('Helper')}
             >
               <Image src={`${selectService !== 'Helper' ? '/images/Select/helper_unselect.png' : '/images/Select/helper_select.png'}`} alt='helper' width={200} height={200}/>
               <div className='w-full h-[40%] flex flex-col items-center gap-[5px]'>
@@ -54,7 +59,7 @@ const SelectRole = () => {
               className='w-[80%] sm:w-[50%] h-full flex flex-col items-center justify-center gap-[10px] hover:cursor-pointer max-sm:pt-5'
               onMouseEnter={() => setSelectService('Customer')}
               onMouseLeave={() => setSelectService('')}  
-              onClick={handleRoute}
+              onClick={() => handleRoute('Customer')}
             >
               <div className='relative h-[200px] w-[280px]'>
                 <Image src={`${selectService !== 'Customer' ? '/images/Select/customer_unselect.png' : '/images/Select/customer_select.png'}`} alt='customer' width={200} height={200} className='absolute bottom-0 right-0'/>

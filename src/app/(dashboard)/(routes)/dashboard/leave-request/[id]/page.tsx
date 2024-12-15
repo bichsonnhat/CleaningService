@@ -61,7 +61,7 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
 
         try {
             const response = await fetch(`/api/helper_availability/${params.id}`, {
-                method: "PATCH",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -90,7 +90,7 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
     const handleApprove = async () => {
         try {
             const response = await fetch(`/api/helper_availability/${params.id}`, {
-                method: "PATCH",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -142,7 +142,7 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
     const handleCancel = async () => {
         try {
             const response = await fetch(`/api/helper_availability/${params.id}`, {
-                method: "PATCH",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
