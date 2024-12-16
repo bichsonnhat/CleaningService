@@ -1,21 +1,42 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { GET } from "@/app/(api)/(routes)/api/service-types/route";
+// import { GET } from "@/app/(api)/(routes)/api/service-types/route";
 
 interface ServiceType {
     id: string;
     name: string;
 }
 
-interface Booking {
+export type Booking = {
     id: string;
+    customerId: string;
+    helperId: string;
+    serviceTypeId: string;
+    location: string;
     scheduledStartTime: string;
     scheduledEndTime: string;
-    serviceType: ServiceType;
-    location: string;
     status: string;
-}
+    cancellationReason?: string;
+    totalPrice: number;
+    paymentStatus: string;
+    paymentMethod?: string;
+    createdAt: string;
+    updatedAt: string;
+    customer: {
+        fullName: string;
+    };
+    helper: {
+        user: {
+            fullName: string;
+        };
+    };
+    feedbacks: {
+        id: string;
+        helperRating?: number;
+        reportedBy: boolean;
+    }[];
+};
 
 interface Task {
     date: string;
@@ -27,9 +48,32 @@ interface Task {
 
 const CalendarComponent = () => {
     // All state declarations at the top level
-    const [bookings, setBookings] = useState<Booking[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [bookings, setBookings] = useState<Booking[] | null>(null);
+    const [userId, setUserId] = useState<string | null>(null);
+    const [role, setRole] = useState<string>("");
+    useEffect(() => {
+        fetchUserInfo();
+        const fetchData = async () => {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${role}&userId=${userId}`
+            );
+            const data = await response.json();
+            setBookings(data);
+            console.log("Booking response: ", data);
+        };
+
+        fetchData();
+    }, []);
+
+    const fetchUserInfo = async () => {
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+        );
+        const data = await response.json();
+        setRole(data.role);
+        setUserId(data.userId);
+    };
+
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [currentDay, setCurrentDay] = useState(
@@ -37,60 +81,12 @@ const CalendarComponent = () => {
     );
     const [view, setView] = useState<"month" | "day">("month");
 
-    // Data fetching effect
-    useEffect(() => {
-        const fetchBookings = async () => {
-            try {
-                const result = await GET();
-                const data = await result.json();
-                console.log("API Response Data:", data);
-
-                // Ensure data is an array before setting state
-                if (Array.isArray(data)) {
-                    setBookings(data);
-                } else {
-                    // If data is not an array, check if it's nested
-                    const bookingsArray = data?.bookings || [];
-                    setBookings(bookingsArray);
-                }
-            } catch (err) {
-                console.error("Data fetching error:", err);
-                setError(
-                    err instanceof Error ? err.message : "An error occurred"
-                );
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchBookings();
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center min-h-[970px]">
-                <div className="text-lg text-gray-600">
-                    Loading calendar data...
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex justify-center items-center min-h-[970px]">
-                <div className="text-lg text-red-500">
-                    Failed to load calendar data. Please try again later.
-                </div>
-            </div>
-        );
-    }
-
     const tasks: Task[] = Array.isArray(bookings)
         ? bookings.map((booking: Booking) => ({
               date: new Date(booking.scheduledStartTime)
                   .toISOString()
                   .slice(0, 10),
-              title: booking.serviceType.name,
+              title: booking.customer.fullName,
               startTime: new Date(booking.scheduledStartTime)
                   .toISOString()
                   .slice(11, 16),
