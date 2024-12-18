@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Pagination from "./Pagination";
 import SearhBarAndFilter from "./SearchBarAndFilter";
 import EmployeeRow from "./EmployeeRow";
+import ClipLoader from "react-spinners/ClipLoader";
 
 type Employee = {
   id: string;
@@ -143,10 +144,16 @@ const EmployeeTable = () => {
       </div>
 
       {/* employee table */}
-      <div className="mt-4 flex overflow-hidden flex-col justify-center w-full max-md:max-w-full">
-        {currentData.map((Employee: Employee, index: any) => (
-          <EmployeeRow key={Employee.id} {...Employee} />
-        ))}
+      <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full mt-4">
+        {employeesData.length === 0 ? (
+          <div className="flex justify-center items-center w-full h-[500px]">
+            <ClipLoader color="#2A88F5" loading={true} size={30} />
+          </div>
+        ) : (
+          currentData.map((Employee: Employee, index: any) => (
+            <EmployeeRow key={Employee.id} {...Employee} />
+          ))
+        )}
       </div>
 
       <Pagination
