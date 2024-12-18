@@ -1,10 +1,9 @@
+"use client"
 import LeaveRequestTable from "@/components/leave-request/LeaveRequestTable";
 import React, { useEffect, useState } from "react";
 import { currentUser } from "@clerk/nextjs/server";
 
-const LeaveRequestPage = async () => {
-  
-
+const LeaveRequestPage = () => {
   const [curUserId, setCurUserId] = useState("");
   const [role, setRole] = useState("");
 
