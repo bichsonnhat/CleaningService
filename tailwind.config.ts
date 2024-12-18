@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 
 const withMT = require("@material-tailwind/react/utils/withMT");
 
-const config = withMT({
+const config = ({
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
