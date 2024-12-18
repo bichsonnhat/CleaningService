@@ -9,7 +9,13 @@ const customerInfoSchema = z.object({
       },
       { message: "Invalid date" }
     ),
-    gender: z.enum(["Female", "Male", "Other"], { required_error: 'Gender is required' }),
+    gender: z.preprocess(
+          (val) => (val === "" || val === undefined ? undefined : val),
+          z.enum(["Female", "Male", "Other"], {
+            invalid_type_error: "Invalid gender value. Expected 'Female', 'Male', or 'Other'.",
+            required_error: "Gender is required",
+          })
+        ),
     phoneNumber: z
       .string({required_error: 'Phone number is required'})
       .regex(/^[0-9]{10}$/, 'Phone number must be number and 10 digits')

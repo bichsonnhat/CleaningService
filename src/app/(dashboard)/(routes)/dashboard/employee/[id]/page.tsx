@@ -1,9 +1,9 @@
 import React from 'react';
 import EmployeeInfo from '@/components/employee/EmployeeInfo';
 
-const EmployeeDetail = () => {
+const EmployeeDetail = ({ params }: { params: { id: string } }) => {
   return (
-    <EmployeeInfo/>
+    <EmployeeInfo helperId={params.id}/>
   )
 }
 

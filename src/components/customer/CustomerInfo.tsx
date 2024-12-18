@@ -16,11 +16,12 @@ import { LuArrowLeft } from 'react-icons/lu';
 const genderOptions = ["Female", "Male", "Other"]
 
 interface CustomerInfoProps {
-    userId: string,
+    customerId: string,
 }
 
-const CustomerInfo: React.FC<CustomerInfoProps> = ({ userId }) => {
+const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId }) => {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const [idCard, setIdCard] = useState<File | null>(null);
     const [idCardUrl, setidCardUrl] = useState<string | null>(null);
 
@@ -31,7 +32,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ userId }) => {
 
     const fetchCustomerInfo = async (): Promise<Customer> => {
         try {
-            const response = await fetch(`/api/users/${userId}`);
+            const response = await fetch(`/api/users/${customerId}`);
             if (!response.ok) {
                 throw new Error("Error fetching user info");
             }
@@ -43,7 +44,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ userId }) => {
     };
 
     const { data: customerData, isPending: isFetchCustomerPending } = useQuery({
-        queryKey: ["serviceDetail", userId],
+        queryKey: ["customerInfo", customerId],
         queryFn: fetchCustomerInfo,
     });
 
@@ -55,7 +56,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ userId }) => {
     } = form;
 
     useEffect(() => {
-        if (!userId) {
+        if (!customerId) {
             reset();
             return;
         }
@@ -91,7 +92,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ userId }) => {
                     .catch((error) => console.error('Error fetching the identity card:', error));
             }
         }
-    }, [userId, customerData, reset]);
+    }, [customerId, customerData, reset]);
 
 
     const handleIdCardChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -222,8 +223,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ userId }) => {
 
             console.log("Final Form Data:", formData);
 
-            //Tam thoi xai cung
-            await fetch(`/api/users/${userId}`, {
+            await fetch(`/api/users/${customerId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -232,6 +232,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ userId }) => {
             });
 
             alert("Form submitted successfully!");
+            queryClient.invalidateQueries({ queryKey: ["customerInfo"] });
         } catch (error) {
             console.error("Failed to submit data:", error);
             alert("Something went wrong during form submission.");
@@ -255,7 +256,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ userId }) => {
                         <button
                             type="button"
                             onClick={() => router.back()}
-                            className='h-full p-6 hover:bg-slate-200 border-r-[1px] '>
+                            className='h-full p-6 hover:bg-gray-100 border-r-[1px] '>
                             <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
                         </button>
                         <p className="font-Averta-Bold text-4xl text-center my-auto ml-[10px]">User Info</p>
@@ -451,20 +452,23 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ userId }) => {
                         />
 
                         <div
+                            className='min-w-[390px] xl:min-w-0'
                             onDrop={handleIdCardDrop}
                             onDragOver={handleDragOver}
                         >
                             {idCard ? (
                                 idCard.type.startsWith('image/') ? (
                                     <div className="text-center">
-                                        <Image
-                                            src={idCardUrl || ''}
-                                            alt="identity"
-                                            width={400}
-                                            height={200}
-                                            className='mx-auto'
-                                            unoptimized
-                                        />
+                                        <div className="max-w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
+                                            <Image
+                                                src={idCardUrl || ''}
+                                                alt="identity"
+                                                width={400}
+                                                height={200}
+                                                className="object-contain"
+                                                unoptimized
+                                            />
+                                        </div>
                                         <div className="flex flex-wrap justify-center gap-[10px] mt-4">
                                             <Button
                                                 className="w-[170px] h-[40px] bg-[#1A78F2] font-Averta-Semibold text-[16px]"
@@ -497,9 +501,12 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ userId }) => {
                             )}
                         </div>
                     </div>
+                    <div className="justify-center items-center py-[20px] flex 2xl:hidden">
+                        <Button className="lg:w-1/5 min-w-[160px] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px] mx-auto">Save</Button>
+                    </div>
                 </div>
-                <div className="flex justify-center items-center py-[20px]">
-                    <Button type="submit" className="md:w-1/5 min-w-[150px] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">Save</Button>
+                <div className="justify-center items-center py-[20px] hidden 2xl:block">
+                    <Button className="lg:w-1/5 min-w-[160px] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">Save</Button>
                 </div>
             </form>
         </div>

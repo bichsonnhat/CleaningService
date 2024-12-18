@@ -3,7 +3,7 @@ type Customer = {
     gender: "Female" | "Male" | "Other";
     fullName: string;
     email: string;
-    dataOfBirth: string;
+    dateOfBirth: string;
     identifyCard: string;
     address: string;
     phoneNumber: string;

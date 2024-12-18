@@ -14,7 +14,6 @@ const userSchema = z
     streetName: z.string(),
     avatar: z.string(),
     idCard: z.string(),
-    resume: z.string()
   })
   .strict();
 

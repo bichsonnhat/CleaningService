@@ -9,26 +9,57 @@ import { MultipleChoiceInput } from '@/components/input/multiplechoice-input';
 import { useRouter } from 'next/navigation';
 import { LuArrowLeft } from 'react-icons/lu';
 import { useForm, Controller } from 'react-hook-form';
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createHelperInfoData, helperInfoSchema } from '@/schema/helperInfoSchema';
+import { createHelperInfoData, helperInfoSchema, updateHelperInfoData } from '@/schema/helperInfoSchema';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 const genderOptions = ["Female", "Male", "Other"]
 
-const EmployeeInfo = () => {
+interface HelperInfoProps {
+    helperId: string,
+}
+
+const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const [serviceCategory, setServiceCategory] = useState<ServiceCategory[]>([]);
-
     const [idCard, setIdCard] = useState<File | null>(null);
     const [idCardUrl, setidCardUrl] = useState<string | null>(null);
     const [resume, setResume] = useState<File | null>(null);
     const [resumeUrl, setResumeUrl] = useState<string | null>(null);
 
-    const form = useForm<createHelperInfoData>({
+    const form = useForm<updateHelperInfoData>({
         mode: "onSubmit",
         resolver: zodResolver(helperInfoSchema),
+
     });
+
+    const fetchHelperInfo = async (): Promise<Helper> => {
+        try {
+            const response = await fetch(`/api/helpers/${helperId}`);
+            if (!response.ok) {
+                throw new Error("Error fetching helper info");
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Error fetching helper info", error);
+            throw new Error("Error fetching helper info");
+        }
+    };
+
+    const { data: helperData, isPending: isFetchCustomerPending } = useQuery({
+        queryKey: ["helperInfo", helperId],
+        queryFn: fetchHelperInfo,
+    });
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+        reset,
+    } = form;
 
     const fetchServiceCategory = async () => {
         try {
@@ -45,7 +76,66 @@ const EmployeeInfo = () => {
 
     useEffect(() => {
         fetchServiceCategory();
-    }, []);
+        if (!helperId) {
+            reset();
+            return;
+        }
+        if (helperData) {
+            // console.log("helperDta:", helperData);
+            // console.log("dateOfBirth1:", helperData.servicesOffered);
+            const addressParts = helperData.user.address.split(' - ');
+            reset({
+                dateOfBirth: helperData.user.dateOfBirth,
+                phoneNumber: helperData.user.phoneNumber,
+                email: helperData.user.email,
+                salaryExpectation: helperData.salaryExpectation,
+                servicesOffered: helperData.servicesOffered,
+                fullName: helperData.user.fullName,
+                houseNumber: addressParts[0],
+                streetName: addressParts[1],
+                ward: addressParts[2],
+                city: addressParts[3],
+                postalCode: addressParts[4],
+                gender: helperData.user.gender ?? ""
+            });
+
+            const identifyCardUrl = helperData?.user.identifyCard;
+            setidCardUrl(identifyCardUrl);
+            const resumeUploadedUrl = helperData?.resumeUploaded;
+            setResumeUrl(resumeUploadedUrl);
+
+            if (identifyCardUrl) {
+                fetch(identifyCardUrl)
+                    .then((response) => response.blob())
+                    .then((blob) => {
+                        // Kiểm tra loại MIME của file để xác định tên và kiểu đúng
+                        const mimeType = blob.type;
+
+                        // Nếu là file PDF
+                        const file = new File([blob], 'identityCard', { type: mimeType });
+
+                        // Set file vào state (setIdCard sẽ nhận file)
+                        setIdCard(file);
+                    })
+                    .catch((error) => console.error('Error fetching the identity card:', error));
+            }
+            if (resumeUploadedUrl) {
+                fetch(resumeUploadedUrl)
+                    .then((response) => response.blob())
+                    .then((blob) => {
+                        // Kiểm tra loại MIME của file để xác định tên và kiểu đúng
+                        const mimeType = blob.type;
+
+                        // Nếu là file PDF
+                        const file = new File([blob], 'resumeUploaded', { type: mimeType });
+
+                        // Set file vào state (setResume sẽ nhận file)
+                        setResume(file);
+                    })
+                    .catch((error) => console.error('Error fetching the resume:', error));
+            }
+        }
+    }, [helperId, helperData, reset]);
 
     const options = serviceCategory.map(serviceCategory => ({
         id: serviceCategory.id,
@@ -181,12 +271,6 @@ const EmployeeInfo = () => {
         URL.revokeObjectURL(fileUrl);
     };
 
-    const {
-        control,
-        handleSubmit,
-        formState: { errors },
-        reset,
-    } = form;
 
     const uploadFile = async (file: File | null): Promise<string | null> => {
         if (!file) {
@@ -216,42 +300,65 @@ const EmployeeInfo = () => {
         }
     };
 
-    const onSubmitHandle = async (data: createHelperInfoData) => {
+    const onSubmitHandle = async (data: updateHelperInfoData) => {
         try {
-            // Upload các file song song
-            const [idCardUrl, resumeUrl] = await Promise.all([
-                uploadFile(idCard),
-                uploadFile(resume),
-            ]);
+            let idCardUrl_temp = null;
+            let resumeUrl_temp = null;
 
-            // Kiểm tra nếu có file nào không upload được
-            if (!idCardUrl || !resumeUrl) {
-                alert("Failed to upload one or more files. Please try again.");
-                return;
+            if (idCard && helperData?.user.identifyCard !== idCardUrl) {
+                idCardUrl_temp = await uploadFile(idCard);
             }
+            else {
+                idCardUrl_temp = helperData?.user.identifyCard;
+            }
+
+            if (resume && helperData?.resumeUploaded !== resumeUrl) {
+                resumeUrl_temp = await uploadFile(resume);
+            }
+            else {
+                resumeUrl_temp = helperData?.resumeUploaded;
+            }
+
 
             // Cập nhật URL vào form data
             const formData = {
                 ...data,
-                idCard: idCardUrl,
-                resume: resumeUrl,
+                idCard: idCardUrl_temp,
+                resume: resumeUrl_temp,
             };
+
+            if (data.email === helperData?.user.email) {
+                delete formData.email;
+            }
 
             console.log("Final Form Data:", formData);
 
-            // Gửi dữ liệu form đến backend
-            // await fetch("/api/submit-helper-info", { method: "POST", body: JSON.stringify(formData) });
+            await fetch(`/api/helpers/${helperId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
 
             alert("Form submitted successfully!");
+            queryClient.invalidateQueries({ queryKey: ["helperInfo"] });
         } catch (error) {
             console.error("Failed to submit data:", error);
             alert("Something went wrong during form submission.");
         }
     };
 
+    if (!helperData)
+        return (
+            <div className="flex w-full h-full items-center justify-center">
+                <ClipLoader color="#2A88F5" loading={true} size={30} />
+            </div>
+        );
+
     return (
         <div className="bg-white h-fit">
-            <form className=" h-full w-full flex flex-wrap md:flex-row justify-center"
+            <form className=" h-full w-full flex flex-wrap lg:flex-row justify-center"
                 onSubmit={handleSubmit(onSubmitHandle)}>
                 {/* Section-Left */}
                 <div className="md:w-2/3 pb-10 bg-white">
@@ -259,7 +366,7 @@ const EmployeeInfo = () => {
                         <button
                             type="button"
                             onClick={() => router.back()}
-                            className='h-full p-6 hover:bg-slate-200 border-r-[1px] '>
+                            className='h-full p-6 hover:bg-gray-100 border-r-[1px] '>
                             <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
                         </button>
                         <p className="font-Averta-Bold text-4xl text-center my-auto ml-[10px]">User Info</p>
@@ -285,16 +392,20 @@ const EmployeeInfo = () => {
                                 <Controller
                                     name="dateOfBirth"
                                     control={control}
-                                    render={({ field }) => (
-                                        <InputWithLabel
-                                            className="min-w-[170px]"
-                                            labelText="DATE OF BIRTH" inputType="date"
-                                            inputPlaceholder="" inputId="dateOfBirth"
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                            error={errors.dateOfBirth?.message}
-                                            inputWidth="11.25vw" />
-                                    )} />
+                                    render={({ field }) => {
+                                        const formattedDate = field.value ? field.value.split('T')[0] : "";
+                                        // console.log("Date of birth: " + field.value);
+                                        return (
+                                            <InputWithLabel
+                                                className="min-w-[170px]"
+                                                labelText="DATE OF BIRTH" inputType="date"
+                                                inputPlaceholder="" inputId="dateOfBirth"
+                                                value={formattedDate}
+                                                onChange={field.onChange}
+                                                error={errors.dateOfBirth?.message}
+                                                inputWidth="11.25vw" />
+                                        )
+                                    }} />
                                 <Controller
                                     name="gender"
                                     control={control}
@@ -302,10 +413,10 @@ const EmployeeInfo = () => {
                                         <ComboboxInput
                                             className="min-w-[112px]"
                                             labelText="GENDER"
-                                            inputId="gender" defaultValue={genderOptions.at(0)}
+                                            inputId="gender"
                                             inputWidth="6.875vw" options={genderOptions}
                                             inputPlaceholder='Gender'
-                                            value={field.value ?? ""}
+                                            value={field.value ?? helperData.user.gender}
                                             onChange={field.onChange}
                                             error={errors.gender?.message}
                                         />
@@ -447,15 +558,19 @@ const EmployeeInfo = () => {
                             <Controller
                                 name="servicesOffered"
                                 control={control}
-                                render={({ field }) => (
-                                    <MultipleChoiceInput
-                                        className="min-w-[290px]"
-                                        labelText="OFFERED SERVICES" inputId="servicesOffered"
-                                        inputWidth="43.125vw" plusPX='16px' options={options}
-                                        value={field.value ?? []}
-                                        onChange={field.onChange}
-                                        error={errors.servicesOffered?.message} />
-                                )} />
+                                render={({ field }) => {
+                                    // console.log("Services: " + field.value);
+                                    // console.log("helperdata.services: " + helperData.servicesOffered);
+                                    return (
+                                        <MultipleChoiceInput
+                                            className="min-w-[290px]"
+                                            labelText="OFFERED SERVICES" inputId="servicesOffered"
+                                            inputWidth="43.125vw" plusPX='16px' options={options}
+                                            value={field.value ?? helperData.servicesOffered}
+                                            onChange={field.onChange}
+                                            error={errors.servicesOffered?.message} />
+                                    )
+                                }} />
 
                         </div>
 
@@ -475,20 +590,23 @@ const EmployeeInfo = () => {
                         />
 
                         <div
+                            className='min-w-[390px] xl:min-w-0'
                             onDrop={handleIdCardDrop}
                             onDragOver={handleDragOver}
                         >
                             {idCard ? (
                                 idCard.type.startsWith('image/') ? (
                                     <div className="text-center">
-                                        <Image
-                                            src={idCardUrl || ''}
-                                            alt="identity"
-                                            width={400}
-                                            height={200}
-                                            className='mx-auto'
-                                            unoptimized
-                                        />
+                                        <div className="max-w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
+                                            <Image
+                                                src={idCardUrl || ''}
+                                                alt="identity"
+                                                width={400}
+                                                height={200}
+                                                className="object-contain"
+                                                unoptimized
+                                            />
+                                        </div>
                                         <div className="flex flex-wrap justify-center gap-[10px] mt-4">
                                             <Button
                                                 className="w-[170px] h-[40px] bg-[#1A78F2] font-Averta-Semibold text-[16px]"
@@ -531,21 +649,24 @@ const EmployeeInfo = () => {
                             accept=".jpg,.jpeg,.png,.pdf"
                             onChange={handleResumeChange}
                         />
-                        <div
+                        <div    
+                            className='min-w-[390px] xl:min-w-0'
                             onDrop={handleResumeDrop}
                             onDragOver={handleDragOver}
                         >
                             {resume ? (
                                 resume.type.startsWith('image/') ? (
                                     <div className="text-center">
-                                        <Image
-                                            src={resumeUrl || ''}
-                                            alt="identity"
-                                            width={400}
-                                            height={200}
-                                            className='mx-auto'
-                                            unoptimized
-                                        />
+                                        <div className="lg:w-[25vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
+                                            <Image
+                                                src={resumeUrl || ''}
+                                                alt="resume"
+                                                width={400}
+                                                height={200}
+                                                className='mx-auto'
+                                                unoptimized
+                                            />
+                                        </div>
                                         <div className="flex flex-wrap justify-center gap-[10px] mt-4">
                                             <Button
                                                 className="w-[170px] h-[40px] bg-[#1A78F2] font-Averta-Semibold text-[16px]"
@@ -579,12 +700,14 @@ const EmployeeInfo = () => {
                         </div>
 
                     </div>
+                    <div className="justify-center items-center py-[20px] flex 2xl:hidden">
+                        <Button className="lg:w-1/5 min-w-[160px] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px] mx-auto">Save</Button>
+                    </div>
                 </div>
-                <div className="flex justify-center items-center py-[20px]">
-                    <Button className="md:w-1/5 min-w-[150px] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">Save</Button>
+                <div className="justify-center items-center py-[20px] hidden 2xl:block">
+                    <Button className="lg:w-1/5 min-w-[160px] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">Save</Button>
                 </div>
             </form>
-
         </div>
     )
 }

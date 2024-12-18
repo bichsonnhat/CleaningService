@@ -8,24 +8,37 @@ import { ComboboxInput } from '@/components/input/combobox-input';
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { createHelperInfoData, helperInfoSchema } from '@/schema/helperInfoSchema';
+import { createHelperInfoData, helperInfoSchema, updateHelperInfoData } from '@/schema/helperInfoSchema';
 import FileDownloadCard from '@/components/card/FileDownloadCard';
 import { useRouter } from 'next/navigation';
 import { LuArrowLeft } from 'react-icons/lu';
+import { currentUser } from '@clerk/nextjs/server';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { ClipLoader } from 'react-spinners';
+import prisma from "@/lib/db";
 
 const genderOptions = ["Female", "Male", "Other"]
 
+interface UpdateStaffInfoProps {
+  userId: string,
+}
 
-const UpdateStaffInfo = () => {
+
+const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
   const router = useRouter();
-  const [serviceCategory, setServiceCategory] = useState<ServiceCategory[]>([]);
+  const queryClient = useQueryClient();
 
+  const [serviceCategory, setServiceCategory] = useState<ServiceCategory[]>([]);
   const [idCard, setIdCard] = useState<File | null>(null);
   const [idCardUrl, setidCardUrl] = useState<string | null>(null);
   const [resume, setResume] = useState<File | null>(null);
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<createHelperInfoData>({
+  let curUserId = userId;
+
+
+  const form = useForm<updateHelperInfoData>({
     mode: "onSubmit",
     resolver: zodResolver(helperInfoSchema),
   });
@@ -43,9 +56,95 @@ const UpdateStaffInfo = () => {
     }
   };
 
+  const fetchCustomerInfo = async (): Promise<Customer> => {
+    try {
+      const response = await fetch(`/api/users/${curUserId}`);
+      if (!response.ok) {
+        throw new Error("Error fetching user info");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching user info", error);
+      throw new Error("Error fetching user info");
+    }
+  };
+
+  const { data: helperData, isPending: isFetchCustomerPending } = useQuery({
+    queryKey: ["updateHelperInfo", curUserId],
+    queryFn: fetchCustomerInfo,
+  });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = form;
+
   useEffect(() => {
     fetchServiceCategory();
-  }, []);
+    if (!curUserId) {
+      reset();
+      return;
+    }
+    if (helperData) {
+      let addressParts;
+      if (addressParts) {
+        addressParts = helperData.address.split(' - ');
+      }
+      else {
+        addressParts = "";
+      }
+      reset({
+        ...helperData,
+        houseNumber: addressParts[0],
+        streetName: addressParts[1],
+        ward: addressParts[2],
+        city: addressParts[3],
+        postalCode: addressParts[4],
+        gender: helperData.gender ?? ""
+      });
+
+      let identifyCardUrl;
+      if (helperData.identifyCard) {
+        identifyCardUrl = helperData.identifyCard;
+        setidCardUrl(identifyCardUrl);
+      }
+      const resumeUploadedUrl = null;
+      setResumeUrl(resumeUploadedUrl);
+
+      if (identifyCardUrl) {
+        fetch(identifyCardUrl)
+          .then((response) => response.blob())
+          .then((blob) => {
+            // Kiểm tra loại MIME của file để xác định tên và kiểu đúng
+            const mimeType = blob.type;
+
+            // Nếu là file PDF
+            const file = new File([blob], 'identityCard', { type: mimeType });
+
+            // Set file vào state (setIdCard sẽ nhận file)
+            setIdCard(file);
+          })
+          .catch((error) => console.error('Error fetching the identity card:', error));
+      }
+      if (resumeUploadedUrl) {
+        fetch(resumeUploadedUrl)
+          .then((response) => response.blob())
+          .then((blob) => {
+            // Kiểm tra loại MIME của file để xác định tên và kiểu đúng
+            const mimeType = blob.type;
+
+            // Nếu là file PDF
+            const file = new File([blob], 'resumeUploaded', { type: mimeType });
+
+            // Set file vào state (setResume sẽ nhận file)
+            setResume(file);
+          })
+          .catch((error) => console.error('Error fetching the resume:', error));
+      }
+    }
+  }, [curUserId, helperData, reset]);
 
   const options = serviceCategory.map(serviceCategory => ({
     id: serviceCategory.id,
@@ -181,16 +280,8 @@ const UpdateStaffInfo = () => {
     URL.revokeObjectURL(fileUrl);
   };
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = form;
-
   const uploadFile = async (file: File | null): Promise<string | null> => {
     if (!file) {
-      alert("Please select a file first!");
       return null;
     }
 
@@ -216,38 +307,109 @@ const UpdateStaffInfo = () => {
     }
   };
 
-  const onSubmitHandle = async (data: createHelperInfoData) => {
+  async function createAndUpdateHelper(id: string, updateData: any) {
     try {
-      // Upload các file song song
-      const [idCardUrl, resumeUrl] = await Promise.all([
-        uploadFile(idCard),
-        uploadFile(resume),
-      ]);
+      const postResponse = await fetch("/api/helpers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+  
+      if (!postResponse.ok) {
+        throw new Error("POST API failed.");
+      }
+  
+      const postResult = await postResponse.json();
+      console.log("POST API result:", postResult);
+  
+      // Gọi PUT API sau khi POST thành công
+      const putResponse = await fetch(`/api/helpers/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updateData),
+      });
+  
+      if (!putResponse.ok) {
+        throw new Error("PUT API failed.");
+      }
+  
+      const putResult = await putResponse.json();
+      console.log("PUT API result:", putResult);
+  
+      return { postResult, putResult };
+    } catch (error) {
+      console.error("Error in createAndUpdateHelper:", error);
+    }
+  }
 
-      // Kiểm tra nếu có file nào không upload được
-      if (!idCardUrl || !resumeUrl) {
-        alert("Failed to upload one or more files. Please try again.");
+  const onSubmitHandle = async (data: updateHelperInfoData) => {
+    try {
+      let idCardUrl_temp = null;
+      let resumeUrl_temp = null;
+
+      if (idCard) {
+        idCardUrl_temp = await uploadFile(idCard);
+      }
+      else {
+        idCardUrl_temp = helperData?.identifyCard;
+      }
+
+      if (resume) {
+        resumeUrl_temp = await uploadFile(resume);
+      }
+      else {
+        resumeUrl_temp = null;
+      }
+
+      if (!idCardUrl_temp || !resumeUrl_temp) {
+        alert("Failed to upload 1 or mores file. Please try again.");
         return;
       }
+
 
       // Cập nhật URL vào form data
       const formData = {
         ...data,
-        idCard: idCardUrl,
-        resume: resumeUrl,
+        idCard: idCardUrl_temp,
+        resume: resumeUrl_temp,
       };
+
+      if (data.email === helperData?.email) {
+        delete formData.email;
+      }
 
       console.log("Final Form Data:", formData);
 
-      // Gửi dữ liệu form đến backend
-      // await fetch("/api/submit-helper-info", { method: "POST", body: JSON.stringify(formData) });
+      // const postResponse = await fetch("/api/helpers", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ id: curUserId }),
+      // });
+  
+      // if (!postResponse.ok) {
+      //   throw new Error("POST API failed.");
+      // }
+  
+      // const postResult = await postResponse.json();
+      // console.log("POST API result:", postResult);
+
+      createAndUpdateHelper(curUserId, formData);
 
       alert("Form submitted successfully!");
+      router.push(`/dashboard/personal`)
+      queryClient.invalidateQueries({ queryKey: ["helperInfo"] });
     } catch (error) {
       console.error("Failed to submit data:", error);
       alert("Something went wrong during form submission.");
     }
   };
+
+  if (!helperData)
+    return (
+      <div className="flex w-full h-full items-center justify-center">
+        <ClipLoader color="#2A88F5" loading={true} size={30} />
+      </div>
+    );
 
   return (
     <form
@@ -258,7 +420,7 @@ const UpdateStaffInfo = () => {
         <button
           type="button"
           onClick={() => router.back()}
-          className='p-6 hover:bg-slate-200 border-r-[1px] '>
+          className='p-6 hover:bg-gray-100 border-r-[1px] '>
           <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
         </button>
         <div className="justify-center h-max">
@@ -290,31 +452,40 @@ const UpdateStaffInfo = () => {
               <Controller
                 name="dateOfBirth"
                 control={control}
-                render={({ field }) => (
-                  <InputWithLabel
+                render={({ field }) => {
+                  console.log("field.value Date:", field.value);
+                  const formattedDate = field.value ? field.value.split('T')[0] : "";
+
+                  return (<InputWithLabel
                     className="min-w-[170px]"
                     labelText="DATE OF BIRTH" inputType="date"
                     inputPlaceholder="" inputId="dateOfBirth"
-                    value={field.value}
+                    value={formattedDate}
                     onChange={field.onChange}
                     error={errors.dateOfBirth?.message}
-                    inputWidth="11.25vw" />
-                )} />
+                    inputWidth="11.25vw" />)
+                }
+                } />
               <Controller
                 name="gender"
                 control={control}
-                render={({ field }) => (
-                  <ComboboxInput
-                    className="min-w-[112px]"
-                    labelText="GENDER"
-                    inputId="gender" defaultValue={genderOptions.at(0)}
-                    inputWidth="6.875vw" options={genderOptions}
-                    inputPlaceholder='Gender'
-                    value={field.value ?? ""}
-                    onChange={field.onChange}
-                    error={errors.gender?.message}
-                  />
-                )} />
+                render={({ field }) => {
+                  // console.log("field.value Gender:", field.value);  
+                  return (
+                    <ComboboxInput
+                      className="min-w-[112px]"
+                      labelText="GENDER"
+                      inputId="gender"
+                      inputWidth="6.875vw"
+                      options={genderOptions}
+                      inputPlaceholder="Gender"
+                      value={field.value ?? helperData.gender}
+                      onChange={field.onChange}
+                      error={errors.gender?.message}
+                      ref={field.ref}
+                    />
+                  );
+                }} />
 
             </div>
           </div>
@@ -486,13 +657,15 @@ const UpdateStaffInfo = () => {
             {idCardUrl ? (
               <>
                 <div className="text-center">
-                  <Image
-                    src={idCardUrl}
-                    alt="identity"
-                    width={400}
-                    height={200}
-                    className='mx-auto'
-                  />
+                  <div className="lg:w-[25vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden bg-white flex items-center justify-center">
+                    <Image
+                      src={idCardUrl}
+                      alt="identity"
+                      width={400}
+                      height={200}
+                      className='mx-auto'
+                    />
+                  </div>
                 </div>
                 <div className="flex flex-wrap justify-center gap-[10px] mt-4">
                   <Button className="w-[170px] h-[40px] 
@@ -563,12 +736,14 @@ const UpdateStaffInfo = () => {
             {resumeUrl ? (
               <>
                 <div className='text-center'>
-                  <Image
-                    src={resumeUrl}
-                    alt="resume"
-                    width={400}
-                    height={200}
-                    className='mx-auto' />
+                  <div className="max-w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 bg-white rounded-md overflow-hidden flex items-center justify-center">
+                    <Image
+                      src={resumeUrl}
+                      alt="resume"
+                      width={400}
+                      height={200}
+                      className='mx-auto' />
+                  </div>
                 </div>
                 <div className="flex flex-wrap justify-center gap-[10px] mt-4">
                   <Button className="w-[170px] h-[40px] 
