@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Pagination from "./Pagination";
 import SearhBar from "./SearchBar";
 import CustomerRow from "./CustomerRow";
+import ClipLoader from "react-spinners/ClipLoader";
 
 type Customer = {
   id: string;
@@ -107,11 +108,20 @@ const CustomerTable = () => {
       </div>
 
       {/* table */}
+
       <div className="flex overflow-hidden flex-col justify-center w-full max-md:max-w-full mt-4">
-        {currentData.map((customer: Customer, index: any) => (
-          <CustomerRow key={customer.id} {...customer} />
-        ))}
+        {customersData.length === 0 ? (
+          <div className="flex justify-center items-center w-full h-[500px]">
+            <ClipLoader color="#2A88F5" loading={true} size={30} />
+          </div>
+        ) : (
+          currentData.map((customer: Customer) => (
+            <CustomerRow key={customer.id} {...customer} />
+          ))
+        )}
       </div>
+
+      {/* pagination */}
 
       <Pagination
         currentPage={currentPage}
