@@ -22,7 +22,7 @@ const Booking5Right = () => {
     try {
       setLoading(true);
       const unitAmount = 12_00; 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe?unit_amount=${unitAmount}`);
+      const response = await fetch(`/api/stripe?unit_amount=${unitAmount}`);
       const data = await response.json();
       router.push(data.url);
     } catch (error) {
