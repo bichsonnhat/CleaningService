@@ -1,3 +1,4 @@
+"use client";
 import CustomerInfo from '@/components/customer/CustomerInfo';
 import EmployeeInfo from '@/components/employee/EmployeeInfo';
 import React, { useEffect, useState } from 'react'
