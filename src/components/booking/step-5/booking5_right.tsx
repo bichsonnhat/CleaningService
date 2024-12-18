@@ -63,12 +63,12 @@ const Booking5Right = () => {
       <div className="my-4 border-gray-300 rounded-lg">
         <div className="p-6 bg-white rounded-lg">
           <div className="flex justify-between ">
-            <div className="text-gray-600 font-Averta-Regular">{bookingData.bookingInfomation[0]?.value}</div>
+            <div className="text-gray-600 font-Averta-Regular">{bookingData.bookingInfomation?.[0]?.value}</div>
             <Separator
               orientation="vertical"
               className="border-gray-300 mx-4 h-9"
             />
-            <div className="text-gray-600 font-Averta-Regular">{bookingData.bookingInfomation[1]?.value}</div>
+            <div className="text-gray-600 font-Averta-Regular">{bookingData.bookingInfomation?.[1]?.value}</div>
             
             {bookingData.serviceCategory?.name === 'Home Cleaning' && 
             <>
@@ -76,7 +76,7 @@ const Booking5Right = () => {
               orientation="vertical"
               className="border-gray-300 mx-4 h-9"
               />
-              <div className="text-gray-600 font-Averta-Regular">{bookingData.bookingInfomation[2]?.value}</div>
+              <div className="text-gray-600 font-Averta-Regular">{bookingData.bookingInfomation?.[2]?.value}</div>
             </>
             }
           </div>
