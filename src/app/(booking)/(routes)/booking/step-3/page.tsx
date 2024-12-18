@@ -49,6 +49,7 @@ const timeSlots = [
 
 const Step_3 = () => {
   const [timeSelected, setTimeSelected] = useState<number>(0);
+  const bookingData = bookingStore((state: any) => state.bookingData)
   const bookingUpdate = bookingStore((state: any) => state.updateBookingData)
 
   const router = useRouter();
@@ -64,12 +65,8 @@ const Step_3 = () => {
     setTimeSelected(time);
   }
 
-  // const day = new Date(bookingData.bookingDate).getDate();
-  const day = new Date().getDate();
-
-  // const month = new Date(bookingData.bookingDate).getMonth();
-  const month = new Date().getMonth();
-
+  const day = new Date(bookingData.bookingDate).getDate();
+  const month = new Date(bookingData.bookingDate).getMonth();
   const daysInMonth = new Date(new Date().getFullYear(), month + 1, 0).getDate();
   const days = Array.from({ length: daysInMonth }, (_, i) => ({
     dayInMonth: (i + 1).toString(),
@@ -145,7 +142,7 @@ const Step_3 = () => {
     </div>
 
     <div className="max-sm:hidden flex justify-center items-center mt-[35px]">
-      <Button className="w-[165px] h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold" onClick={handleRoute}>Next</Button>
+      <Button className="w-[165px] h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold" disabled={bookingData.bookingTiming===undefined} onClick={handleRoute}>Next</Button>
     </div>
 </div>
 

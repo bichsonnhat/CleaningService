@@ -1,28 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
-import { Label } from "../ui/label";
+import React from 'react';
+import { Label } from '../ui/label';
 
 interface MultiLineInputProps {
-  labelText?: string;
-  inputPlaceholder: string;
-  inputId: string;
-  inputWidth?: string;
-  inputHeight?: string;
-  hasLabel: boolean;
-  disabled?: boolean;
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    labelText?: string;
+    inputPlaceholder: string;
+    inputId: string;
+    inputWidth?: string;
+    inputHeight?: string;
+    disabled?: boolean;
+    onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 export function MultiLineInput({
-  labelText,
-  inputPlaceholder,
-  inputId,
-  inputWidth = "w-full",
-  inputHeight = "h-full",
-  hasLabel,
-  disabled,
-  onChange,
+    labelText,
+    inputPlaceholder,
+    inputId,
+    inputWidth = "w-full",
+    inputHeight = "h-full",
+    disabled,
+    onChange,
 }: MultiLineInputProps) {
   return (
     <div className="grid max-w-max items-center gap-1.5">

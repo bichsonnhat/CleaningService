@@ -56,17 +56,15 @@ const Booking5Left = () => {
               inputWidth="25vw"
               onChange={(e) => bookingUpdate({ phoneNumber: e.target.value })}
             />
-            <div className="mt-2 md:mt-0">
-              <InputWithLabel
-                className="min-w-[360px]"
-                labelText="HOW DO WE CONTACT YOU"
-                inputType="email"
-                inputPlaceholder=""
-                inputId="contactEmail"
-                inputWidth="25vw"
-                onChange={(e) => bookingUpdate({ contactNote: e.target.value })}
-              />
-            </div>
+            <InputWithLabel
+              className="min-w-[360px]"
+              labelText="HOW DO WE CONTACT YOU"
+              inputType="email"
+              inputPlaceholder=""
+              inputId="contactEmail"
+              inputWidth="25vw"
+              onChange={(e) => bookingUpdate({ contactNote: e.target.value })}
+            />
           </div>
         </div>
 

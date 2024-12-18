@@ -30,6 +30,38 @@ const ProgressBar = () => {
     address: '',
     subTotal: ''
   })
+
+  const [serviceType, setServiceType] = useState<string>('')
+  const [homeCleaningDetail, setHomeCleaningDetail] = useState<{
+    bedrooms: string;
+    bathrooms: string;
+    cleanType: string;
+  }>({bedrooms: '', bathrooms: '', cleanType: ''})
+  const [otherServicesDetail, setOtherServicesDetail] = useState<{
+    serviceDetail: string;
+    howLong: string;
+  }>({serviceDetail: '', howLong: ''})
+  const [dateTimeBooking, setDateTimeBooking] = useState<string>('')
+  const [addressBooking, setAddressBooking] = useState<string>('')
+
+  const mappingValue = (value: number) => {
+    switch (value) {
+      case 1:
+      return 'Flexible';
+      case 8:
+      return '08:00am';
+      case 8.5:
+      return '08:30am';
+      case 9:
+      return '09:00am';
+      case 9.5:
+      return '09:30am';
+      case 10:
+      return '10:00am';
+      default:
+      break;
+    }
+  }
   const pathName = usePathname();
   const router = useRouter();
   const handleRoute = () => {
@@ -50,7 +82,7 @@ const ProgressBar = () => {
         router.push('/booking/step-5')
         break;
       case '/booking/step-5':
-        // router.push('/payment')
+        router.push("/payment-success");
         break;
       default:
         break;
@@ -58,25 +90,52 @@ const ProgressBar = () => {
   }
 
   useEffect(() => {
-    setServiceDetails({serviceType: bookingData.serviceCategory?.name || 'Home Cleaning', ...bookingData})
-  }, [bookingData])
+    setServiceDetails({
+      serviceType: serviceType,
+      bedrooms: homeCleaningDetail.bedrooms,
+      bathrooms: homeCleaningDetail.bathrooms,
+      cleanType: homeCleaningDetail.cleanType,
+      serviceDetail: otherServicesDetail.serviceDetail,
+      howLong: otherServicesDetail.howLong,
+      scheduleDate: dateTimeBooking === 'Invalid Date at Invalid Date' ? '-' : dateTimeBooking,
+      address: addressBooking === 'undefined undefined' ? '-' : addressBooking,
+      subTotal: bookingData.totalPrice})
+  }, [serviceType, homeCleaningDetail, otherServicesDetail, dateTimeBooking, addressBooking])
 
   useEffect(() => {
     switch (pathName) {
       case '/booking/step-1':
         setStep(1)
+        const serviceType = bookingData.serviceCategory?.name || 'Other Services';
+        setServiceType(serviceType)
         break;
       case '/booking/step-2':
         setStep(2)
+        if (bookingData.serviceCategory?.name === 'Home Cleaning') {
+          const bedrooms = bookingData.bookingInfomation[0]?.value || '0';
+          const bathrooms = bookingData.bookingInfomation[1]?.value || '0';
+          const cleanType = bookingData.bookingInfomation[2]?.value || 'Standard';
+          setHomeCleaningDetail({bedrooms, bathrooms, cleanType})
+        } else {
+          const serviceDetail = bookingData.bookingInfomation[0]?.value || 'Other Services';
+          const howLong = bookingData.bookingInfomation[1]?.value || '1 hour';
+          setOtherServicesDetail({serviceDetail, howLong})
+        }
         break;
       case '/booking/step-3':
         setStep(2)
         break;
       case '/booking/step-4':
         setStep(3)
+        const dateTimeBooking = new Date(bookingData.bookingDate).toLocaleDateString('en-GB', {
+          day: '2-digit', month: '2-digit', year: 'numeric'
+        }) + ' at ' + mappingValue(bookingData.bookingTiming) || 'Time Booking';
+        setDateTimeBooking(dateTimeBooking)
         break;
       case '/booking/step-5':
         setStep(4)
+        const addressBooking = bookingData.APT + ', ' + bookingData.bookingAddress;
+        setAddressBooking(addressBooking)
         break;
       default:
         break;

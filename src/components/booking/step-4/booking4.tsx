@@ -72,9 +72,7 @@ const Booking4 = () => {
                 inputPlaceholder="Enter a Location"
                 inputId="location"
                 inputWidth="40vw"
-                onChange={(e) =>
-                  bookingUpdate({ bookingAdress: e.target.value })
-                }
+                onChange={(e) => bookingUpdate({ bookingAddress: e.target.value })}
               />
               <div className="md:ml-2 mt-2 md:mt-0">
                 <InputWithLabel
@@ -147,7 +145,6 @@ const Booking4 = () => {
           <div className="grid justify-center items-center mt-[45px]">
             <MultiLineInput
               disabled={!bookingData.anyPet}
-              hasLabel={false}
               inputPlaceholder="What types of pets? Some of our cleaners have pet allergies."
               inputId="notesPet"
               inputHeight="h-[55px]"
@@ -156,10 +153,8 @@ const Booking4 = () => {
             />
             <div className="mt-[30px]">
               <MultiLineInput
-                hasLabel={true}
                 labelText="ADDITIONAL NOTES"
-                inputPlaceholder="I would like Sophie to be my cleaner. Please change my sheets 
-                (fresh bedding is on the bed) and empty the dishwasher."
+                inputPlaceholder="I would like Sophie to be my cleaner. Please change my sheets (fresh bedding is on the bed) and empty the dishwasher."
                 inputId="notes"
                 inputHeight="h-[100px]"
                 inputWidth="w-full md:w-[56.25vw] min-w-[325px]"
@@ -170,10 +165,9 @@ const Booking4 = () => {
             </div>
 
             <div className="flex justify-center items-center mt-[55px] pb-[50px]">
-              <Button
-                className="max-sm:hidden md:w-[12.5vw] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]"
-                onClick={handleRoute}
-              >
+            <Button className="max-sm:hidden md:w-[12.5vw] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]" 
+              disabled={bookingData.bookingAddress === undefined || bookingData.bookingAddress === "" || bookingData.APT === undefined || bookingData.APT === ""}
+              onClick={handleRoute}>
                 Next
               </Button>
             </div>
