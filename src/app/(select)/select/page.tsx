@@ -21,8 +21,14 @@ const Select = () => {
     IServiceCategoryResponse[]
   >([]);
   const router = useRouter();
-  const handleRoute = () => {
+  const handleRoute = async () => {
     bookingUpdate({ serviceCategory: selectService });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info?isSelectService=${true}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     router.push("/booking/step-1");
   };
 

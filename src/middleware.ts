@@ -1,6 +1,6 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { useRouter } from "next/navigation";
+import { clerkClient, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { bookingStore } from "./utils/store/booking.store";
 
 const isPublicRoute = createRouteMatcher([
   "/dashboard(.*)",
@@ -42,7 +42,23 @@ const isSharedRoute = createRouteMatcher([
   "/dashboard/calendar",
 ]);
 
+// New booking step routes
+const isBookingStep1Route = createRouteMatcher(["/booking/step-1"]);
+const isBookingStep2Route = createRouteMatcher(["/booking/step-2"]);
+const isBookingStep3Route = createRouteMatcher(["/booking/step-3"]);
+const isBookingStep4Route = createRouteMatcher(["/booking/step-4"]);
+const isBookingStep5Route = createRouteMatcher(["/booking/step-5"]);
+
 const roles = ["admin", "customer", "helper"];
+
+const resetBookingData = async () => {
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info?isSelectService=${false}&isStep1Completed=${false}&isStep2Completed=${false}&isStep3Completed=${false}&isStep4Completed=${false}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
 
 export default clerkMiddleware(async (auth, request) => {
   const { userId, redirectToSignIn } = await auth();
@@ -52,6 +68,7 @@ export default clerkMiddleware(async (auth, request) => {
   }
 
   const role = (await auth()).sessionClaims?.metadata?.role;
+  const bookingData = (await auth()).sessionClaims?.metadata?.BookingStatus;
   if (!role) {
     // If trying to access any public route except /select-role, redirect to /select-role
     if (isPublicRoute(request) && request.nextUrl.pathname !== "/select-role") {
@@ -79,35 +96,63 @@ export default clerkMiddleware(async (auth, request) => {
   }
 
   if (
-    isAdminRoute(request) &&
-    (await auth()).sessionClaims?.metadata?.role !== "admin"
+    isAdminRoute(request) && role !== "admin"
   ) {
     const url = new URL("/", request.url);
     return NextResponse.redirect(url);
   }
 
   if (
-    isCustomerRoute(request) &&
-    (await auth()).sessionClaims?.metadata?.role !== "customer"
+    isCustomerRoute(request) && role !== "customer"
   ) {
     const url = new URL("/", request.url);
     return NextResponse.redirect(url);
   }
 
   if (
-    isHelperRoute(request) &&
-    (await auth()).sessionClaims?.metadata?.role !== "helper"
+    isHelperRoute(request) && role !== "helper"
   ) {
     const url = new URL("/", request.url);
     return NextResponse.redirect(url);
   }
 
   if (
-    isSharedRoute(request) &&
-    (await auth()).sessionClaims?.metadata?.role !== "customer" &&
-    (await auth()).sessionClaims?.metadata?.role !== "helper"
+    isSharedRoute(request) && role !== "customer" && role !== "helper"
   ) {
     const url = new URL("/", request.url);
+    return NextResponse.redirect(url);
+  }
+
+  // Booking step protection logic
+  const BookingStatus = (await auth()).sessionClaims?.metadata?.BookingStatus;
+
+  // Protect booking step routes based on previous steps' completion
+  if (isBookingStep1Route(request) && !BookingStatus?.isSelectService) {
+    const url = new URL("/select", request.url);
+    return NextResponse.redirect(url);
+  }
+
+  if (isBookingStep2Route(request) && !BookingStatus?.isStep1Completed) {
+    const url = new URL("/booking/step-1", request.url);
+    resetBookingData();
+    return NextResponse.redirect(url);
+  }
+
+  if (isBookingStep3Route(request) && !BookingStatus?.isStep2Completed) {
+    const url = new URL("/booking/step-2", request.url);
+    resetBookingData();
+    return NextResponse.redirect(url);
+  }
+
+  if (isBookingStep4Route(request) && !BookingStatus?.isStep3Completed) {
+    const url = new URL("/booking/step-3", request.url);
+    resetBookingData();
+    return NextResponse.redirect(url);
+  }
+
+  if (isBookingStep5Route(request) && !BookingStatus?.isStep4Completed) {
+    const url = new URL("/booking/step-4", request.url);
+    resetBookingData();
     return NextResponse.redirect(url);
   }
 });
