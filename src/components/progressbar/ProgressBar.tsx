@@ -117,8 +117,8 @@ const ProgressBar = () => {
           const cleanType = bookingData.bookingInfomation[2]?.value || 'Standard';
           setHomeCleaningDetail({bedrooms, bathrooms, cleanType})
         } else {
-          const serviceDetail = bookingData.bookingInfomation[0]?.value || 'Other Services';
-          const howLong = bookingData.bookingInfomation[1]?.value || '1 hour';
+          const serviceDetail = bookingData.bookingInfomation?.[0]?.value || 'Other Services';
+          const howLong = bookingData.bookingInfomation?.[1]?.value || '1 hour';
           setOtherServicesDetail({serviceDetail, howLong})
         }
         break;
