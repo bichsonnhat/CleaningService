@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type Role = 'Helper' | 'Customer' | ''; 
+type Role = 'helper' | 'customer' | 'admin' | ''; 
 
 interface UserState {
   role: Role;

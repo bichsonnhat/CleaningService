@@ -45,7 +45,7 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
 
   const fetchServiceCategory = async () => {
     try {
-      const response = await fetch('/api/service-categories');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/service-categories`);
       if (!response.ok) {
         throw new Error("Error fetching service types");
       }
@@ -58,7 +58,7 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
 
   const fetchCustomerInfo = async (): Promise<Customer> => {
     try {
-      const response = await fetch(`/api/users/${curUserId}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${curUserId}`);
       if (!response.ok) {
         throw new Error("Error fetching user info");
       }
@@ -289,7 +289,7 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
     formData.append("file", file);
 
     try {
-      const response = await fetch("/api/test-cloudinary", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/test-cloudinary`, {
         method: "POST",
         body: formData,
       });
@@ -309,7 +309,7 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
 
   async function createAndUpdateHelper(id: string, updateData: any) {
     try {
-      const postResponse = await fetch("/api/helpers", {
+      const postResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/helpers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
@@ -323,7 +323,7 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
       console.log("POST API result:", postResult);
   
       // Gọi PUT API sau khi POST thành công
-      const putResponse = await fetch(`/api/helpers/${id}`, {
+      const putResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/helpers/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateData),

@@ -32,7 +32,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId }) => {
 
     const fetchCustomerInfo = async (): Promise<Customer> => {
         try {
-            const response = await fetch(`/api/users/${customerId}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${customerId}`);
             if (!response.ok) {
                 throw new Error("Error fetching user info");
             }
@@ -181,7 +181,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId }) => {
         formData.append("file", file);
 
         try {
-            const response = await fetch("/api/test-cloudinary", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/test-cloudinary`, {
                 method: "POST",
                 body: formData,
             });
@@ -223,7 +223,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId }) => {
 
             console.log("Final Form Data:", formData);
 
-            await fetch(`/api/users/${customerId}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${customerId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

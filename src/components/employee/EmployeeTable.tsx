@@ -36,12 +36,12 @@ const EmployeeTable = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        // const response = await fetch(
-        //   `${process.env.NEXT_PUBLIC_API_URL}/api/helpers`
-        // );
         const response = await fetch(
-          `/api/helpers`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/helpers`
         );
+        // const response = await fetch(
+        //   `/api/helpers`
+        // );
 
         if (response.ok) {
           const helpers = await response.json();
@@ -125,6 +125,7 @@ const EmployeeTable = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
+  
 
   return (
     <>

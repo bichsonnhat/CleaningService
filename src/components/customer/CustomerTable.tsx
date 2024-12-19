@@ -31,13 +31,13 @@ const CustomerTable = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // const response = await fetch(
-        //   `${process.env.NEXT_PUBLIC_API_URL}/api/users`
-        // );
-
         const response = await fetch(
-          `/api/users`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users`
         );
+
+        // const response = await fetch(
+        //   `/api/users`
+        // );
 
         if (response.ok) {
           const users = await response.json();

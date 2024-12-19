@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Checkbox } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 
 const LeaveRequestRow: React.FC<LeaveRequestRowProps> = ({
@@ -9,11 +8,8 @@ const LeaveRequestRow: React.FC<LeaveRequestRowProps> = ({
   status,
   requestReason,
   helper,
-  onCheckboxToggle,
 }) => {
   const router = useRouter();
-
-  const [isChecked, setIsChecked] = useState(false);
 
   const statusColor =
     status.toLowerCase() === "approved"
@@ -55,14 +51,6 @@ const LeaveRequestRow: React.FC<LeaveRequestRowProps> = ({
     );
   };
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked;
-    setIsChecked(checked);
-    if (onCheckboxToggle) {
-      onCheckboxToggle(id, checked);
-    }
-  };
-
   return (
     <div
       onClick={() => router.push(`leave-request/${id}`)}
@@ -72,16 +60,6 @@ const LeaveRequestRow: React.FC<LeaveRequestRowProps> = ({
         onClick={(e) => e.stopPropagation()}
         className={`flex flex-col lg:flex-[1] grow shrink justify-center w-full lg:w-[66px]`}
       >
-        <div className="flex overflow-hidden items-center ml-4 pl-px w-full min-h-[48px]">
-          <Checkbox
-            checked={isChecked}
-            onChange={handleCheckboxChange}
-            onClick={(e) => e.stopPropagation()}
-            crossOrigin={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          />
-        </div>
       </div>
       <div
         className={`flex flex-col lg:flex-[2] grow shrink justify-center pl-2.5 text-sm font-bold text-neutral-800 w-full lg:w-[70px]`}

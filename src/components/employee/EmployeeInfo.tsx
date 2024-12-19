@@ -38,7 +38,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
 
     const fetchHelperInfo = async (): Promise<Helper> => {
         try {
-            const response = await fetch(`/api/helpers/${helperId}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/helpers/${helperId}`);
             if (!response.ok) {
                 throw new Error("Error fetching helper info");
             }
@@ -63,7 +63,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
 
     const fetchServiceCategory = async () => {
         try {
-            const response = await fetch('/api/service-categories');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/service-categories`);
             if (!response.ok) {
                 throw new Error("Error fetching service types");
             }
@@ -282,7 +282,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
         formData.append("file", file);
 
         try {
-            const response = await fetch("/api/test-cloudinary", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/test-cloudinary`, {
                 method: "POST",
                 body: formData,
             });
@@ -333,7 +333,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
 
             console.log("Final Form Data:", formData);
 
-            await fetch(`/api/helpers/${helperId}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/helpers/${helperId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -351,7 +351,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
 
     if (!helperData)
         return (
-            <div className="flex w-full h-full items-center justify-center">
+            <div className="flex justify-center items-center w-full h-[500px]">
                 <ClipLoader color="#2A88F5" loading={true} size={30} />
             </div>
         );
@@ -649,7 +649,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
                             accept=".jpg,.jpeg,.png,.pdf"
                             onChange={handleResumeChange}
                         />
-                        <div    
+                        <div
                             className='min-w-[390px] xl:min-w-0'
                             onDrop={handleResumeDrop}
                             onDragOver={handleDragOver}

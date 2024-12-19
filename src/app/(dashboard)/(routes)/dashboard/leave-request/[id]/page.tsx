@@ -17,17 +17,22 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from "@tanstack/react-query";
+import { userStore } from "@/utils/store/role.store";
 const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
     const [detail, setDetail] = useState<LeaveRequest | null>(null);
 
-    let userRole = 'helper';
+    const role = userStore((state) => state.role);
+    const userId = userStore((state) => state.id);
+    const endPoint = `${process.env.NEXT_PUBLIC_API_URL}/api/helper_availability/${params.id}`;
+
+    let userRole = role;
 
     const queryClient = useQueryClient();
     const [rejectionReason, setRejectionReason] = useState("");
 
     useEffect(() => {
         const fetchDetail = async (id: string) => {
-            const response = await fetch(`/api/helper_availability/${id}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/helper_availability/${id}`);
             const data = await response.json();
             setDetail(data);
         };
@@ -60,7 +65,7 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
         }
 
         try {
-            const response = await fetch(`/api/helper_availability/${params.id}`, {
+            const response = await fetch(endPoint, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -89,7 +94,7 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
 
     const handleApprove = async () => {
         try {
-            const response = await fetch(`/api/helper_availability/${params.id}`, {
+            const response = await fetch(endPoint, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -97,7 +102,7 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
                 body: JSON.stringify({
                     status: "Approved",
                     //Tam thoi xai User cung
-                    approvedById: "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e",
+                    approvedById: userId ?? "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e",
                 }),
             });
 
@@ -119,7 +124,7 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
 
     const handleDelete = async () => {
         try {
-            const response = await fetch(`/api/helper_availability/${params.id}`, {
+            const response = await fetch(endPoint, {
                 method: "DELETE",
             });
 
@@ -141,7 +146,7 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
 
     const handleCancel = async () => {
         try {
-            const response = await fetch(`/api/helper_availability/${params.id}`, {
+            const response = await fetch(endPoint, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -202,8 +207,8 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
                             </div>
                         </div>
                     </div>
-                    <div className='flex flex-row'>
-                        {userRole == 'admin' && detail?.status.toLowerCase() == 'pending' && <div className='flex flex-row justify-center items-center gap-2'>
+                    <div className='flex flex-row mr-5'>
+                        {userRole === 'admin' && detail?.status.toLowerCase() == 'pending' && <div className='flex flex-row justify-center items-center gap-2'>
                             {/* Nút approve */}
                             <AlertDialog>
                                 <AlertDialogTrigger>
@@ -339,7 +344,7 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
                         }
 
                         {/* Delete request */}
-                        <AlertDialog>
+                        {/* <AlertDialog>
                             <AlertDialogTrigger>
                                 <button className='h-full p-6 ml-2 hover:bg-slate-200'>
                                     <FaRegTrashAlt className='h-[19px]' />
@@ -364,9 +369,10 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
                                     </AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
-                        </AlertDialog>
+                        </AlertDialog> */}
                     </div>
                 </div>
+
                 {/* End Title */}
                 {/* Begin Sender info */}
                 <div className='flex flex-row items-center justify-between py-3 px-5'>
