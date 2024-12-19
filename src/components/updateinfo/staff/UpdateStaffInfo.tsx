@@ -33,7 +33,8 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
   const [idCardUrl, setidCardUrl] = useState<string | null>(null);
   const [resume, setResume] = useState<File | null>(null);
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   let curUserId = userId;
 
@@ -314,28 +315,28 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
-  
+
       if (!postResponse.ok) {
         throw new Error("POST API failed.");
       }
-  
+
       const postResult = await postResponse.json();
       console.log("POST API result:", postResult);
-  
+
       // Gọi PUT API sau khi POST thành công
       const putResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/helpers/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateData),
       });
-  
+
       if (!putResponse.ok) {
         throw new Error("PUT API failed.");
       }
-  
+
       const putResult = await putResponse.json();
       console.log("PUT API result:", putResult);
-  
+
       return { postResult, putResult };
     } catch (error) {
       console.error("Error in createAndUpdateHelper:", error);
@@ -343,7 +344,9 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
   }
 
   const onSubmitHandle = async (data: updateHelperInfoData) => {
+    let checkSubmit = false;
     try {
+      setIsSubmitting(true);
       let idCardUrl_temp = null;
       let resumeUrl_temp = null;
 
@@ -380,432 +383,460 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
 
       console.log("Final Form Data:", formData);
 
-      // const postResponse = await fetch("/api/helpers", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ id: curUserId }),
-      // });
-  
-      // if (!postResponse.ok) {
-      //   throw new Error("POST API failed.");
-      // }
-  
-      // const postResult = await postResponse.json();
-      // console.log("POST API result:", postResult);
-
       createAndUpdateHelper(curUserId, formData);
 
+
+      const roleUpdateResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: curUserId,
+          role: "helper",
+        }),
+      });
+
+      if (!roleUpdateResponse.ok) {
+        throw new Error("Failed to update role.");
+      }
+
+      // Log raw response text
+      const rawResponse = await roleUpdateResponse.text();
+
+      // Parse JSON
+      const result = JSON.parse(rawResponse);
+      console.log("Parsed result:", result);
+
+      checkSubmit = true;
       alert("Form submitted successfully!");
-      router.push(`/dashboard/personal`)
-      queryClient.invalidateQueries({ queryKey: ["helperInfo"] });
+
+      queryClient.invalidateQueries({ queryKey: ["updateHelperInfo"] });
     } catch (error) {
       console.error("Failed to submit data:", error);
+      checkSubmit = false;
       alert("Something went wrong during form submission.");
+    } finally {
+      if (checkSubmit) {
+        router.push(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/personal`);
+      }
+      else {
+        setIsSubmitting(false);
+        alert("Failed to submit form");
+      }
     }
   };
 
   if (!helperData)
     return (
-      <div className="flex w-full h-full items-center justify-center">
+      <div className="flex justify-center items-center w-full h-screen">
         <ClipLoader color="#2A88F5" loading={true} size={30} />
       </div>
     );
 
   return (
-    <form
-      className="flex flex-col md:flex-row h-full relative min-h-screen"
-      onSubmit={handleSubmit(onSubmitHandle)}>
-      {/* Section-Left */}
-      <div className="md:w-2/3 pb-10 bg-white min-h-screen">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className='p-6 hover:bg-gray-100 border-r-[1px] '>
-          <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
-        </button>
-        <div className="justify-center h-max">
-          <p className="text-4xl text-center font-Averta-Bold mb-2  mx-auto md:w-[41.53vw]">
-            Update Your Info to Continue
-          </p>
-          <p className="text-[20px] text-center text-[#88939D] font-Averta-Semibold mx-auto leading-[25px] md:w-[41.53vw]">
-            With your latest details, we can serve you better and ensure
-            everything runs smoothly
-          </p>
+    <div>
+      {isSubmitting ? (
+        <div className="flex justify-center items-center w-full h-screen">
+          <ClipLoader color="#2A88F5" loading={true} size={30} />
         </div>
-        <div className="grid mt-[80px] gap-7">
-          <div className="flex justify-center flex-wrap md:flex-row gap-2 w-full">
-            <Controller
-              name="fullName"
-              control={control}
-              render={({ field }) => (
-                <InputWithLabel
-                  className="min-w-[290px]"
-                  labelText="FULL NAME" inputType="text"
-                  inputPlaceholder="Enter Full Name" inputId="fullName"
-                  value={field.value ?? ""}
-                  onChange={field.onChange}
-                  inputWidth="25vw"
-                  error={errors.fullName?.message}
-                />
-              )} />
-            <div className="flex md:mt-0 gap-2">
-              <Controller
-                name="dateOfBirth"
-                control={control}
-                render={({ field }) => {
-                  console.log("field.value Date:", field.value);
-                  const formattedDate = field.value ? field.value.split('T')[0] : "";
-
-                  return (<InputWithLabel
-                    className="min-w-[170px]"
-                    labelText="DATE OF BIRTH" inputType="date"
-                    inputPlaceholder="" inputId="dateOfBirth"
-                    value={formattedDate}
-                    onChange={field.onChange}
-                    error={errors.dateOfBirth?.message}
-                    inputWidth="11.25vw" />)
-                }
-                } />
-              <Controller
-                name="gender"
-                control={control}
-                render={({ field }) => {
-                  // console.log("field.value Gender:", field.value);  
-                  return (
-                    <ComboboxInput
-                      className="min-w-[112px]"
-                      labelText="GENDER"
-                      inputId="gender"
-                      inputWidth="6.875vw"
-                      options={genderOptions}
-                      inputPlaceholder="Gender"
-                      value={field.value ?? helperData.gender}
+      ) : (
+        <form
+          className="flex flex-col md:flex-row h-full relative min-h-screen"
+          onSubmit={handleSubmit(onSubmitHandle)}>
+          {/* Section-Left */}
+          <div className="md:w-2/3 pb-10 bg-white min-h-screen">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className='p-6 hover:bg-gray-100 border-r-[1px] '>
+              <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
+            </button>
+            <div className="justify-center h-max">
+              <p className="text-4xl text-center font-Averta-Bold mb-2  mx-auto md:w-[41.53vw]">
+                Update Your Info to Continue
+              </p>
+              <p className="text-[20px] text-center text-[#88939D] font-Averta-Semibold mx-auto leading-[25px] md:w-[41.53vw]">
+                With your latest details, we can serve you better and ensure
+                everything runs smoothly
+              </p>
+            </div>
+            <div className="grid mt-[80px] gap-7">
+              <div className="flex justify-center flex-wrap md:flex-row gap-2 w-full">
+                <Controller
+                  name="fullName"
+                  control={control}
+                  render={({ field }) => (
+                    <InputWithLabel
+                      className="min-w-[290px]"
+                      labelText="FULL NAME" inputType="text"
+                      inputPlaceholder="Enter Full Name" inputId="fullName"
+                      value={field.value ?? ""}
                       onChange={field.onChange}
-                      error={errors.gender?.message}
-                      ref={field.ref}
+                      inputWidth="25vw"
+                      error={errors.fullName?.message}
                     />
-                  );
-                }} />
+                  )} />
+                <div className="flex md:mt-0 gap-2">
+                  <Controller
+                    name="dateOfBirth"
+                    control={control}
+                    render={({ field }) => {
+                      // console.log("field.value Date:", field.value);
+                      const formattedDate = field.value ? field.value.split('T')[0] : "";
 
-            </div>
-          </div>
+                      return (<InputWithLabel
+                        className="min-w-[170px]"
+                        labelText="DATE OF BIRTH" inputType="date"
+                        inputPlaceholder="" inputId="dateOfBirth"
+                        value={formattedDate}
+                        onChange={field.onChange}
+                        error={errors.dateOfBirth?.message}
+                        inputWidth="11.25vw" />)
+                    }
+                    } />
+                  <Controller
+                    name="gender"
+                    control={control}
+                    render={({ field }) => {
+                      // console.log("field.value Gender:", field.value);  
+                      return (
+                        <ComboboxInput
+                          className="min-w-[112px]"
+                          labelText="GENDER"
+                          inputId="gender"
+                          inputWidth="6.875vw"
+                          options={genderOptions}
+                          inputPlaceholder="Gender"
+                          value={field.value ?? helperData.gender}
+                          onChange={field.onChange}
+                          error={errors.gender?.message}
+                          ref={field.ref}
+                        />
+                      );
+                    }} />
 
-          <div className="flex justify-center flex-wrap md:flex-row gap-2">
-            <Controller
-              name="phoneNumber"
-              control={control}
-              render={({ field }) => (
-                <InputWithLabel
-                  className="min-w-[290px]"
-                  labelText="PHONE NUMBER" inputType="text"
-                  inputPlaceholder="Enter a Phone number" inputId="phoneNumber"
-                  inputWidth="25vw"
-                  value={field.value ?? ""}
-                  onChange={field.onChange}
-                  error={errors.phoneNumber?.message} />
-              )} />
-
-            <div className="md:mt-0">
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <InputWithLabel
-                    className="min-w-[290px]"
-                    labelText="EMAIL ADDRESS" inputType="email"
-                    inputPlaceholder="Enter your email address" inputId="email"
-                    inputWidth="18.125vw" plusPX='8px'
-                    value={field.value ?? ""}
-                    onChange={field.onChange}
-                    error={errors.email?.message} />
-                )} />
-            </div>
-          </div>
-
-          <div className="flex justify-center flex-wrap md:flex-row gap-2">
-            <Controller
-              name="salaryExpectation"
-              control={control}
-              render={({ field }) => (
-                <InputWithLabel
-                  className="min-w-[290px] appearance-none"
-                  labelText="SALARY EXPECTATION ($)" inputType="number"
-                  inputPlaceholder="100000$" inputId="salaryExpectation"
-                  inputWidth="18.125vw" plusPX='8px'
-                  value={field.value ?? ""}
-                  onChange={field.onChange}
-                  error={errors.salaryExpectation?.message} />
-              )} />
-
-            <div className=" md:mt-0">
-              <Controller
-                name="city"
-                control={control}
-                render={({ field }) => (
-                  <InputWithLabel
-                    className="min-w-[290px]"
-                    labelText="CITY/PROVINCE" inputType="text"
-                    inputPlaceholder="Enter your city/province" inputId="city"
-                    inputWidth="25vw"
-                    value={field.value ?? ""}
-                    onChange={field.onChange}
-                    error={errors.city?.message} />
-                )} />
-            </div>
-          </div>
-
-          <div className="flex justify-center flex-wrap md:flex-row gap-2">
-            <Controller
-              name="ward"
-              control={control}
-              render={({ field }) => (
-                <InputWithLabel
-                  className="min-w-[290px]"
-                  labelText="WARD" inputType="text"
-                  inputPlaceholder="Enter ward" inputId="ward"
-                  inputWidth="25vw"
-                  value={field.value ?? ""}
-                  onChange={field.onChange}
-                  error={errors.ward?.message} />
-              )} />
-
-            <div className=" md:mt-0">
-              <Controller
-                name="postalCode"
-                control={control}
-                render={({ field }) => (
-                  <InputWithLabel
-                    className="min-w-[290px]"
-                    labelText="POSTAL CODE" inputType="text"
-                    inputPlaceholder="Enter Postal Code" inputId="postalCode"
-                    inputWidth="18.125vw" plusPX='8px'
-                    value={field.value ?? ""}
-                    onChange={field.onChange}
-                    error={errors.postalCode?.message} />
-                )} />
-            </div>
-          </div>
-
-          <div className="flex justify-center flex-wrap md:flex-row gap-2">
-            <Controller
-              name="houseNumber"
-              control={control}
-              render={({ field }) => (
-                <InputWithLabel
-                  className="min-w-[290px]"
-                  labelText="HOUSE NUMBER" inputType="text"
-                  inputPlaceholder="Enter your House Number" inputId="houseNumber"
-                  inputWidth="18.75vw"
-                  value={field.value ?? ""}
-                  onChange={field.onChange}
-                  error={errors.houseNumber?.message} />
-              )} />
-
-            <div className=" md:mt-0">
-              <Controller
-                name="streetName"
-                control={control}
-                render={({ field }) => (
-                  <InputWithLabel
-                    className="min-w-[290px]"
-                    labelText="STREET NAME" inputType="text"
-                    inputPlaceholder="Enter your Street Name" inputId="streetName"
-                    inputWidth="24.375vw" plusPX='8px'
-                    value={field.value ?? ""}
-                    onChange={field.onChange}
-                    error={errors.streetName?.message} />
-                )} />
-
-            </div>
-          </div>
-
-          <div className="flex justify-center flex-wrap md:flex-row gap-2">
-            <Controller
-              name="servicesOffered"
-              control={control}
-              render={({ field }) => (
-                <MultipleChoiceInput
-                  className="min-w-[290px]"
-                  labelText="OFFERED SERVICES" inputId="servicesOffered"
-                  inputWidth="43.125vw" plusPX='16px' options={options}
-                  value={field.value ?? []}
-                  onChange={field.onChange}
-                  error={errors.servicesOffered?.message} />
-              )} />
-          </div>
-
-        </div>
-      </div>
-      {/* Section-Right */}
-      <div className="md:w-1/3 bg-gray-100 min-h-screen">
-
-        {/* ID Card */}
-        <div
-        >
-          <p className="text-3xl font-Averta-Bold mb-4 mt-[4.7vw] ml-[2.2vw]">ID Card</p>
-          <input
-            id="indentifyCard"
-            type="file"
-            className="hidden"
-            accept=".jpg,.jpeg,.png,.pdf"
-            onChange={handleIdCardChange}
-          />
-
-          <div
-            onDrop={handleIdCardDrop}
-            onDragOver={handleDragOver}>
-            {idCardUrl ? (
-              <>
-                <div className="text-center">
-                  <div className="lg:w-[25vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden bg-white flex items-center justify-center">
-                    <Image
-                      src={idCardUrl}
-                      alt="identity"
-                      width={400}
-                      height={200}
-                      className='mx-auto'
-                    />
-                  </div>
                 </div>
-                <div className="flex flex-wrap justify-center gap-[10px] mt-4">
-                  <Button className="w-[170px] h-[40px] 
-                    bg-[#1A78F2] font-Averta-Semibold text-[16px]"
-                    type="button"
-                    onClick={() => handleDownload(idCard)}>
-                    Download
-                  </Button>
-                  <Button className="w-[170px] h-[40px]
-                    bg-white font-Averta-Semibold text-[#1A78F2] hover:bg-gray-100
-                      text-[16px] border-2 border-[#1A78F2]"
-                    onClick={() => document.querySelector<HTMLInputElement>("#indentifyCard")?.click()}
-                    type="button">Upload IDCard</Button>
-                </div></>
-            ) : idCard ? (
-              <FileDownloadCard
-                className='mx-[2.08vw]'
-                fileName={idCard.name}
-                fileSize={idCard.size}
-                onUpdate={() => document.querySelector<HTMLInputElement>("#indentifyCard")?.click()}
-                onDownload={() => handleDownload(idCard)} />
-            ) : (
-              <div
-                className="border-2 bg-white mx-[2.08vw] border-dashed border-gray-300 rounded-lg px-4 py-8 text-center"
-              >
-                <Image
-                  src="/images/Dashboard/Personal/upload.svg"
-                  alt="upload"
-                  width={40}
-                  height={40}
-                  className="mb-6 mx-auto"
-                />
-                <>
-                  <p className="text-[14px] text-gray-600 font-Averta-Semibold mb-3">
-                    Select a file or drag and drop here
-                  </p>
-                  <p className="text-[12px] text-gray-500 mb-6">
-                    JPG, PNG or PDF, file size no more than 10MB
-                  </p>
-                </>
-                <button
-                  type="button"
-                  className="bg-white font-Averta-Semibold text-[#1A78F2] border-2 border-[#1A78F2] px-4 py-2 rounded-md hover:bg-blue-50 transition-colors"
-                  onClick={() => document.querySelector<HTMLInputElement>("#indentifyCard")?.click()}
-                >
-                  Select File
-                </button>
               </div>
-            )}
-          </div>
 
-        </div>
+              <div className="flex justify-center flex-wrap md:flex-row gap-2">
+                <Controller
+                  name="phoneNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <InputWithLabel
+                      className="min-w-[290px]"
+                      labelText="PHONE NUMBER" inputType="text"
+                      inputPlaceholder="Enter a Phone number" inputId="phoneNumber"
+                      inputWidth="25vw"
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      error={errors.phoneNumber?.message} />
+                  )} />
 
-        {/* Resume */}
-        <div>
-          <p className="text-3xl font-Averta-Bold mb-4 ml-[2.2vw] mt-[1vw]">Résumé</p>
-          <input
-            id="resumeUploaded"
-            type="file"
-            className="hidden"
-            accept=".jpg,.jpeg,.png,.pdf"
-            onChange={handleResumeChange}
-          />
-          <div
-            onDrop={handleResumeDrop}
-            onDragOver={handleDragOver}
-          >
-            {resumeUrl ? (
-              <>
-                <div className='text-center'>
-                  <div className="max-w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 bg-white rounded-md overflow-hidden flex items-center justify-center">
-                    <Image
-                      src={resumeUrl}
-                      alt="resume"
-                      width={400}
-                      height={200}
-                      className='mx-auto' />
-                  </div>
+                <div className="md:mt-0">
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => (
+                      <InputWithLabel
+                        className="min-w-[290px]"
+                        labelText="EMAIL ADDRESS" inputType="email"
+                        inputPlaceholder="Enter your email address" inputId="email"
+                        inputWidth="18.125vw" plusPX='8px'
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                        error={errors.email?.message} />
+                    )} />
                 </div>
-                <div className="flex flex-wrap justify-center gap-[10px] mt-4">
-                  <Button className="w-[170px] h-[40px] 
+              </div>
+
+              <div className="flex justify-center flex-wrap md:flex-row gap-2">
+                <Controller
+                  name="salaryExpectation"
+                  control={control}
+                  render={({ field }) => (
+                    <InputWithLabel
+                      className="min-w-[290px] appearance-none"
+                      labelText="SALARY EXPECTATION ($)" inputType="number"
+                      inputPlaceholder="100000$" inputId="salaryExpectation"
+                      inputWidth="18.125vw" plusPX='8px'
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      error={errors.salaryExpectation?.message} />
+                  )} />
+
+                <div className=" md:mt-0">
+                  <Controller
+                    name="city"
+                    control={control}
+                    render={({ field }) => (
+                      <InputWithLabel
+                        className="min-w-[290px]"
+                        labelText="CITY/PROVINCE" inputType="text"
+                        inputPlaceholder="Enter your city/province" inputId="city"
+                        inputWidth="25vw"
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                        error={errors.city?.message} />
+                    )} />
+                </div>
+              </div>
+
+              <div className="flex justify-center flex-wrap md:flex-row gap-2">
+                <Controller
+                  name="ward"
+                  control={control}
+                  render={({ field }) => (
+                    <InputWithLabel
+                      className="min-w-[290px]"
+                      labelText="WARD" inputType="text"
+                      inputPlaceholder="Enter ward" inputId="ward"
+                      inputWidth="25vw"
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      error={errors.ward?.message} />
+                  )} />
+
+                <div className=" md:mt-0">
+                  <Controller
+                    name="postalCode"
+                    control={control}
+                    render={({ field }) => (
+                      <InputWithLabel
+                        className="min-w-[290px]"
+                        labelText="POSTAL CODE" inputType="text"
+                        inputPlaceholder="Enter Postal Code" inputId="postalCode"
+                        inputWidth="18.125vw" plusPX='8px'
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                        error={errors.postalCode?.message} />
+                    )} />
+                </div>
+              </div>
+
+              <div className="flex justify-center flex-wrap md:flex-row gap-2">
+                <Controller
+                  name="houseNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <InputWithLabel
+                      className="min-w-[290px]"
+                      labelText="HOUSE NUMBER" inputType="text"
+                      inputPlaceholder="Enter your House Number" inputId="houseNumber"
+                      inputWidth="18.75vw"
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      error={errors.houseNumber?.message} />
+                  )} />
+
+                <div className=" md:mt-0">
+                  <Controller
+                    name="streetName"
+                    control={control}
+                    render={({ field }) => (
+                      <InputWithLabel
+                        className="min-w-[290px]"
+                        labelText="STREET NAME" inputType="text"
+                        inputPlaceholder="Enter your Street Name" inputId="streetName"
+                        inputWidth="24.375vw" plusPX='8px'
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                        error={errors.streetName?.message} />
+                    )} />
+
+                </div>
+              </div>
+
+              <div className="flex justify-center flex-wrap md:flex-row gap-2">
+                <Controller
+                  name="servicesOffered"
+                  control={control}
+                  render={({ field }) => (
+                    <MultipleChoiceInput
+                      className="min-w-[290px]"
+                      labelText="OFFERED SERVICES" inputId="servicesOffered"
+                      inputWidth="43.125vw" plusPX='16px' options={options}
+                      value={field.value ?? []}
+                      onChange={field.onChange}
+                      error={errors.servicesOffered?.message} />
+                  )} />
+              </div>
+
+            </div>
+          </div>
+          {/* Section-Right */}
+          <div className="md:w-1/3 bg-gray-100 min-h-screen">
+
+            {/* ID Card */}
+            <div
+            >
+              <p className="text-3xl font-Averta-Bold mb-4 mt-[4.7vw] ml-[2.2vw]">ID Card</p>
+              <input
+                id="indentifyCard"
+                type="file"
+                className="hidden"
+                accept=".jpg,.jpeg,.png,.pdf"
+                onChange={handleIdCardChange}
+              />
+
+              <div
+                onDrop={handleIdCardDrop}
+                onDragOver={handleDragOver}>
+                {idCardUrl ? (
+                  <>
+                    <div className="text-center">
+                      <div className="lg:w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden bg-white flex items-center justify-center">
+                        <Image
+                          src={idCardUrl}
+                          alt="identity"
+                          width={400}
+                          height={200}
+                          className='mx-auto'
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-[10px] mt-4">
+                      <Button className="w-[170px] h-[40px] 
                     bg-[#1A78F2] font-Averta-Semibold text-[16px]"
-                    type="button"
-                    onClick={() => handleDownload(resume)}>
-                    Download
-                  </Button>
-                  <Button className="w-[170px] h-[40px]
+                        type="button"
+                        onClick={() => handleDownload(idCard)}>
+                        Download
+                      </Button>
+                      <Button className="w-[170px] h-[40px]
                     bg-white font-Averta-Semibold text-[#1A78F2] hover:bg-gray-100
                       text-[16px] border-2 border-[#1A78F2]"
-                    onClick={() => document.querySelector<HTMLInputElement>("#resumeUploaded")?.click()}
-                    type="button">Upload IDCard</Button>
-                </div>
-              </>
-            ) : resume ? (
-              <FileDownloadCard
-                className='mx-[2.08vw]'
-                fileName={resume.name}
-                fileSize={resume.size}
-                onUpdate={() => document.querySelector<HTMLInputElement>("#resumeUploaded")?.click()}
-                onDownload={() => handleDownload(resume)} />
-            ) : (
+                        onClick={() => document.querySelector<HTMLInputElement>("#indentifyCard")?.click()}
+                        type="button">Upload IDCard</Button>
+                    </div></>
+                ) : idCard ? (
+                  <FileDownloadCard
+                    className='mx-[2.08vw]'
+                    fileName={idCard.name}
+                    fileSize={idCard.size}
+                    onUpdate={() => document.querySelector<HTMLInputElement>("#indentifyCard")?.click()}
+                    onDownload={() => handleDownload(idCard)} />
+                ) : (
+                  <div
+                    className="border-2 bg-white mx-[2.08vw] border-dashed border-gray-300 rounded-lg px-4 py-8 text-center"
+                  >
+                    <Image
+                      src="/images/Dashboard/Personal/upload.svg"
+                      alt="upload"
+                      width={40}
+                      height={40}
+                      className="mb-6 mx-auto"
+                    />
+                    <>
+                      <p className="text-[14px] text-gray-600 font-Averta-Semibold mb-3">
+                        Select a file or drag and drop here
+                      </p>
+                      <p className="text-[12px] text-gray-500 mb-6">
+                        JPG, PNG or PDF, file size no more than 10MB
+                      </p>
+                    </>
+                    <button
+                      type="button"
+                      className="bg-white font-Averta-Semibold text-[#1A78F2] border-2 border-[#1A78F2] px-4 py-2 rounded-md hover:bg-blue-50 transition-colors"
+                      onClick={() => document.querySelector<HTMLInputElement>("#indentifyCard")?.click()}
+                    >
+                      Select File
+                    </button>
+                  </div>
+                )}
+              </div>
+
+            </div>
+
+            {/* Resume */}
+            <div>
+              <p className="text-3xl font-Averta-Bold mb-4 ml-[2.2vw] mt-[1vw]">Résumé</p>
+              <input
+                id="resumeUploaded"
+                type="file"
+                className="hidden"
+                accept=".jpg,.jpeg,.png,.pdf"
+                onChange={handleResumeChange}
+              />
               <div
-                className="border-2 bg-white h-auto mx-[2.08vw] border-dashed
+                onDrop={handleResumeDrop}
+                onDragOver={handleDragOver}
+              >
+                {resumeUrl ? (
+                  <>
+                    <div className='text-center'>
+                      <div className="max-w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 bg-white rounded-md overflow-hidden flex items-center justify-center">
+                        <Image
+                          src={resumeUrl}
+                          alt="resume"
+                          width={400}
+                          height={200}
+                          className='mx-auto' />
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-[10px] mt-4">
+                      <Button className="w-[170px] h-[40px] 
+                    bg-[#1A78F2] font-Averta-Semibold text-[16px]"
+                        type="button"
+                        onClick={() => handleDownload(resume)}>
+                        Download
+                      </Button>
+                      <Button className="w-[170px] h-[40px]
+                    bg-white font-Averta-Semibold text-[#1A78F2] hover:bg-gray-100
+                      text-[16px] border-2 border-[#1A78F2]"
+                        onClick={() => document.querySelector<HTMLInputElement>("#resumeUploaded")?.click()}
+                        type="button">Upload IDCard</Button>
+                    </div>
+                  </>
+                ) : resume ? (
+                  <FileDownloadCard
+                    className='mx-[2.08vw]'
+                    fileName={resume.name}
+                    fileSize={resume.size}
+                    onUpdate={() => document.querySelector<HTMLInputElement>("#resumeUploaded")?.click()}
+                    onDownload={() => handleDownload(resume)} />
+                ) : (
+                  <div
+                    className="border-2 bg-white h-auto mx-[2.08vw] border-dashed
              border-gray-300 rounded-lg px-4 py-4 flex"
 
-              >
-                <Image
-                  src="/images/Dashboard/Personal/upload.svg"
-                  alt="upload"
-                  width={40}
-                  height={40}
-                />
-                <div className="py-2 px-4 text-center mx-auto">
-                  <p className="text-[14px] text-gray-600 font-Averta-Semibold">
-                    Select your CV or drag and drop here
-                  </p>
-                  <p className="text-[12px] text-gray-500 mt-[12px]">
-                    JPG, PNG or PDF, file size no more than 10MB
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  className="bg-white font-Averta-Semibold text-[#1A78F2] 
+                  >
+                    <Image
+                      src="/images/Dashboard/Personal/upload.svg"
+                      alt="upload"
+                      width={40}
+                      height={40}
+                    />
+                    <div className="py-2 px-4 text-center mx-auto">
+                      <p className="text-[14px] text-gray-600 font-Averta-Semibold">
+                        Select your CV or drag and drop here
+                      </p>
+                      <p className="text-[12px] text-gray-500 mt-[12px]">
+                        JPG, PNG or PDF, file size no more than 10MB
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className="bg-white font-Averta-Semibold text-[#1A78F2] 
                   border-2 border-[#1A78F2] px-4 py-2 rounded-md hover:bg-blue-50 
                   transition-colors h-fit ml-auto my-auto w-auto"
-                  onClick={() => document.querySelector<HTMLInputElement>("#resumeUploaded")?.click()}
-                >
-                  Select File
-                </button>
+                      onClick={() => document.querySelector<HTMLInputElement>("#resumeUploaded")?.click()}
+                    >
+                      Select File
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+
+            </div>
+
+            <div className="flex justify-center items-center mt-[2vw] pb-[2vw]">
+              <Button type="submit" className="md:w-1/3 min-w-[150px] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">Verify</Button>
+            </div>
           </div>
-
-        </div>
-
-        <div className="flex justify-center items-center mt-[2vw] pb-[2vw]">
-          <Button type="submit" className="md:w-1/3 min-w-[150px] h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]">Verify</Button>
-        </div>
-      </div>
-    </form>
+        </form>
+      )}
+    </div>
 
   )
 }

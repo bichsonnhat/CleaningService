@@ -241,7 +241,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId }) => {
 
     if (!customerData)
         return (
-            <div className="flex w-full h-full items-center justify-center">
+            <div className="flex w-full h-screen items-center justify-center">
                 <ClipLoader color="#2A88F5" loading={true} size={30} />
             </div>
         );

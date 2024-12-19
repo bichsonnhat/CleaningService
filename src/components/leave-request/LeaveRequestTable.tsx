@@ -117,7 +117,7 @@ const LeaveRequestTable = () => {
         </div>
       </div>
       <div className="flex overflow-hidden flex-col justify-center mt-3.5 w-full max-md:max-w-full">
-        {currentData.length === 0 ? (
+        {!data? (
           <div className="flex justify-center items-center w-full h-[500px]">
             <ClipLoader color="#2A88F5" loading={true} size={30} />
           </div>

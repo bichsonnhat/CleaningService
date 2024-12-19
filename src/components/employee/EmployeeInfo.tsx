@@ -351,7 +351,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
 
     if (!helperData)
         return (
-            <div className="flex justify-center items-center w-full h-[500px]">
+            <div className="flex justify-center items-center w-full h-screen">
                 <ClipLoader color="#2A88F5" loading={true} size={30} />
             </div>
         );
@@ -657,7 +657,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
                             {resume ? (
                                 resume.type.startsWith('image/') ? (
                                     <div className="text-center">
-                                        <div className="lg:w-[25vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
+                                        <div className="lg:w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
                                             <Image
                                                 src={resumeUrl || ''}
                                                 alt="resume"

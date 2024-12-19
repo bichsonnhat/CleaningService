@@ -20,10 +20,11 @@ const LeaveRequestPage = () => {
       setRole(userRole);
       setUserId(userId);
     
-      setIsLoading(false)
     } catch (error) {
       console.error("Failed to fetch user info:", error);
       // Handle error state if needed
+    } finally {
+      setIsLoading(false);
     }
   };
 
