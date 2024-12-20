@@ -42,7 +42,7 @@ export async function GET(
 }
 
 // Update helper_availability by id
-export async function PATCH(
+export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
 ) {

@@ -5,51 +5,81 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { userStore } from '@/utils/store/role.store'
+import { ClipLoader } from 'react-spinners'
 
 const SelectRole = () => {
 
   const [selectService, setSelectService] = useState('');
   const [curUser, setCurUser] = useState<{ userId: string; role: string | null } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const setRole = userStore((state) => state.setRole);
   const setUserId = userStore((state) => state.setId);
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch("/api/user-info");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`, {
+        redirect: 'follow',
+      });
       if (!response.ok) {
-        throw new Error("Failed to fetch user data");
+        console.log(response);
       }
 
       const data = await response.json();
       setCurUser({ userId: data.userId, role: data.role });
     } catch (error) {
       console.error("Error fetching service types:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchUserData();
-    console.log("hehe")
   }, []);
 
   const router = useRouter();
-  const handleRoute = async (role: 'Helper' | 'Customer') => {
-    setRole(role);
-    if (role === 'Helper') {
-      const helperCheck = await fetch(`/api/helpers/${curUser?.userId}`);
+  const handleRoute = async (role: 'helper' | 'customer') => {
+    if (!curUser?.userId) {
+      alert("User ID is undefined!");
+      return;
+    }
 
-      console.log(helperCheck);
-      if (helperCheck.ok) {
-        alert("Already helper!");
+    setRole(role);
+    if (role === 'helper') {
+      try {
+        const helperCheck = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/helpers/${curUser.userId}`);
+
+        if (helperCheck.ok) {
+          alert("Already helper!");
+          return;
+        }
+
+        if (helperCheck.status === 404) {
+          setUserId(curUser?.userId ?? "4f54507b-7a0c-449c-8b88-91414cf747e9");
+        } else {
+          alert(`Error checking helper: ${helperCheck.statusText}`);
+          return;
+        }
+      } catch (error) {
+        alert(`Failed to check helper: ` + error);
         return;
       }
+    }
+    else {
       setUserId(curUser?.userId ?? "4f54507b-7a0c-449c-8b88-91414cf747e9");
     }
-    else{
-      setUserId(curUser?.userId ?? "4f54507b-7a0c-449c-8b88-91414cf747e9");
-    }
+
+
     router.push('/update-info')
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center w-full h-[500px]">
+        <ClipLoader color="#2A88F5" loading={true} size={30} />
+      </div>
+    );
   }
 
   return (
@@ -79,7 +109,7 @@ const SelectRole = () => {
             className='w-[80%] sm:w-[50%] h-full flex flex-col items-center justify-center gap-[10px] hover:cursor-pointer max-sm:pb-5'
             onMouseEnter={() => setSelectService('Helper')}
             onMouseLeave={() => setSelectService('')}
-            onClick={() => handleRoute('Helper')}
+            onClick={() => handleRoute('helper')}
           >
             <Image src={`${selectService !== 'Helper' ? '/images/Select/helper_unselect.png' : '/images/Select/helper_select.png'}`} alt='helper' width={200} height={200} />
             <div className='w-full h-[40%] flex flex-col items-center gap-[5px]'>
@@ -93,7 +123,7 @@ const SelectRole = () => {
             className='w-[80%] sm:w-[50%] h-full flex flex-col items-center justify-center gap-[10px] hover:cursor-pointer max-sm:pt-5'
             onMouseEnter={() => setSelectService('Customer')}
             onMouseLeave={() => setSelectService('')}
-            onClick={() => handleRoute('Customer')}
+            onClick={() => handleRoute('customer')}
           >
             <div className='relative h-[200px] w-[280px]'>
               <Image src={`${selectService !== 'Customer' ? '/images/Select/customer_unselect.png' : '/images/Select/customer_select.png'}`} alt='customer' width={200} height={200} className='absolute bottom-0 right-0' />

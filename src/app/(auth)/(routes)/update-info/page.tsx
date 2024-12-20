@@ -11,8 +11,8 @@ const page = () => {
 
   return (
     <div>
-      {role === 'Helper' && <UpdateStaffInfo userId={userId}/>}
-      {role === 'Customer' && <UpdateCustomerInfo userId={userId}/>}
+      {role === 'helper' && <UpdateStaffInfo userId={userId}/>}
+      {role === 'customer' && <UpdateCustomerInfo userId={userId}/>}
     </div>
   )
 };
