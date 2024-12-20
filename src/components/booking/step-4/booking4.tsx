@@ -45,7 +45,15 @@ const Booking4 = () => {
   const bookingData = bookingStore((state: any) => state.bookingData);
   const bookingUpdate = bookingStore((state: any) => state.updateBookingData);
   const route = useRouter();
-  const handleRoute = () => {
+  const handleRoute = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const data = await response.json();
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info?isSelectService=${true}&isStep1Completed=${true}&isStep2Completed=${true}&isStep3Completed=${true}&isStep4Completed=${true}&userId=${data.userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     route.push("/booking/step-5");
   };
   return (

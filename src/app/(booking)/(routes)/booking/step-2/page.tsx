@@ -50,7 +50,15 @@ const Step_2 = () => {
     };
 
     const route = useRouter();
-    const handleRoute = () => {
+    const handleRoute = async () => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+        const data = await response.json();
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info?isSelectService=${true}&isStep1Completed=${true}&isStep2Completed=${true}&isStep3Completed=${false}&isStep4Completed=${false}&userId=${data.userId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         route.push("/booking/step-3");
     };
 

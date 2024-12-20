@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { IServiceCategoryResponse } from "@/utils/interfaces";
 import { bookingStore } from "@/utils/store/booking.store";
+import { currentUser } from "@clerk/nextjs/server";
 
 type SelectService = {
   id: string;
@@ -23,7 +24,9 @@ const Select = () => {
   const router = useRouter();
   const handleRoute = async () => {
     bookingUpdate({ serviceCategory: selectService });
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info?isSelectService=${true}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const data = await response.json();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info?isSelectService=${true}&userId=${data?.userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -15,11 +15,12 @@ export async function PUT(
 ) {
     try {
         const { searchParams } = new URL(request.url);
-        const isSelectService = searchParams.get('isSelectService') === undefined ? false : searchParams.get('isSelectService');
-        const isStep1Completed = searchParams.get('isStep1Completed') === undefined ? false : searchParams.get('isStep1Completed');
-        const isStep2Completed = searchParams.get('isStep2Completed') === undefined ? false : searchParams.get('isStep2Completed');
-        const isStep3Completed = searchParams.get('isStep3Completed') === undefined ? false : searchParams.get('isStep3Completed');
-        const isStep4Completed = searchParams.get('isStep4Completed') === undefined ? false : searchParams.get('isStep4Completed');
+        const isSelectService = searchParams.get('isSelectService') ?? false;
+        const isStep1Completed = searchParams.get('isStep1Completed') ?? false;
+        const isStep2Completed = searchParams.get('isStep2Completed') ?? false;
+        const isStep3Completed = searchParams.get('isStep3Completed') ?? false;
+        const isStep4Completed = searchParams.get('isStep4Completed') ?? false;
+        const userId = searchParams.get('userId') ?? "";
         
         console.log("Log is:", isSelectService, isStep1Completed, isStep2Completed, isStep3Completed, isStep4Completed);
         const BookingStatus = {
@@ -29,12 +30,7 @@ export async function PUT(
             isStep3Completed: isStep3Completed === "true",
             isStep4Completed: isStep4Completed === "true",
         };
-        const user = await currentUser();
-        console.log("User is:", user);
-        if (!user) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
-        }
-        const userId = user.id;
+        
         const client = await clerkClient();
         await client.users.updateUserMetadata(userId, {
             publicMetadata: {

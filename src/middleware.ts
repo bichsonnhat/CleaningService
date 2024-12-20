@@ -1,4 +1,4 @@
-import { clerkClient, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkClient, clerkMiddleware, createRouteMatcher, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { bookingStore } from "./utils/store/booking.store";
 
@@ -51,8 +51,9 @@ const isBookingStep5Route = createRouteMatcher(["/booking/step-5"]);
 
 const roles = ["admin", "customer", "helper"];
 
-const resetBookingData = async () => {
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info?isSelectService=${false}&isStep1Completed=${false}&isStep2Completed=${false}&isStep3Completed=${false}&isStep4Completed=${false}`, {
+const resetBookingData = async (userId: string) => {
+  console.log("Resetting booking data for user", userId);
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info?isSelectService=${false}&isStep1Completed=${false}&isStep2Completed=${false}&isStep3Completed=${false}&isStep4Completed=${false}&userId=${userId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -133,26 +134,26 @@ export default clerkMiddleware(async (auth, request) => {
   }
 
   if (isBookingStep2Route(request) && !BookingStatus?.isStep1Completed) {
-    const url = new URL("/booking/step-1", request.url);
-    resetBookingData();
+    const url = new URL("/select", request.url);
+    await resetBookingData(userId || "");
     return NextResponse.redirect(url);
   }
 
   if (isBookingStep3Route(request) && !BookingStatus?.isStep2Completed) {
-    const url = new URL("/booking/step-2", request.url);
-    resetBookingData();
+    const url = new URL("/select", request.url);
+    await resetBookingData(userId || "");
     return NextResponse.redirect(url);
   }
 
   if (isBookingStep4Route(request) && !BookingStatus?.isStep3Completed) {
     const url = new URL("/booking/step-3", request.url);
-    resetBookingData();
+    await resetBookingData(userId || "");
     return NextResponse.redirect(url);
   }
 
   if (isBookingStep5Route(request) && !BookingStatus?.isStep4Completed) {
     const url = new URL("/booking/step-4", request.url);
-    resetBookingData();
+    await resetBookingData(userId || "");
     return NextResponse.redirect(url);
   }
 });

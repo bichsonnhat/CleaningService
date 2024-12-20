@@ -79,7 +79,7 @@ const HomeCleaning = () => {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     updateBookingData({
       bookingInfomation: [
         { name: "Number of bedrooms", value: numberOfBed[selectedNumberOfBed].name },
@@ -91,8 +91,17 @@ const HomeCleaning = () => {
       totalPrice: numberOfBed[selectedNumberOfBed].price + numberOfBathroom[selectedNumberOfBathroom].price + cleanTypes[selectedCleanType].price,
     })
 
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const data = await response.json();
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info?isSelectService=${true}&isStep1Completed=${true}&isStep2Completed=${false}&isStep3Completed=${false}&isStep4Completed=${false}&userId=${data.userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     router.push("/booking/step-2");
   };
+  
 
   const renderOptions = (
     items: ServiceDetail[],
