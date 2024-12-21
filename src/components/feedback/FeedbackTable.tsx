@@ -66,25 +66,22 @@ export default function FeedbackTable() {
 
   const [feedbacks, setFeedbacks] = useState<Feedback2[] | null>(null);
 
-  const fetchData = async (id: string, role: string) => {
+  const fetchData = async () => {
+    const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const userInfo = await userResponse.json();
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/feedback?role=${role}&userId=${id}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/feedback?role=${userInfo.role}&userId=${userInfo.userId}`
     );
     const data = await response.json();
     setFeedbacks(data);
+    setUserId(data.userId);
+    setRole(data.role);
     console.log("Feedback response: ", data);
   };
 
-  const fetchUserInfo = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
-    const data = await response.json();
-    setUserId(data.userId);
-    setRole(data.role);
-  }
-
   useEffect(() => {
-    fetchUserInfo();
-    fetchData(userId, role);
+    fetchData();
   }, []);
 
   const columns = [

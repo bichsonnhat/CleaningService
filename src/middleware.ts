@@ -19,25 +19,29 @@ const isAdminRoute = createRouteMatcher([
   "/dashboard/service",
   "/dashboard/service/category",
   "/dashboard/service/detail",
-  "/dashboard/feedback",
   "/dashboard/issue",
-  "/dashboard/refund",
   // "/api(.*)"
 ]);
 
 const isCustomerRoute = createRouteMatcher([
   "/dashboard/order-history",
+]);
+
+const isCutomserAdminSharedRoute = createRouteMatcher([
   "/dashboard/feedback",
   "/dashboard/refund",
 ]);
 
 const isHelperRoute = createRouteMatcher([
-  "/dashboard/issue",
   "/dashboard/job-history",
-  "/dashboard/leave-request",
 ]);
 
-const isSharedRoute = createRouteMatcher([
+const isHelperAdminSharedRoute = createRouteMatcher([
+  "/dashboard/leave-request",
+  "/dashboard/issue",
+]);
+
+const isCustomerHelperSharedRoute = createRouteMatcher([
   "/dashboard/personal",
   "/dashboard/calendar",
 ]);
@@ -64,7 +68,7 @@ export default clerkMiddleware(async (auth, request) => {
       isAdminRoute(request) ||
       isCustomerRoute(request) ||
       isHelperRoute(request) ||
-      isSharedRoute(request)
+      isCustomerHelperSharedRoute(request)
     ) {
       const url = new URL("/select-role", request.url);
       return NextResponse.redirect(url);
@@ -103,9 +107,27 @@ export default clerkMiddleware(async (auth, request) => {
   }
 
   if (
-    isSharedRoute(request) &&
+    isCustomerHelperSharedRoute(request) &&
     (await auth()).sessionClaims?.metadata?.role !== "customer" &&
     (await auth()).sessionClaims?.metadata?.role !== "helper"
+  ) {
+    const url = new URL("/", request.url);
+    return NextResponse.redirect(url);
+  }
+
+  if (
+    isCutomserAdminSharedRoute(request) &&
+    (await auth()).sessionClaims?.metadata?.role !== "customer" &&
+    (await auth()).sessionClaims?.metadata?.role !== "admin"
+  ) {
+    const url = new URL("/", request.url);
+    return NextResponse.redirect(url);
+  }
+
+  if (
+    isHelperAdminSharedRoute(request) &&
+    (await auth()).sessionClaims?.metadata?.role !== "helper" &&
+    (await auth()).sessionClaims?.metadata?.role !== "admin"
   ) {
     const url = new URL("/", request.url);
     return NextResponse.redirect(url);

@@ -27,7 +27,7 @@ export async function GET(req: Request) {
   }
   let feedback;
 
-  if (role === "Customer") {
+  if (role === "customer") {
     feedback = await prisma.feedback.findMany({
       orderBy: {
         updated_at: "desc",
@@ -59,7 +59,7 @@ export async function GET(req: Request) {
         },
       },
     });
-  } else if (role === "Admin") {
+  } else if (role === "admin") {
     feedback = await prisma.feedback.findMany({
       orderBy: {
         updated_at: "desc",
@@ -88,7 +88,7 @@ export async function GET(req: Request) {
         },
       },
     });
-  } else if (role === "Helper") {
+  } else if (role === "helper") {
     feedback = await prisma.feedback.findMany({
       orderBy: {
         updated_at: "desc",
