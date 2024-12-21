@@ -12,11 +12,10 @@ export async function POST(request: Request) {
 
     try {
         event = stripe.webhooks.constructEvent
-            (body, sig, "whsec_b2ddf5804ddf737be87c170d775aa3d364afd8e643cd154e6ef6b1c785fd9edb");
+            (body, sig, process.env.STRIPE_SIGNING_SECRET || '');
     } catch (error) {
         return NextResponse.json({ error }, { status: 400 });
     }
-    
     // Handle the event
     switch (event.type) {
         case 'payment_intent.succeeded':
