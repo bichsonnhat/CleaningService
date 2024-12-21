@@ -168,13 +168,13 @@ const Sidebar: React.FC = () => {
       icon: "/images/Dashboard/Sidebar/InActive/Service.svg",
       activeIcon: "/images/Dashboard/Sidebar/Active/Service.svg",
       label: "Service",
-      href: "/dashboard/service/category",
+      href: "/dashboard/service/type",
       children: [
         {
-          icon: "/images/Dashboard/Sidebar/InActive/C.svg",
-          activeIcon: "/images/Dashboard/Sidebar/Active/C.svg",
-          label: "Category",
-          href: "/dashboard/service/category",
+          icon: "/images/Dashboard/Sidebar/InActive/T.svg",
+          activeIcon: "/images/Dashboard/Sidebar/Active/T.svg",
+          label: "Type",
+          href: "/dashboard/service/type",
         },
         {
           icon: "/images/Dashboard/Sidebar/InActive/D.svg",
