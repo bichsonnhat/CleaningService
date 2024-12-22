@@ -14,8 +14,8 @@ type ChartTableProps = {
 export const ChartTable: React.FC<ChartTableProps> = ({chartTableData}) => {
 
   return (
-    <div className='w-[95%] m-auto mt-[25px]'>
-        <div className='max-sm:hidden flex flex-row bg-[#F1F4F9] h-[48px] p-[10px] gap-[10px] rounded-t-2xl'>
+    <div className='w-[95%] m-auto my-[25px]'>
+        <div className='max-sm:hidden flex flex-row bg-[#F1F4F9] h-[48px] p-[10px] gap-[10px] rounded-t-xl'>
             <div className='w-[20.5%] pl-[12px] m-auto'>
                 <div className='text-[#202224] text-sm font-bold'>Service Name</div>
             </div>

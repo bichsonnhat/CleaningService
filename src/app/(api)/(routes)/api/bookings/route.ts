@@ -19,6 +19,11 @@ export async function GET(req: Request) {
           createdAt: "desc",
         },
         include: {
+          serviceCategory: {
+            select: {
+              name: true,
+            },
+          },
           customer: {
             select: {
               fullName: true,

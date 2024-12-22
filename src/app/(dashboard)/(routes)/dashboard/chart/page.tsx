@@ -76,7 +76,7 @@ const ChartPage = () => {
         hour12: true,
       });
       return {
-        service_name: data.serviceType.name,
+        service_name: data.serviceCategory.name,
         location: data.location,
         date_time: formattedDateTime,
         service_fee: data.totalPrice,
@@ -111,31 +111,27 @@ const ChartPage = () => {
 
   useEffect(() => {
     const fetchBookingData = async (url: string) => {
-      const res = await fetch(url, {
-        cache: "force-cache",
-      });
+      const res = await fetch(url);
       const data = await res.json();
       mappingChartData(data);
     };
     const fetchUserData = async (url: string) => {
-      const res = await fetch(url, {
-        cache: "force-cache",
-      });
+      const res = await fetch(url);
       const data = await res.json();
       setUser(data);
     };
-    fetchBookingData("/api/bookings");
-    fetchUserData("/api/users");
+    fetchBookingData(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=Admin&userId=asd`);
+    fetchUserData(`${process.env.NEXT_PUBLIC_API_URL}/api/users?role=Admin`);
   }, []);
 
   useEffect(() => {
     const newTotalIncome = Array(12).fill(0);
     chartTableData.forEach((data) => {
-      if (data.status === "Completed") {
+      if (data.status.toLowerCase() === "completed") {
         const month = new Date(data.date_time).getMonth();
         newTotalIncome[month] += Number(data.service_fee);
       }
-      if (data.status === "Pending") {
+      if (data.status.toLowerCase() === "pending") {
         setTotalPending((prev) => prev + 1);
       }
     });
@@ -195,15 +191,14 @@ const ChartPage = () => {
       return yesterday.getDate() === date.getDate();
     }).length;
 
-    const percentageUserChange =
-      ((totalUserToday - totalUserYesterday) / totalUserYesterday) * 100;
-    const percentageOrderChange =
-      ((totalOrderToday - totalOrderYesterday) / totalOrderYesterday) * 100;
-    const percentageIncomeChange =
-      ((totalIncomeToday - totalIncomeYesterday) / totalIncomeYesterday) * 100;
-    const percentagePendingChange =
-      ((totalPendingToday - totalPendingYesterday) / totalPendingYesterday) *
-      100;
+    const percentageUserChange = totalUserYesterday !== 0 ?
+      ((totalUserToday - totalUserYesterday) / totalUserYesterday) * 100 : 0;
+    const percentageOrderChange = totalOrderYesterday !== 0 ?
+      ((totalOrderToday - totalOrderYesterday) / totalOrderYesterday) * 100 : 0;
+    const percentageIncomeChange = totalIncomeYesterday !== 0 ?
+      ((totalIncomeToday - totalIncomeYesterday) / totalIncomeYesterday) * 100 : 0;
+    const percentagePendingChange = totalPendingYesterday !== 0 ?
+      ((totalPendingToday - totalPendingYesterday) / totalPendingYesterday) * 100 : 0;
 
     chartCardData[0].dataInfo = user.length.toString();
     chartCardData[0].percentageChangeInfo = `${percentageUserChange.toFixed(

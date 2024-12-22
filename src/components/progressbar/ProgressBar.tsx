@@ -112,9 +112,9 @@ const ProgressBar = () => {
       case '/booking/step-2':
         setStep(2)
         if (bookingData.serviceCategory?.name === 'Home Cleaning') {
-          const bedrooms = bookingData.bookingInfomation[0]?.value || '0';
-          const bathrooms = bookingData.bookingInfomation[1]?.value || '0';
-          const cleanType = bookingData.bookingInfomation[2]?.value || 'Standard';
+          const bedrooms = bookingData.bookingInfomation?.[0]?.value || '0';
+          const bathrooms = bookingData.bookingInfomation?.[1]?.value || '0';
+          const cleanType = bookingData.bookingInfomation?.[2]?.value || 'Standard';
           setHomeCleaningDetail({bedrooms, bathrooms, cleanType})
         } else {
           const serviceDetail = bookingData.bookingInfomation?.[0]?.value || 'Other Services';

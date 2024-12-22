@@ -18,28 +18,47 @@ import {
 } from "@/schema/leaveRequestSchema";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { userStore } from "@/utils/store/role.store";
+import { useToast } from "@/hooks/use-toast";
 
 export function CreateLeaveRequestPopup() {
+
   const queryClient = useQueryClient();
+  const userId = userStore((state) => state.id);
+  const { toast } = useToast();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const createLeaveRequest = async (data: createLeaveRequestData) => {
     try {
-      const response = await fetch("/api/helper_availability", {
+      const formData = {
+        ...data,
+        helperId: userId,
+      };
+
+      console.log("Final data:", formData);
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/helper_availability`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
+
       if (!response.ok) {
-        throw new Error("Error creating leave request");
+        const errorMessage = "Failed to create leave request because you already have a request in that time period. Please try again.";
+        // toast({
+        //   variant: "destructive",
+        //   title: errorMessage,
+        // });
+        throw new Error(errorMessage);
       }
       const result = await response.json();
       console.log(result);
     } catch (error) {
       console.error("Error creating leave request:", error);
+      throw error;
     }
   };
 
@@ -63,14 +82,21 @@ export function CreateLeaveRequestPopup() {
 
   const onSubmitHandle = async (data: createLeaveRequestData) => {
     try {
-      console.log("Submitting data:", data);
+      // console.log("Submitting data:", data);
       await createLeaveRequest(data);
       queryClient.invalidateQueries({ queryKey: ["leaveRequests"] });
       setIsDialogOpen(false);
+      toast({
+        title: "Create a leave request successfully!",
+      });
       reset(); // Reset form after successful submission
     } catch (error) {
       console.error("Error while creating leave request:", error);
-      alert("Failed to create leave request. Please try again.");
+      // alert("Failed to create leave request. Please try again.");
+      toast({
+        variant: "destructive",
+        title: "Failed to create leave request because you already have a request in that time period. Please try again.",
+      });
     }
   };
 

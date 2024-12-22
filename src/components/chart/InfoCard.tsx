@@ -13,9 +13,9 @@ export const InfoCard:React.FC<InfoCardProps> = ({titleInfo, dataInfo, urliconIn
     const bgIconColor = titleInfo === "Total User" ? 'bg-[#caf0ff]' : 
                         titleInfo === "Total Order" ? 'bg-[#f8e0c9cc]' : 
                         titleInfo === "Total Income" ? 'bg-[#cefad8]' : 'bg-[#ffd2d1]';
-    const urlTrend = trend === "up" ? "/images/Chart/up.svg" : "/images/Chart/down.svg";
-    const textColorTrend = trend === "up" ? "text-[#00B69B]" : "text-[#B60000]";
-    const changeInfoText = trend === "up" ? "Up from yesterday" : "Down from yesterday";
+    const urlTrend = trend === "down" ? "/images/Chart/down.svg" : "/images/Chart/up.svg";
+    const textColorTrend = trend === "down" ? "text-[#B60000]" : "text-[#00B69B]";
+    const changeInfoText = trend === "down" ? "Down from yesterday" : "Up from yesterday";
   return (
     <div className='sm:flex sm:flex-col justify-center items-center w-[24%] max-sm:w-full bg-white py-[25px] px-[25px] gap-[32px] rounded-xl'>
         <div className='inline-flex w-full justify-between'>

@@ -55,15 +55,6 @@ const OtherServices = () => {
   );
 
   const handleNext = () => {
-    updateBookingData({
-      bookingInfomation: [
-        { name: "Service details", value: services[selectedService].name },
-        { name: "For how long?", value: forHowLong[selectedHowLong].name },
-      ],
-    });
-    updateBookingData({
-      totalPrice: services[selectedService].price + forHowLong[selectedHowLong].price,
-    })
     router.push("/booking/step-2");
   };
   const renderOptions = (
@@ -100,6 +91,18 @@ const OtherServices = () => {
     if (type === "service") setSelectedService(index);
     else setHowLong(index);
   };
+
+  useEffect(() => {
+    updateBookingData({
+      bookingInfomation: [
+        { name: "Service details", value: services[selectedService]?.name },
+        { name: "For how long?", value: forHowLong[selectedHowLong]?.name },
+      ],
+    });
+    updateBookingData({
+      totalPrice: services[selectedService]?.price + forHowLong[selectedHowLong]?.price,
+    })
+  },[selectedHowLong, selectedService, services, forHowLong]);
 
   return (
     <>

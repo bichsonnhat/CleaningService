@@ -11,7 +11,7 @@ export interface IBookingResponse {
     totalPrice: number,
     paymentStatus: string,
     paymentMethod: string,
-    serviceType: {
+    serviceCategory: {
       name: string,
     }
 }

@@ -80,17 +80,6 @@ const HomeCleaning = () => {
   };
 
   const handleNext = () => {
-    updateBookingData({
-      bookingInfomation: [
-        { name: "Number of bedrooms", value: numberOfBed[selectedNumberOfBed].name },
-        { name: "Number of bathrooms", value: numberOfBathroom[selectedNumberOfBathroom].name },
-        { name: "Clean type", value: cleanTypes[selectedCleanType].name },
-      ],
-    });
-    updateBookingData({
-      totalPrice: numberOfBed[selectedNumberOfBed].price + numberOfBathroom[selectedNumberOfBathroom].price + cleanTypes[selectedCleanType].price,
-    })
-
     router.push("/booking/step-2");
   };
 
@@ -124,6 +113,19 @@ const HomeCleaning = () => {
     ))}
   </div>
   );
+
+  useEffect(() => {
+    updateBookingData({
+      bookingInfomation: [
+        { name: "Number of bedrooms", value: numberOfBed[selectedNumberOfBed]?.name },
+        { name: "Number of bathrooms", value: numberOfBathroom[selectedNumberOfBathroom]?.name },
+        { name: "Clean type", value: cleanTypes[selectedCleanType]?.name },
+      ],
+    });
+    updateBookingData({
+      totalPrice: numberOfBed[selectedNumberOfBed]?.price + numberOfBathroom[selectedNumberOfBathroom]?.price + cleanTypes[selectedCleanType]?.price,
+    })
+  },[selectedNumberOfBed, selectedNumberOfBathroom, selectedCleanType, numberOfBed, numberOfBathroom, cleanTypes])
 
   return (
     <div className="w-full h-full mt-[50px]">

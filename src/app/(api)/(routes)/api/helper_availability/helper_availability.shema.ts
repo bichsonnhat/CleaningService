@@ -2,6 +2,7 @@ import z from "zod";
 
 const helperAvailabilitySchema = z
   .object({
+    helperId: z.string(),
     availabilityType: z.string(),
     startDatetime: z.coerce.date(),
     endDatetime: z.coerce.date(),

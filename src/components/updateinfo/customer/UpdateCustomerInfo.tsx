@@ -11,8 +11,7 @@ import { useRouter } from 'next/navigation';
 import { LuArrowLeft } from 'react-icons/lu';
 import { ClipLoader } from 'react-spinners';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { boolean } from 'zod';
-import { clerkClient } from '@clerk/nextjs/server';
+import { useToast } from "@/hooks/use-toast";
 
 const genderOptions = ["Female", "Male", "Other"]
 
@@ -22,6 +21,7 @@ interface UpdateCustomerInfoProps {
 
 const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
 
+  const { toast } = useToast();
   const router = useRouter();
   const queryClient = useQueryClient();
   const [idCard, setIdCard] = useState<File | null>(null);
@@ -119,12 +119,20 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
     if (selectedFile) {
       const allowedFormats = ["image/jpeg", "image/png", "application/pdf"];
       if (!allowedFormats.includes(selectedFile.type)) {
-        alert("Only JPG, PNG, or PDF files are allowed!");
+        // alert("Only JPG, PNG, or PDF files are allowed!");
+        toast({
+          variant: "destructive",
+          title: "Only JPG, PNG, or PDF files are allowed!",
+        });
         return;
       }
 
       if (selectedFile.size > 10 * 1024 * 1024) {
-        alert("File size should be less than 10MB!");
+        // alert("File size should be less than 10MB!");
+        toast({
+          variant: "destructive",
+          title: "File size should be less than 10MB!",
+        });
         return;
       }
 
@@ -146,12 +154,20 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
     if (droppedFile) {
       const allowedFormats = ["image/jpeg", "image/png", "application/pdf"];
       if (!allowedFormats.includes(droppedFile.type)) {
-        alert("Only JPG, PNG, or PDF files are allowed!");
+        // alert("Only JPG, PNG, or PDF files are allowed!");
+        toast({
+          variant: "destructive",
+          title: "Only JPG, PNG, or PDF files are allowed!",
+        });
         return;
       }
 
       if (droppedFile.size > 10 * 1024 * 1024) {
-        alert("File size should be less than 10MB!");
+        // alert("File size should be less than 10MB!");
+        toast({
+          variant: "destructive",
+          title: "File size should be less than 10MB!",
+        });
         return;
       }
 
@@ -173,7 +189,11 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
 
   const handleDownload = (file: File | null) => {
     if (!file) {
-      alert("No file selected to download.");
+      // alert("No file selected to download.");
+      toast({
+        variant: "destructive",
+        title: "No file selected to download.",
+      });
       return;
     }
 
@@ -192,7 +212,11 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
 
   const uploadFile = async (file: File | null): Promise<string | null> => {
     if (!file) {
-      alert("Please select a file first!");
+      // alert("Please select a file first!");
+      toast({
+        variant: "destructive",
+        title: "Please select a file first!",
+      });
       return null;
     }
 
@@ -233,7 +257,11 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
       }
 
       if (!idCardUrl_temp) {
-        alert("Failed to upload ID Card. Please try again.");
+        // alert("Failed to upload ID Card. Please try again.");
+        toast({
+          variant: "destructive",
+          title: "Failed to upload ID Card. Please try again.",
+        });
         return;
       }
 
@@ -284,21 +312,27 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
       console.log("Parsed result:", result);
 
       checkSubmit = true;
-      alert("Form submitted successfully!");
+      // alert("Form submitted successfully!");
+      toast({ title: "Info updated successfully!" });
 
       queryClient.invalidateQueries({ queryKey: ["updateCustomerInfo"] });
     } catch (error) {
       console.error("Failed to submit data:", error);
       checkSubmit = false;
-      alert("Something went wrong during form submission.");
+      // alert("Something went wrong during form submission.");
     }
     finally {
       if (checkSubmit) {
-        router.push(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/personal`);
+        // router.push(`${process.env.NEXT_PUBLIC_API_URL}`);
+        (window.location.href = `${process.env.NEXT_PUBLIC_API_URL}`)
       }
       else {
         setIsSubmitting(false);
-        alert("Failed to submit form");
+        // alert("Failed to submit form");
+        toast({
+          variant: "destructive",
+          title: "Fail to update data",
+        });
       }
     }
   };
@@ -312,11 +346,12 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
 
   return (
     <div>
-      {isSubmitting ? (
-        <div className="flex justify-center items-center w-full h-screen">
+      {isSubmitting && (
+        <div className="flex justify-center items-center w-full h-screen bg-gray-400 bg-opacity-50 fixed top-0 left-0 z-50">
           <ClipLoader color="#2A88F5" loading={true} size={30} />
         </div>
-      ) : (
+      )}
+      <div className={isSubmitting ? "pointer-events-none opacity-50" : ""}>
         <form
           className="flex flex-col md:flex-row h-full relative min-h-screen"
           onSubmit={handleSubmit(onSubmitHandle)}>
@@ -608,8 +643,7 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
             </div>
           </div>
         </form>
-
-      )}
+      </div>
     </div>
   )
 }

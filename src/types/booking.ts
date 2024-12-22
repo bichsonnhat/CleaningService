@@ -37,4 +37,5 @@ export interface BookingData {
 
   bookingNote?: string;
   totalPrice?: number;
+  finalPrice?: number;
 }

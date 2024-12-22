@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 const Booking5Right = () => {
   const bookingData = bookingStore((state: any) => state.bookingData);
+  const bookingUpdate = bookingStore((state: any) => state.updateBookingData)
   const [discount, setDiscount] = useState<number>(0);
   const [subTotalPrice, setSubTotalPrice] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
@@ -54,6 +55,7 @@ const Booking5Right = () => {
     setSubTotalPrice(bookingData.totalPrice - discount);
     setTax(bookingData.totalPrice * 0.05);
     setTotalPrice(subTotalPrice + tax);
+    bookingUpdate({ finalPrice: subTotalPrice + tax });
   }, [bookingData.totalPrice, discount, subTotalPrice, tax, totalPrice]);
   return (
     <div className="w-full min-w-[365px] md:w-1/3 p-4 bg-gray-100 min-h-screen">

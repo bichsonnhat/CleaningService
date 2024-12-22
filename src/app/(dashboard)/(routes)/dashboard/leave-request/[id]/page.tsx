@@ -18,9 +18,11 @@ import {
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from "@tanstack/react-query";
 import { userStore } from "@/utils/store/role.store";
+import { useToast } from "@/hooks/use-toast";
 const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
     const [detail, setDetail] = useState<LeaveRequest | null>(null);
 
+    const { toast } = useToast();
     const role = userStore((state) => state.role);
     const userId = userStore((state) => state.id);
     const endPoint = `${process.env.NEXT_PUBLIC_API_URL}/api/helper_availability/${params.id}`;
@@ -60,7 +62,11 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
 
     const handleReject = async () => {
         if (!rejectionReason.trim()) {
-            alert("Please provide a rejection reason.");
+            // alert("Please provide a rejection reason.");
+            toast({
+                variant: "destructive",
+                title: "Please provide a rejection reason.",
+            });
             return;
         }
 
@@ -85,10 +91,15 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
             queryClient.invalidateQueries({
                 queryKey: ["leaveRequests"],
             });
-            alert("Leave request has been rejected.");
+            // alert("Leave request has been rejected.");
+            toast({ title: "Leave request has been rejected." });
         } catch (error) {
             console.error("Error rejecting leave request:", error);
-            alert("Something went wrong while rejecting the leave request.");
+            // alert("Something went wrong while rejecting the leave request.");
+            toast({
+                variant: "destructive",
+                title: "Something went wrong while rejecting the leave request.",
+            });
         }
     };
 
@@ -115,10 +126,15 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
             queryClient.invalidateQueries({
                 queryKey: ["leaveRequests"],
             });
-            alert("Leave request has been approved.");
+            // alert("Leave request has been approved.");
+            toast({ title: "Leave request has been approved." });
         } catch (error) {
             console.error("Error approving leave request:", error);
-            alert("Something went wrong while approving the leave request.");
+            // alert("Something went wrong while approving the leave request.");
+            toast({
+                variant: "destructive",
+                title: "Something went wrong while approving the leave request.",
+            });
         }
     };
 
@@ -165,10 +181,17 @@ const LeaveRequestDetail = ({ params }: { params: { id: string } }) => {
             queryClient.invalidateQueries({
                 queryKey: ["leaveRequests"],
             });
-            alert("Leave request has been cancelled.");
+            // alert("Leave request has been cancelled.");
+            toast({
+                title: "Leave request has been cancelled.",
+            });
         } catch (error) {
             console.error("Error cancelling leave request:", error);
-            alert("Something went wrong while cancelling the leave request.");
+            // alert("Something went wrong while cancelling the leave request.");
+            toast({
+                variant: "destructive",
+                title: "Something went wrong while cancelling the leave request.",
+            });
         }
     }
 

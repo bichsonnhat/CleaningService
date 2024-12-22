@@ -9,12 +9,12 @@ interface ChartRowProps {
 }
 
 export const ChartRow: React.FC<ChartRowProps> = ({service_name, location, date_time, service_fee, status}) => {
-    const bgColor = status === 'Completed' ? 'bg-[#b3fcf1]' : 
-                    status === 'Processing'? 'bg-[#cab5fc]' : 
-                    status === 'Pending'? 'bg-[#f8e0c9]' : '';
-    const textColor = status === 'Completed' ? 'text-[#00B69B]' : 
-                    status === 'Processing'? 'text-[#6226EF]' :
-                    status === 'Pending'? 'text-[#FF8C00]' : '';
+    const bgColor = status === 'Completed'.toLowerCase() ? 'bg-[#b3fcf1]' : 
+                    status === 'Processing'.toLowerCase() ? 'bg-[#cab5fc]' : 
+                    status === 'Pending'.toLowerCase() ? 'bg-[#f8e0c9]' : '';
+    const textColor = status === 'Completed'.toLowerCase() ? 'text-[#00B69B]' : 
+                    status === 'Processing'.toLowerCase() ? 'text-[#6226EF]' :
+                    status === 'Pending'.toLowerCase() ? 'text-[#FF8C00]' : '';
   return (
     <>
         <div className='flex flex-col sm:flex-row h-fit sm:h-[80px] p-[10px] gap-[10px]'>

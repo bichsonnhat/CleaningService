@@ -64,7 +64,7 @@ export async function POST(req: Request) {
 
     const newHelperAvailability = await prisma.helperAvailability.create({
       data: {
-        helperId: userId,
+        helperId: data.helperId ?? userId,
         availabilityType: data.availabilityType,
         startDatetime: data.startDatetime,
         endDatetime: data.endDatetime,
