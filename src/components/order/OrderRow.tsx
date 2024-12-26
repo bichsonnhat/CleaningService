@@ -157,9 +157,15 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
             </span>
             {renderRating()}
             <div className="hidden lg:block mt-1">
-              {booking.feedbacks[0]?.helperRating !== null
-                ? `${booking.feedbacks[0]?.helperRating} out of 5 stars`
-                : "N/A"}
+              {(() => {
+                const firstValidFeedback = booking.feedbacks.find(
+                  (feedback) => !feedback.reportedBy
+                );
+                return firstValidFeedback !== null &&
+                  firstValidFeedback !== undefined
+                  ? `${firstValidFeedback.helperRating} out of 5 stars`
+                  : "N/A";
+              })()}
             </div>
           </div>
         </div>

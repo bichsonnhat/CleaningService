@@ -13,7 +13,7 @@ export async function GET(req: Request) {
   }
   let bookings;
   try {
-    if (role === "Admin") {
+    if (role === "admin") {
       bookings = await prisma.booking.findMany({
         orderBy: {
           createdAt: "desc",
@@ -40,9 +40,14 @@ export async function GET(req: Request) {
               reportedBy: true,
             },
           },
+          serviceCategory: {
+            select: {
+              name: true,
+            },
+          },
         },
       });
-    } else if (role === "Customer") {
+    } else if (role === "customer") {
       bookings = await prisma.booking.findMany({
         where: {
           customerId: userId,
@@ -72,9 +77,14 @@ export async function GET(req: Request) {
               reportedBy: true,
             },
           },
+          serviceCategory: {
+            select: {
+              name: true,
+            },
+          },
         },
       });
-    } else if (role === "Helper") {
+    } else if (role === "helper") {
       bookings = await prisma.booking.findMany({
         where: {
           helperId: userId,
@@ -102,6 +112,11 @@ export async function GET(req: Request) {
               id: true,
               helperRating: true,
               reportedBy: true,
+            },
+          },
+          serviceCategory: {
+            select: {
+              name: true,
             },
           },
         },

@@ -42,9 +42,9 @@ export type Feedback2 = {
 };
 
 export enum Role {
-  Admin = "Admin",
-  Customer = "Customer",
-  Helper = "Helper",
+  Admin = "admin",
+  Customer = "customer",
+  Helper = "helper",
 }
 
 export default function FeedbackTable() {
@@ -67,7 +67,9 @@ export default function FeedbackTable() {
   const [feedbacks, setFeedbacks] = useState<Feedback2[] | null>(null);
 
   const fetchData = async () => {
-    const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const userResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+    );
     const userInfo = await userResponse.json();
 
     const response = await fetch(

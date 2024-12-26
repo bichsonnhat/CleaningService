@@ -18,25 +18,33 @@ const columns = [
 
 const OrderHistoryTable = () => {
   const [bookings, setBookings] = useState<Booking[] | null>(null);
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const fetchData = async () => {
+    const userResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+    );
+    const userInfo = await userResponse.json();
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${role}&userId=${userId}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${userInfo.role}&userId=${userInfo.userId}`
     );
     const data = await response.json();
     setBookings(data);
+    setRole(data.role);
+    setUserId(data.userId);
     console.log("Booking history response: ", data);
   };
   const fetchUserInfo = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+    );
     const data = await response.json();
     setRole(data.role);
     setUserId(data.userId);
-  }
+  };
   useEffect(() => {
     fetchData();
-    fetchUserInfo();
   }, []);
 
   const [currentPage, setCurrentPage] = useState(1);

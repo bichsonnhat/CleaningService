@@ -18,13 +18,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import CreateIssuePopup from "./CreateIssuePopup";
 
-interface QuickPopupHelper {
+interface QuickPopupHelperProps {
   toggle: () => void;
   bookingId: string;
+  userId: string;
+  role: string;
 }
-const QuickPopupHelper: React.FC<QuickPopupHelper> = ({
+const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
   toggle,
   bookingId,
+  userId,
+  role,
 }) => {
   const router = useRouter();
   const { toast } = useToast();
@@ -424,6 +428,8 @@ const QuickPopupHelper: React.FC<QuickPopupHelper> = ({
       </div>
       {toggleIssue && (
         <CreateIssuePopup
+          role={role}
+          userId={userId}
           toggle={toggleIssuePopup}
           defaultBookingId={booking.id}
         />

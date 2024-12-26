@@ -126,11 +126,31 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
   const styleBtn =
     bookingState === BookingStatus.Completed ? (
       <Button
-        onClick={() => router.push(`feedback/${booking?.feedbacks[0].id}`)}
-        disabled={booking ? booking.feedbacks.length == 0 : false}
+        onClick={() => {
+          const firstValidFeedback =
+            booking &&
+            booking.feedbacks.find((feedback) => !feedback.reportedBy);
+          if (firstValidFeedback) {
+            router.push(`feedback/${firstValidFeedback.id}`);
+          }
+        }}
+        disabled={
+          !booking ||
+          booking.feedbacks.find((feedback) => !feedback.reportedBy) ===
+            undefined
+        }
         className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
       >
         Go to Feedback
+      </Button>
+    ) : bookingState === BookingStatus.Requested && booking?.refunds[0] ? (
+      <Button
+        onClick={() => {
+          router.push(`refund/${booking.refunds[0].id}`);
+        }}
+        className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
+      >
+        Go to Refund
       </Button>
     ) : (
       ""

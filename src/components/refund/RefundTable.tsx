@@ -64,10 +64,9 @@ export default function RefundTable() {
     const data = await response.json();
     setRole(data.role);
     setUserId(data.userId);
-  }
+  };
   useEffect(() => {
     fetchRefund();
-    fetchUser();
   }, []);
 
   const [toggleRefund, setToggleRefund] = useState(false);
