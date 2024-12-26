@@ -45,11 +45,6 @@ export async function GET(req: Request) {
               reportedBy: true,
             },
           },
-          serviceCategory: {
-            select: {
-              name: true,
-            },
-          },
         },
       });
     } else if (role === "customer") {
