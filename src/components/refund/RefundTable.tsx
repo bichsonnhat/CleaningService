@@ -44,17 +44,23 @@ export enum RefundStatus {
 }
 
 export default function RefundTable() {
-  const [role, setRole] = useState<string>("");
-  const [userId, setUserId] = useState<string>("");
+  const [role, setRole] = useState<string | null>();
+  const [userId, setUserId] = useState<string | null>();
   const { toast } = useToast();
 
   const [refunds, setRefunds] = useState<Refund[] | null>(null);
   const fetchRefund = async () => {
+    const userResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+    );
+    const userInfo = await userResponse.json();
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/refunds?role=${role}&userId=${userId}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/refunds?role=${userInfo.role}&userId=${userInfo.userId}`
     );
     const data = await response.json();
     console.log("Refunds: ", data);
+    setRole(userInfo.role);
+    setUserId(userInfo.userId);
     setRefunds(data);
   };
   const fetchUser = async () => {
@@ -62,12 +68,9 @@ export default function RefundTable() {
       `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
     );
     const data = await response.json();
-    setRole(data.role);
-    setUserId(data.userId);
-  }
+  };
   useEffect(() => {
     fetchRefund();
-    fetchUser();
   }, []);
 
   const [toggleRefund, setToggleRefund] = useState(false);
@@ -204,7 +207,7 @@ export default function RefundTable() {
     );
   };
 
-  if (!refunds)
+  if (!refunds || !userId || !role)
     return (
       <div className="flex justify-center items-center w-full h-[500px]">
         <ClipLoader color="#2A88F5" loading={true} size={30} />

@@ -19,19 +19,27 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
 
 export default function IssueTable() {
-  const role = "Admin";
-  const userId = "0066dc01-cdd4-4243-9f4e-778bcfa4458f";
+  // const role = "Admin";
+  // const userId = "0066dc01-cdd4-4243-9f4e-778bcfa4458f";
+  const [userId, setUserId] = useState("");
+  const [role, setRole] = useState("");
   const { toast } = useToast();
 
   const [issueData2, setIssueData2] = useState<Feedback2[] | null>(null);
 
   useEffect(() => {
     const fetchFeedback = async () => {
+      const userResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+      );
+      const userInfo = await userResponse.json();
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/feedback?role=${role}&userId=${userId}&reportedBy=true`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/feedback?role=${userInfo.role}&userId=${userInfo.userId}&reportedBy=true`
       );
       const data = await response.json();
       console.log("Issue: ", data);
+      setUserId(data.userId);
+      setRole(data.role);
       setIssueData2(data);
     };
 

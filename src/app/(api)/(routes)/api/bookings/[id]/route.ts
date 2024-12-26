@@ -5,16 +5,19 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
+  const { searchParams } = new URL(req.url);
+  const role = searchParams.get("role");
+  const userId = searchParams.get("userId");
   let bookings = null;
   try {
     if (params.id === "can-feedback") {
-      const customerId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
+      //const customerId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
       bookings = await prisma.booking.findMany({
         orderBy: {
           scheduledStartTime: "desc",
         },
         where: {
-          customerId: customerId,
+          customerId: userId ?? undefined,
           status: "completed",
           feedbacks: {
             none: {
@@ -50,13 +53,13 @@ export async function GET(
         },
       });
     } else if (params.id === "can-issue") {
-      const helperId = "0066dc01-cdd4-4243-9f4e-778bcfa4458f";
+      //const helperId = "0066dc01-cdd4-4243-9f4e-778bcfa4458f";
       bookings = await prisma.booking.findMany({
         orderBy: {
           scheduledStartTime: "desc",
         },
         where: {
-          helperId: helperId,
+          helperId: userId,
           status: {
             notIn: ["pending", "inprogress"],
           },
@@ -89,13 +92,19 @@ export async function GET(
         },
       });
     } else if (params.id === "can-refund") {
-      const customerId = "fa21339b-a224-466b-bf76-043a207ad160";
+      //const customerId = "fa21339b-a224-466b-bf76-043a207ad160";
+      if (!role || !userId) {
+        return NextResponse.json(
+          { error: "Role or userId not provided" },
+          { status: 400 }
+        );
+      }
       bookings = await prisma.booking.findMany({
         orderBy: {
           scheduledStartTime: "desc",
         },
         where: {
-          customerId: customerId,
+          customerId: userId,
           status: "completed",
           refunds: {
             none: {},

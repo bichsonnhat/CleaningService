@@ -63,13 +63,19 @@ const OrderTable = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [role, setRole] = useState<string>("");
   useEffect(() => {
-    fetchUserInfo();
+    //fetchUserInfo();
     const fetchData = async () => {
+      const userResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+      );
+      const userInfo = await userResponse.json();
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${role}&userId=${userId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=${userInfo.role}&userId=${userInfo.userId}`
       );
       const data = await response.json();
       setBookings(data);
+      setRole(data.role);
+      setUserId(data.userId);
       console.log("Booking response: ", data);
     };
 
@@ -77,11 +83,13 @@ const OrderTable = () => {
   }, []);
 
   const fetchUserInfo = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+    );
     const data = await response.json();
     setRole(data.role);
     setUserId(data.userId);
-  }
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");

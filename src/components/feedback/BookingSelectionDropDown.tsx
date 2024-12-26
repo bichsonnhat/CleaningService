@@ -136,7 +136,9 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
                   className="max-lg:hidden"
                 />
                 <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
-                  {booking.helper.user.fullName}
+                  {reportedBy === false
+                    ? booking.helper.user.fullName
+                    : booking.customer.fullName}
                 </p>
               </div>
               <div className="flex flex-col gap-1 w-[30%] h-full text-center">

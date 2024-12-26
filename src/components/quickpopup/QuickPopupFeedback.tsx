@@ -158,7 +158,7 @@ const QuickPopupFeedback: React.FC<CreateFeedbackPopupProps> = ({
     setCreating(true);
     try {
       const response = await fetch(
-        "${process.env.NEXT_PUBLIC_API_URL}/api/feedback",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/feedback`,
         {
           method: "POST",
           headers: {

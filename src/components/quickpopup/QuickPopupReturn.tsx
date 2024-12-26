@@ -21,8 +21,12 @@ const QuickPopupReturn: React.FC<QuickPopupReturnProps> = ({
   const [selectedBooking, setSelectedBooking] =
     useState<BookingCanFeedback | null>(null);
   const fetchFeedback = async () => {
+    const userResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+    );
+    const userInfo = await userResponse.json();
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/can-refund`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/can-refund?role=${userInfo.role}&userId=${userInfo.userId}`
     );
     const data = await response.json();
     setBookings(data);
@@ -80,7 +84,7 @@ const QuickPopupReturn: React.FC<QuickPopupReturnProps> = ({
     setCreating(true);
     try {
       const response = await fetch(
-        "${process.env.NEXT_PUBLIC_API_URL}/api/refunds",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/refunds`,
         {
           method: "POST",
           headers: {

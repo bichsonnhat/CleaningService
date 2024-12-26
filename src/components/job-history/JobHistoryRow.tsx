@@ -3,6 +3,7 @@ import Star from "../employee/Star";
 import Link from "next/link";
 import { Booking } from "../order/OrderTable";
 import { BookingStatus } from "../quickpopup/QuickPopupAdmin";
+import QuickPopupHelperProps from "../quickpopup/QuickPopupHelper";
 import QuickPopupHelper from "../quickpopup/QuickPopupHelper";
 
 type JobHistoryRowProps = {
@@ -15,6 +16,8 @@ type JobHistoryRowProps = {
   // totalPrice: number;
   // status: "Pending" | "In Progress" | "Cancelled" | "Completed";
   booking: Booking;
+  userId: string;
+  role: string;
 };
 const JobHistoryRow: React.FC<JobHistoryRowProps> = ({
   // id,
@@ -26,6 +29,8 @@ const JobHistoryRow: React.FC<JobHistoryRowProps> = ({
   // totalPrice,
   // status,
   booking,
+  userId,
+  role,
 }) => {
   // const startTimeString: string = new Date(
   //   booking.scheduledStartTime
@@ -67,7 +72,10 @@ const JobHistoryRow: React.FC<JobHistoryRowProps> = ({
   };
 
   // Phần trăm hoàn thành
-  const percentage = (booking.feedbacks[0].helperRating ?? 0) * 20;
+  const firstValidFeedback = booking.feedbacks.find(
+    (feedback) => !feedback.reportedBy
+  );
+  const percentage = (firstValidFeedback?.helperRating ?? 0) * 20;
   const filledStars = Math.floor(percentage / 20);
   // Hàm render ngôi sao
   const renderRating = () => {
@@ -164,9 +172,15 @@ const JobHistoryRow: React.FC<JobHistoryRowProps> = ({
           </span>
           {renderRating()}
           <div className="hidden lg:block mt-1">
-            {booking.feedbacks[0].helperRating !== null
-              ? `${booking.feedbacks[0].helperRating} out of 5 stars`
-              : "N/A"}
+            {(() => {
+              const firstValidFeedback = booking.feedbacks.find(
+                (feedback) => !feedback.reportedBy
+              );
+              return firstValidFeedback !== null &&
+                firstValidFeedback !== undefined
+                ? `${firstValidFeedback.helperRating} out of 5 stars`
+                : "N/A";
+            })()}
           </div>
         </div>
       </div>
@@ -194,6 +208,8 @@ const JobHistoryRow: React.FC<JobHistoryRowProps> = ({
         <QuickPopupHelper
           toggle={handleToggleHelperPopup}
           bookingId={booking.id}
+          userId={userId}
+          role={role}
           // mutate={fetchRefund}
           // defaultBookingId={null}
         />

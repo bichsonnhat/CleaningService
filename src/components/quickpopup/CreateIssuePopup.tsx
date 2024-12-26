@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 interface CreateIssuePopupProps {
+  userId: string;
+  role: string;
   toggle: () => void;
   mutate?: (id: string, role: string) => void;
   defaultBookingId: string | null;
@@ -43,6 +45,8 @@ export type BookingCanFeedback = {
 };
 
 const CreateIssuePopup: React.FC<CreateIssuePopupProps> = ({
+  userId,
+  role,
   toggle,
   mutate,
   defaultBookingId,
@@ -51,8 +55,10 @@ const CreateIssuePopup: React.FC<CreateIssuePopupProps> = ({
   const [selectedBooking, setSelectedBooking] =
     useState<BookingCanFeedback | null>(null);
   const fetchBookingCanIssue = async () => {
+    console.log("UserId: ", userId);
+    console.log("Role: ", role);
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/can-issue`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/can-issue?role=${role}&userId=${userId}`
     );
     const data = await response.json();
     setBookings(data);
@@ -77,8 +83,8 @@ const CreateIssuePopup: React.FC<CreateIssuePopupProps> = ({
     setSelectedBooking(booking);
   };
 
-  const role = "Helper"; // sau này sẽ thay bằng role của user
-  const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
+  // const role = "Helper"; // sau này sẽ thay bằng role của user
+  // const userId = "799a5f8f-1f54-4a15-b0c1-9099469f1128";
   const router = useRouter();
   const { toast } = useToast();
 

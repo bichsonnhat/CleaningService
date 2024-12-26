@@ -19,7 +19,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
 import QuickPopupAdmin from "../quickpopup/QuickPopupAdmin";
 import QuickPopupCustomer from "../quickpopup/QuickPopupCustomer";
-import QuickPopupHelper from "../quickpopup/QuickPopupHelper";
+import QuickPopupHelperProps from "../quickpopup/QuickPopupHelper";
 import CreateIssuePopup from "../quickpopup/CreateIssuePopup";
 
 export type Issue = {
@@ -31,9 +31,10 @@ export type Issue = {
 };
 
 export default function IssueHistoryTable() {
-  const role = "Role.Helper";
-  const userId = "c11a7445-a49d-45be-9212-f546fb788acc";
   const { toast } = useToast();
+
+  const [role, setRole] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
 
   const [issueData, setIssueData] = useState<Feedback2[] | null>(null);
 
@@ -43,12 +44,18 @@ export default function IssueHistoryTable() {
   };
 
   const fetchIssueHistory = async () => {
+    const userResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+    );
+    const userInfo = await userResponse.json();
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/feedback?role=${role}&userId=${userId}&reportedBy="true"`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/feedback?role=${userInfo.role}&userId=${userInfo.userId}&reportedBy="true"`
     );
     const data = await response.json();
     console.log("Issue History: ", data);
     setIssueData(data);
+    setRole(userInfo.role);
+    setUserId(userInfo.userId);
   };
   useEffect(() => {
     fetchIssueHistory();
@@ -177,7 +184,7 @@ export default function IssueHistoryTable() {
     }
   };
 
-  if (!issueData)
+  if (!issueData || !role || !userId)
     return (
       <div className="flex justify-center items-center w-full h-[500px]">
         <ClipLoader color="#2A88F5" loading={true} size={30} />
@@ -283,6 +290,8 @@ export default function IssueHistoryTable() {
       />
       {toggleIssue && (
         <CreateIssuePopup
+          role={role as Role}
+          userId={userId}
           toggle={toggleIssuePopup}
           mutate={fetchIssueHistory}
           defaultBookingId={null}
