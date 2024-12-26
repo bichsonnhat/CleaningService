@@ -11,13 +11,13 @@ export async function GET(
   let bookings = null;
   try {
     if (params.id === "can-feedback") {
-      const customerId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
+      //const customerId = "ee6efe69-71ca-4e3d-bc07-ba6e5c3e061e";
       bookings = await prisma.booking.findMany({
         orderBy: {
           scheduledStartTime: "desc",
         },
         where: {
-          customerId: customerId,
+          customerId: userId ?? undefined,
           status: "completed",
           feedbacks: {
             none: {

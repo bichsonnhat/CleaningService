@@ -16,7 +16,7 @@ export async function GET(req: Request) {
 
   let refunds;
 
-  if (role === "Admin") {
+  if (role === "admin") {
     refunds = await prisma.refund.findMany({
       orderBy: {
         created_at: "desc",
@@ -33,7 +33,7 @@ export async function GET(req: Request) {
         },
       },
     });
-  } else if (role === "Customer") {
+  } else if (role === "customer") {
     refunds = await prisma.refund.findMany({
       orderBy: {
         created_at: "desc",

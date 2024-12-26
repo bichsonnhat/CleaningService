@@ -56,8 +56,8 @@ export default function FeedbackTable() {
   const [searchBy, setSearchBy] = useState("Name");
   const [checkedRows, setCheckedRows] = useState<string[]>([]);
   const [deleting, setDeleting] = useState(false);
-  const [userId, setUserId] = useState("");
-  const [role, setRole] = useState("");
+  const [userId, setUserId] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
   const [toggleFeedback, setToggleFeedback] = useState(false);
   const toggleFeedbackPopup = () => {
@@ -77,8 +77,8 @@ export default function FeedbackTable() {
     );
     const data = await response.json();
     setFeedbacks(data);
-    setUserId(data.userId);
-    setRole(data.role);
+    setUserId(userInfo.userId);
+    setRole(userInfo.role);
     console.log("Feedback response: ", data);
   };
 
@@ -214,7 +214,7 @@ export default function FeedbackTable() {
     }
   };
 
-  if (!feedbacks)
+  if (!feedbacks || !userId || !role)
     return (
       <div className="flex justify-center items-center w-full h-[500px]">
         <ClipLoader color="#2A88F5" loading={true} size={30} />

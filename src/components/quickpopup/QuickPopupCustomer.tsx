@@ -140,12 +140,14 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
         Cancel The Service
       </Button>
     ) : bookingState === BookingStatus.Requested ? (
-      <Button
-        onClick={() => router.push(`refund/${booking?.refunds[0].id}`)}
-        className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
-      >
-        Go to refund request
-      </Button>
+      (booking?.refunds?.length ?? 0) > 0 && (
+        <Button
+          onClick={() => router.push(`refund/${booking?.refunds[0].id}`)}
+          className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
+        >
+          Go to refund request
+        </Button>
+      )
     ) : (
       ""
     );

@@ -8,16 +8,16 @@ export async function GET(req: Request) {
   const reportedByString = searchParams.get("reportedBy");
   const reportedBy = reportedByString === "true" ? true : false;
 
-  //  if (!role) {
-  //    return NextResponse.json({ error: "Role is required" }, { status: 400 });
-  //  }
+   if (!role) {
+     return NextResponse.json({ error: "Role is required" }, { status: 400 });
+   }
 
-  //  if (role === "Customer" && !userId) {
-  //    return NextResponse.json(
-  //      { error: "userId is required for Customer role" },
-  //      { status: 400 }
-  //    );
-  //  }
+   if (role === "customer" && !userId) {
+     return NextResponse.json(
+       { error: "userId is required for Customer role" },
+       { status: 400 }
+     );
+   }
 
   if (!role || !userId) {
     return NextResponse.json(

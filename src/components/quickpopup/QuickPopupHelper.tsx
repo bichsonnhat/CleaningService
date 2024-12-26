@@ -173,13 +173,14 @@ const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
       bookingState === BookingStatus.Refunded ? (
       booking && booking.feedbacks.some((fb) => fb.reportedBy) ? (
         <Button
-          onClick={() =>
-            router.push(
-              `issue/${
-                booking?.feedbacks?.find((feedback) => feedback.reportedBy)?.id
-              }`
-            )
-          }
+          onClick={() => {
+            const firstValidIssue = booking.feedbacks.find(
+              (feedback) => feedback.reportedBy
+            );
+            if (firstValidIssue) {
+              router.push(`issue/${firstValidIssue.id}`);
+            }
+          }}
           className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
         >
           Go to Issue
@@ -229,12 +230,12 @@ const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
         }
       );
       if (response.ok) {
-        toast({ description: "Booking cancelled successfully" });
+        toast({ description: "Booking updated successfully" });
         setTimeout(() => {
           window.location.reload();
         }, 2000);
       } else {
-        toast({ description: "Failed to cancel booking" });
+        toast({ description: "Failed to update booking" });
       }
     } catch (error) {
       console.error("Error update booking: ", error);
