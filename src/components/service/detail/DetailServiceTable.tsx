@@ -9,6 +9,7 @@ import { UpdateServiceDetailPopup } from "@/components/popup/UpdateServiceDetail
 import { CreateServiceDetailPopup } from "@/components/popup/CreateServiceDetailPopup";
 import { Button } from "@/components/ui/button";
 import Pagination from "./Pagination";
+import { useToast } from "@/hooks/use-toast";
 
 const columns = [
   { header: "", className: "w-[48px] hidden md:table-cell" },
@@ -73,14 +74,15 @@ const ServiceDetailsData: ServiceDetail[] = [
 const DetailServiceTable = () => {
   const queryClient = useQueryClient();
 
+  const { toast } = useToast();
+
   const [selectedServiceDetailId, setSelectedServiceDetailId] = useState<
     string | null
   >(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [checkedRows, setCheckedRows] = useState<string[]>([]);
 
-  const url = "http://localhost:3000/api/service-detail";
-  const deleteDetailServicesUrl = "http://localhost:3000/api/service-detail";
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/service-detail`;
 
   const fetchData = async (): Promise<ServiceDetail[]> => {
     try {
@@ -101,15 +103,23 @@ const DetailServiceTable = () => {
 
   const deleteDetailServices = async (id: string) => {
     try {
-      const response = await fetch(`${deleteDetailServicesUrl}/${id}`, {
+      const response = await fetch(`${url}/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
+      toast({
+        variant: "default",
+        title: "Deleting service detail successfully!",
+      });
       return await response.json();
     } catch (error) {
       console.error("Error deleting data:", error);
+      toast({
+        variant: "destructive",
+        title: "Deleting service detail failed!",
+      });
       return [];
     }
   };

@@ -19,6 +19,7 @@ import {
   serviceTypeSchema,
   updateServiceTypeData,
 } from "@/schema/serviceTypeSchema";
+import { useToast } from "@/hooks/use-toast";
 
 export function UpdateServiceTypePopup({
   id,
@@ -31,10 +32,11 @@ export function UpdateServiceTypePopup({
 }) {
   const queryClient = useQueryClient();
 
-  const fetchServiceCategoryUrl =
-    "http://localhost:3000/api/service-categories";
+  const { toast } = useToast();
+
+  const fetchServiceCategoryUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories`;
   const serviceTypelUrl = id
-    ? `http://localhost:3000/api/service-types/${id}`
+    ? `${process.env.NEXT_PUBLIC_API_URL}/api/service-types/${id}`
     : null;
 
   const form = useForm<updateServiceTypeData>({
@@ -65,6 +67,10 @@ export function UpdateServiceTypePopup({
       }
       return await response.json();
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Fetching service categories failed!",
+      });
       console.error("Error fetching service types:", error);
       return [];
     }
@@ -83,10 +89,10 @@ export function UpdateServiceTypePopup({
     queryFn: fetchServiceCategories,
   });
 
-  const updateServiceDetail = async (data: updateServiceTypeData) => {
+  const updateServiceType = async (data: updateServiceTypeData) => {
     try {
       if (!serviceTypelUrl) {
-        throw new Error("Service detail URL is null");
+        throw new Error("Service type URL is null");
       }
       const response = await fetch(serviceTypelUrl, {
         method: "PATCH",
@@ -96,12 +102,19 @@ export function UpdateServiceTypePopup({
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error("Error updating service detail");
+        throw new Error("Error updating service type");
       }
       const result = await response.json();
-      console.log(result);
+      toast({
+        variant: "default",
+        title: "Updating service type successfully!",
+      });
     } catch (error) {
-      console.error("Error updating service detail:", error);
+      toast({
+        variant: "destructive",
+        title: "Updating service type failed!",
+      });
+      console.error("Error updating service type:", error);
     }
   };
 
@@ -143,12 +156,12 @@ export function UpdateServiceTypePopup({
   const onSubmitHandle = async (data: updateServiceTypeData) => {
     try {
       console.log("Submitting data:", data);
-      await updateServiceDetail(data);
-      console.log("Service detail update successfully.");
+      await updateServiceType(data);
+      console.log("Service type update successfully.");
       queryClient.invalidateQueries({ queryKey: ["serviceTypes"] });
       onClose();
     } catch (error) {
-      console.error("Error while updating service detail:", error);
+      console.error("Error while updating service type:", error);
       alert("Failed to update service detail. Please try again.");
     }
   };

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Checkbox as MaterialCheckbox } from "@material-tailwind/react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
@@ -16,14 +16,6 @@ const DetailServiceRow: React.FC<DetailServiceRowProps> = ({
   isLoading,
 }) => {
   const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked;
-    setIsChecked(checked);
-    if (onCheckboxToggle) {
-      onCheckboxToggle(id, checked);
-    }
-  };
 
   return (
     <div
@@ -40,13 +32,15 @@ const DetailServiceRow: React.FC<DetailServiceRowProps> = ({
           {isLoading ? (
             <Skeleton className="h-4 w-full"></Skeleton>
           ) : (
-            <MaterialCheckbox
+            <Checkbox
               color="blue"
               checked={isChecked}
-              onChange={handleCheckboxChange}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-              crossOrigin={undefined}
+              onCheckedChange={(checked) => {
+                setIsChecked(checked === true);
+                if (onCheckboxToggle) {
+                  onCheckboxToggle(id, checked === true);
+                }
+              }}
             />
           )}
         </div>

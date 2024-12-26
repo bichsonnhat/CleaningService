@@ -19,13 +19,16 @@ import {
 } from "@/schema/serviceDetailSchema";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
 export function CreateServiceDetailPopup() {
   const queryClient = useQueryClient();
 
-  const fetchServiceTypesUrl = "http://localhost:3000/api/service-types";
+  const fetchServiceTypesUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/service-types`;
 
-  const createServiceDetailUrl = "http://localhost:3000/api/service-detail";
+  const createServiceDetailUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/service-detail`;
+
+  const { toast } = useToast();
 
   const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -44,6 +47,10 @@ export function CreateServiceDetailPopup() {
       const data = await response.json();
       setServiceTypes(data);
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Fetching service types failed!",
+      });
       console.error("Error fetching service types:", error);
     }
   };
@@ -60,8 +67,15 @@ export function CreateServiceDetailPopup() {
         throw new Error("Error creating service detail");
       }
       const result = await response.json();
-      console.log(result);
+      toast({
+        variant: "default",
+        title: "Creating service detail successfully!",
+      });
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Creating service detail failed!",
+      });
       console.error("Error creating service detail:", error);
     }
   };

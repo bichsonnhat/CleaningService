@@ -17,14 +17,16 @@ import {
 } from "@/schema/serviceTypeSchema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export function CreateServiceTypePopup() {
   const queryClient = useQueryClient();
 
-  const fetchServiceCategorysUrl =
-    "http://localhost:3000/api/service-categories";
+  const { toast } = useToast();
 
-  const createServiceTypeUrl = "http://localhost:3000/api/service-types";
+  const fetchServiceCategorysUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/service-categories`;
+
+  const createServiceTypeUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/service-types`;
 
   const [ServiceCategories, setServiceCategories] = useState<ServiceCategory[]>(
     []
@@ -40,6 +42,10 @@ export function CreateServiceTypePopup() {
       const data = await response.json();
       setServiceCategories(data);
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Fetching service categories failed!",
+      });
       console.error("Error fetching service categories:", error);
     }
   };
@@ -57,7 +63,15 @@ export function CreateServiceTypePopup() {
       }
       const result = await response.json();
       console.log(result);
+      toast({
+        variant: "default",
+        title: "Creating service type successfully!",
+      });
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Creating service type failed!",
+      });
       console.error("Error creating service type:", error);
     }
   };

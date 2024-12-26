@@ -8,6 +8,7 @@ import { UpdateServiceTypePopup } from "@/components/popup/UpdateServiceTypePopu
 import ServiceTypeRow from "./ServiceTypeRow";
 import { CreateServiceTypePopup } from "@/components/popup/CreateServiceTypePopup";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const columns = [
   { header: "", className: "w-[48px] hidden xl:table-cell" },
@@ -78,8 +79,9 @@ const ServiceTypesData: ServiceType[] = [
 const ServiceTypeTable = () => {
   const queryClient = useQueryClient();
 
-  const url = "http://localhost:3000/api/service-types";
-  const deleteServiceTypesUrl = "http://localhost:3000/api/service-detail";
+  const { toast } = useToast();
+
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/service-types`;
 
   const [selectedServiceTypeId, setSelectedServiceTypeId] = useState<
     string | null
@@ -110,14 +112,22 @@ const ServiceTypeTable = () => {
 
   const deleteServiceTypes = async (id: string) => {
     try {
-      const response = await fetch(`${deleteServiceTypesUrl}/${id}`, {
+      const response = await fetch(`${url}/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
+      toast({
+        variant: "default",
+        title: "Deleting service type successfully!",
+      });
       return await response.json();
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Deleting service type failed!",
+      });
       console.error("Error deleting data:", error);
       return [];
     }
