@@ -19,6 +19,7 @@ import {
 import { useEffect } from "react";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { ClipLoader } from "react-spinners";
+import { useToast } from "@/hooks/use-toast";
 
 export function UpdateServiceDetailPopup({
   id,
@@ -31,9 +32,11 @@ export function UpdateServiceDetailPopup({
 }) {
   const queryClient = useQueryClient();
 
-  const fetchServiceTypesUrl = "http://localhost:3000/api/service-types";
+  const { toast } = useToast();
+
+  const fetchServiceTypesUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/service-types`;
   const serviceDetailUrl = id
-    ? `http://localhost:3000/api/service-detail/${id}`
+    ? `${process.env.NEXT_PUBLIC_API_URL}/api/service-detail/${id}`
     : null;
 
   const form = useForm<updateServiceDetailData>({
@@ -64,6 +67,10 @@ export function UpdateServiceDetailPopup({
       }
       return await response.json();
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Fetching service type failed!",
+      });
       console.error("Error fetching service types:", error);
       return [];
     }
@@ -97,7 +104,15 @@ export function UpdateServiceDetailPopup({
       }
       const result = await response.json();
       console.log(result);
+      toast({
+        variant: "default",
+        title: "Updating service detail successfully!",
+      });
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Updating service detail failed!",
+      });
       console.error("Error updating service detail:", error);
     }
   };
