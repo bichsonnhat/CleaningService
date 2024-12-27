@@ -78,6 +78,7 @@ CREATE TABLE "ServiceDetail" (
     "id" UUID NOT NULL,
     "serviceTypeId" UUID NOT NULL,
     "title" TEXT NOT NULL,
+    "duration" INTEGER NOT NULL,
     "additionalPrice" DECIMAL(10,2) NOT NULL DEFAULT 0,
     "multiplyPrice" DECIMAL(10,2) NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -88,6 +89,7 @@ CREATE TABLE "ServiceDetail" (
 -- CreateTable
 CREATE TABLE "Booking" (
     "id" UUID NOT NULL,
+    "orderNumber" SERIAL,
     "customerId" TEXT NOT NULL,
     "helperId" TEXT,
     "serviceCategoryId" UUID NOT NULL,

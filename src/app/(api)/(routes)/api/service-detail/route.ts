@@ -69,6 +69,7 @@ export async function POST(request: Request) {
         title: data.title,
         additionalPrice: data.additionalPrice,
         multiplyPrice: data.multiplyPrice,
+        duration: data.duration,
       },
     });
 
