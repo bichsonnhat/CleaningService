@@ -11,13 +11,13 @@ const parseDecimalTime = (decimalTime: number) => {
 
 export const getBookingDuration = (serviceType: string): number => {
   switch (serviceType) {
-    case "1":
+    case "Standard":
       return 1;
-    case "2":
+    case "Deep Clean":
       return 2;
-    case "3":
+    case "Post-Party":
       return 3;
-    case "4":
+    case "Post-Construciton":
       return 4;
 
     case "1-3 hours":
