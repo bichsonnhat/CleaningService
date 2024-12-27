@@ -23,18 +23,14 @@ const isAdminRoute = createRouteMatcher([
   // "/api(.*)"
 ]);
 
-const isCustomerRoute = createRouteMatcher([
-  "/dashboard/order-history",
-]);
+const isCustomerRoute = createRouteMatcher(["/dashboard/order-history"]);
 
 const isCutomserAdminSharedRoute = createRouteMatcher([
   "/dashboard/feedback",
   "/dashboard/refund",
 ]);
 
-const isHelperRoute = createRouteMatcher([
-  "/dashboard/job-history",
-]);
+const isHelperRoute = createRouteMatcher(["/dashboard/job-history"]);
 
 const isHelperAdminSharedRoute = createRouteMatcher([
   "/dashboard/leave-request",

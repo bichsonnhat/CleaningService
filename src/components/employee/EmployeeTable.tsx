@@ -8,21 +8,31 @@ import ClipLoader from "react-spinners/ClipLoader";
 type Employee = {
   id: string;
   name: string;
+  gender: string;
   address: string;
   phone: string;
   email?: string;
   averageRating: string;
   completedJobs: number;
   totalJobs: number;
+  status: string;
 };
 
 const columns = [
-  { header: "ID", className: "w-[130px] hidden md:table-cell" },
-  { header: "NAME", className: "w-[170px] hidden md:table-cell" },
-  { header: "ADDRESS", className: "w-[300px] hidden md:table-cell" },
-  { header: "EVALUATE", className: "w-[182px] hidden md:table-cell " },
-  { header: "PHONE", className: "w-[130px] hidden md:table-cell" },
-  { header: "EMAIL", className: "w-[220px] hidden md:table-cell" },
+  { header: "ID", className: "w-[60px] flex-[2] hidden md:table-cell" },
+  { header: "NAME", className: "w-[200px] flex-[3]  hidden md:table-cell" },
+  {
+    header: "GENDER",
+    className: "w-[140px] flex-[3] hidden md:table-cell mr-2 text-center",
+  },
+  { header: "ADDRESS", className: "w-[240px] flex-[5] hidden md:table-cell" },
+  { header: "EVALUATE", className: "w-[182px] flex-[4] hidden md:table-cell " },
+  { header: "PHONE", className: "w-[130px] flex-[3] hidden md:table-cell" },
+  { header: "EMAIL", className: "w-[180px] flex-[3] hidden md:table-cell" },
+  {
+    header: "STATUS",
+    className: "w-[130px] flex-[3] hidden md:table-cell text-center",
+  },
 ];
 
 const EmployeeTable = () => {
@@ -54,14 +64,16 @@ const EmployeeTable = () => {
 
             return {
               id: helper.id,
-              name: helper.user.fullName || "Unknown",
-              address: helper.user.address || "Unknown",
-              phone: helper.user.phoneNumber || "Unknown",
-              email: helper.user.email || undefined,
+              name: helper.user.fullName || "-",
+              gender: helper.user.gender || "-",
+              address: helper.user.address || "-",
+              phone: helper.user.phoneNumber || "-",
+              email: helper.user.email || "-",
               averageRating: helper.averageRating || "0",
               completedJobs: helper.completedJobs || 0,
               totalJobs:
                 (helper.completedJobs || 0) + (helper.cancelledJobs || 0),
+              status: helper.user.status || "-",
             };
           });
 
@@ -125,7 +137,6 @@ const EmployeeTable = () => {
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
-  
 
   return (
     <>
@@ -155,7 +166,7 @@ const EmployeeTable = () => {
           </div>
         ) : (
           currentData.map((Employee: Employee, index: any) => (
-            <EmployeeRow key={Employee.id} {...Employee} />
+            <EmployeeRow key={Employee.id} index={index + 1} {...Employee} />
           ))
         )}
       </div>
