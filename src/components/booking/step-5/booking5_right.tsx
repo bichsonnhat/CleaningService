@@ -29,6 +29,7 @@ const Booking5Right = () => {
     return `${startDate}-${startMonth}-${startYear}`;
   };
 
+  //console.log("Info: ", bookingData.bookingInfomation);
   const handlePayment = async () => {
     try {
       setLoading(true);
@@ -61,15 +62,14 @@ const Booking5Right = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
       );
       const userInfo = await userResponse.json();
-
-      if (typeof bookingData.bookingInfomation[1].value === "number") {
-        bookingData.bookingInfomation[1].value =
-          bookingData.bookingInfomation[1].value.toString();
-      }
+      const cleanType = bookingData.bookingInfomation.find(
+        (item: any) =>
+          item.name === "Clean type" || item.name === "For how long?"
+      );
       const scheduleDates = createScheduleDates(
         bookingData.bookingDate,
         bookingData.bookingTiming,
-        bookingData.bookingInfomation[1].value
+        cleanType.value
       );
 
       const bookingPayload = {
@@ -81,6 +81,7 @@ const Booking5Right = () => {
         bookingNote: bookingData.bookingNote,
         totalPrice: totalPrice,
       };
+      //console.log("Booking Payload: ", bookingPayload);
       const bookingResponse = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/bookings`,
         {
@@ -125,17 +126,30 @@ const Booking5Right = () => {
       <div className="my-4 border-gray-300 rounded-lg">
         <div className="p-6 bg-white rounded-lg">
           <div className="flex justify-between ">
-            <div className="text-gray-600 font-Averta-Regular">Studio</div>
+            <div className="text-gray-600 font-Averta-Regular">
+              {bookingData.bookingInfomation?.[0].value}
+            </div>
             <Separator
               orientation="vertical"
               className="border-gray-300 mx-4 h-9"
             />
-            <div className="text-gray-600 font-Averta-Regular">3 Bathrooms</div>
-            <Separator
-              orientation="vertical"
-              className="border-gray-300 mx-4 h-9"
-            />
-            <div className="text-gray-600 font-Averta-Regular">Standard</div>
+            <div className="text-gray-600 font-Averta-Regular">
+              {/* {bookingData.serviceCategory?.name === "Home Cleaning"
+                ? bookingData.bookingInfomation?.[1].name
+                : bookingData.bookingInfomation?.[].name} */}
+              {bookingData.bookingInfomation?.[1].value}
+            </div>
+            {bookingData.serviceCategory?.name === "Home Cleaning" && (
+              <>
+                <Separator
+                  orientation="vertical"
+                  className="border-gray-300 mx-4 h-9"
+                />
+                <div className="text-gray-600 font-Averta-Regular">
+                  {bookingData.bookingInfomation?.[2].value}
+                </div>
+              </>
+            )}
           </div>
           <div className="mb-4 border-t pt-4 flex">
             <p className="text-gray-600 font-Averta-Semibold">
