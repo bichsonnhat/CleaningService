@@ -88,8 +88,8 @@ async function main() {
 
     for (let serviceDetail of serviceDetailData) {
         await prisma.$executeRaw`INSERT INTO "ServiceDetail" ("id", "serviceTypeId", "title", 
-            "additionalPrice", "multiplyPrice", "createdAt") 
-            VALUES (${serviceDetail.id}::uuid, ${serviceDetail.serviceTypeId}::uuid, ${serviceDetail.title}, ${serviceDetail.additionalPrice}, ${serviceDetail.multiplyPrice}, ${serviceDetail.createdAt})`;
+            "duration", "additionalPrice", "multiplyPrice", "createdAt") 
+            VALUES (${serviceDetail.id}::uuid, ${serviceDetail.serviceTypeId}::uuid, ${serviceDetail.title}, ${serviceDetail.duration}, ${serviceDetail.additionalPrice}, ${serviceDetail.multiplyPrice}, ${serviceDetail.createdAt})`;
     }
 
     for (let bookingDetail of bookingDetailData) {

@@ -170,6 +170,7 @@ model ServiceDetail {
   id                String    @id @default(uuid()) @db.Uuid
   serviceTypeId     String    @db.Uuid
   title             String
+  duration          Int
   additionalPrice   Decimal   @default(0) @db.Decimal(10, 2)
   multiplyPrice     Decimal   @default(0) @db.Decimal(10, 2)
   createdAt         DateTime  @default(now()) @db.Timestamp()
@@ -181,6 +182,7 @@ model ServiceDetail {
 
 model Booking {
   id                 String        @id @default(uuid()) @db.Uuid
+  orderNumber        Int?           @default(autoincrement())
   customerId         String        
   helperId          String?       
   serviceCategoryId     String        @db.Uuid

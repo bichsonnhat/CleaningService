@@ -6,6 +6,7 @@ const serviceDetailSchema = z
     additionalPrice: z.number().nonnegative(),
     multiplyPrice: z.number().min(1),
     title: z.string(),
+    duration: z.number().nonnegative(),
   })
   .strict();
 
