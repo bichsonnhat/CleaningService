@@ -35,7 +35,6 @@ export default async function createPaymentLink(
     };
 
     const paymentLink = await payOS.createPaymentLink(body);
-    console.log("Payment link 1: ", paymentLink);
 
     return paymentLink.checkoutUrl;
   } catch (error) {

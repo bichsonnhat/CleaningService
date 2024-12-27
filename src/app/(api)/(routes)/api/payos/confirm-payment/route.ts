@@ -17,11 +17,11 @@ export async function POST(req: Request) {
 
     const updatedBooking = await prisma.booking.update({
       where: {
-        id: booking?.id, // Ensure orderNumber is unique in the schema
+        id: booking?.id,
       },
       data: {
-        status: "confirmed", // New status value to update
-        paymentStatus: "paid", // New status value to update
+        status: "confirmed",
+        paymentStatus: "paid",
       },
     });
 
