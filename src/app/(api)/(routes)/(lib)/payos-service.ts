@@ -21,10 +21,8 @@ export default async function createPaymentLink(
       throw new Error("Booking not found");
     }
 
-    const orderCode = Date.now(); //Sample
-
     const body: CheckoutRequestType = {
-      orderCode: orderCode,
+      orderCode: booking.orderNumber!,
       amount: Number(booking.totalPrice),
       description: `khang dat hang`,
       cancelUrl: "/payment-cancelled",

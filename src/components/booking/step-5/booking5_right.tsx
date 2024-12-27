@@ -105,30 +105,34 @@ const Booking5Right = () => {
         totalPrice: totalPrice,
       };
       //console.log("Booking Payload: ", bookingPayload);
-      const bookingResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/bookings`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(bookingPayload),
+      if (paymentMethod === "Stripe") {
+        const bookingResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/bookings`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bookingPayload),
+          }
+        );
+
+        if (!bookingResponse.ok) {
+          throw new Error("Failed to create booking");
         }
-      );
 
-      if (!bookingResponse.ok) {
-        throw new Error("Failed to create booking");
+        // Gọi Stripe payment
+        const stripeResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/stripe?unit_amount=${
+            totalPrice * 100
+          }`
+        );
+
+        const data = await stripeResponse.json();
+        router.push(data.url);
+      } else {
+        await paymentMutation.mutateAsync(bookingPayload);
       }
-
-      // Gọi Stripe payment
-      const stripeResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/stripe?unit_amount=${
-          totalPrice * 100
-        }`
-      );
-
-      const data = await stripeResponse.json();
-      router.push(data.url);
     } catch (error) {
       console.log(error);
     } finally {
