@@ -85,7 +85,7 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
       <div className="w-full md:w-[210px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="md:hidden font-bold">HELPER: </span>
-          {booking.helper.user.fullName}
+          {booking.helper?.user.fullName}
         </div>
       </div>
 
