@@ -230,7 +230,7 @@ const Sidebar: React.FC = () => {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="fixed top-4 right-4 z-50 p-2 bg-white rounded-lg shadow-lg md:hidden"
+        className="fixed top-4 right-4 z-50 p-2 bg-white rounded-lg shadow-lg xl:hidden"
       >
         {isMobileMenuOpen ? (
           <X className="w-6 h-6 text-gray-600" />
@@ -242,19 +242,19 @@ const Sidebar: React.FC = () => {
       {/* Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 xl:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:static top-0 left-0 z-40 h-screen w-[85%] md:w-[16%] 
+        className={`fixed xl:static top-0 left-0 z-40 h-screen w-[85%] xl:w-[16%] 
           transform transition-transform duration-300 ease-in-out bg-white
           ${
             isMobileMenuOpen
               ? "translate-x-0"
-              : "-translate-x-full md:translate-x-0"
+              : "-translate-x-full xl:translate-x-0"
           }`}
       >
         <nav

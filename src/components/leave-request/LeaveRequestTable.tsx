@@ -22,6 +22,25 @@ const LeaveRequestTable = () => {
 
   const queryClient = useQueryClient();
 
+  const columns = [
+    {
+      header: "HELPER",
+      className: "flex-[2] pl-[24px] hidden md:table-cell",
+    }, // Ít thông tin, không cần rộng
+    {
+      header: "STATUS",
+      className: " flex-[2] pl-[35px] hidden md:table-cell",
+    }, // Thông tin thường dài, cần rộng hơn
+    {
+      header: "REQUEST REASON",
+      className: " flex-[5] pl-[10px] hidden md:table-cell ",
+    }, // Số liệu ngắn, đủ hẹp
+    {
+      header: "DATE RANGE",
+      className: " flex-[2] hidden md:table-cell text-center",
+    },
+  ];
+
   const fetchData = async (): Promise<LeaveRequest[]> => {
     try {
       let enpoint;
@@ -117,7 +136,17 @@ const LeaveRequestTable = () => {
         </div>
       </div>
       <div className="flex overflow-hidden flex-col justify-center mt-3.5 w-full max-md:max-w-full">
-        {!data? (
+        <div className="lg:flex hidden w-full bg-[#f5f5f5] h-[48px] items-center p-2.5 ">
+          {columns.map((col, index) => (
+            <div
+              key={index}
+              className={`${col.className} text-left text-[#202224] text-sm font-Averta-Bold`}
+            >
+              {col.header}
+            </div>
+          ))}
+        </div>
+        {!data ? (
           <div className="flex justify-center items-center w-full h-[500px]">
             <ClipLoader color="#2A88F5" loading={true} size={30} />
           </div>

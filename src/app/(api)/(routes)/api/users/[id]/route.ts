@@ -43,7 +43,7 @@ export async function PUT(
         where: { id: id },
     });
 
-    const address = `${data.houseNumber} - ${data.streetName} - ${data.ward} - ${data.city} - ${data.postalCode}`;
+    const address = `${data.houseNumber}, ${data.streetName}, ${data.ward}, ${data.city}, ${data.postalCode}`;
 
     if (user === null) {
         return NextResponse.json(

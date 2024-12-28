@@ -46,9 +46,9 @@ const PersonalPage = () => {
   return (
     <div>
       {role === "helper"
-        ? <EmployeeInfo helperId={userId} />
+        ? <EmployeeInfo role={role} helperId={userId} />
         : role === "customer"
-          ? <CustomerInfo customerId={userId} />
+          ? <CustomerInfo role={role} customerId={userId} />
           : <div>Personal Page</div>}
     </div>
   )

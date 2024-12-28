@@ -12,7 +12,7 @@ const customerInfoSchema = z.object({
     gender: z.preprocess(
           (val) => (val === "" || val === undefined ? undefined : val),
           z.enum(["Female", "Male", "Other"], {
-            invalid_type_error: "Invalid gender value. Expected 'Female', 'Male', or 'Other'.",
+            invalid_type_error: "Gender is required.",
             required_error: "Gender is required",
           })
         ),

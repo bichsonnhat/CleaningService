@@ -19,9 +19,10 @@ const genderOptions = ["Female", "Male", "Other"]
 
 interface HelperInfoProps {
     helperId: string,
+    role: string,
 }
 
-const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
+const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId, role }) => {
     const router = useRouter();
     const queryClient = useQueryClient();
     const { toast } = useToast();
@@ -86,7 +87,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
         if (helperData) {
             // console.log("helperDta:", helperData);
             // console.log("dateOfBirth1:", helperData.servicesOffered);
-            const addressParts = helperData.user.address.split(' - ');
+            const addressParts = helperData.user.address.split(',');
             reset({
                 dateOfBirth: helperData.user.dateOfBirth,
                 phoneNumber: helperData.user.phoneNumber,
@@ -94,11 +95,11 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
                 salaryExpectation: helperData.salaryExpectation,
                 servicesOffered: helperData.servicesOffered,
                 fullName: helperData.user.fullName,
-                houseNumber: addressParts[0],
-                streetName: addressParts[1],
-                ward: addressParts[2],
-                city: addressParts[3],
-                postalCode: addressParts[4],
+                houseNumber: addressParts[0]?.trim(),
+                streetName: addressParts[1]?.trim(),
+                ward: addressParts[2]?.trim(),
+                city: addressParts[3]?.trim(),
+                postalCode: addressParts[4]?.trim(),
                 gender: helperData.user.gender ?? ""
             });
 
@@ -433,7 +434,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
                             <button
                                 type="button"
                                 onClick={() => router.back()}
-                                className='h-full p-6 hover:bg-gray-100 border-r-[1px] '>
+                                className={`h-full p-6 hover:bg-gray-100 border-r-[1px] ${role !== 'admin' ? 'invisible' : ''} `}>
                                 <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
                             </button>
                             <p className="font-Averta-Bold text-4xl text-center my-auto ml-[10px]">User Info</p>
@@ -664,7 +665,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
                                 {idCard ? (
                                     idCard.type.startsWith('image/') ? (
                                         <div className="text-center">
-                                            <div className="max-w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
+                                            <div className="md:w-[26.5vw] w-fit h-fit max-h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
                                                 <Image
                                                     src={idCardUrl || ''}
                                                     alt="identity"
@@ -724,7 +725,7 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId }) => {
                                 {resume ? (
                                     resume.type.startsWith('image/') ? (
                                         <div className="text-center">
-                                            <div className="lg:w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
+                                            <div className="md:w-[26.5vw] h-fit max-h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
                                                 <Image
                                                     src={resumeUrl || ''}
                                                     alt="resume"

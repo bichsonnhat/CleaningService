@@ -18,9 +18,10 @@ const genderOptions = ["Female", "Male", "Other"]
 
 interface CustomerInfoProps {
     customerId: string,
+    role: string,
 }
 
-const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId }) => {
+const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId, role }) => {
 
     const { toast } = useToast();
     const router = useRouter();
@@ -66,14 +67,14 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId }) => {
         }
         if (customerData) {
             console.log("Initial gender:", customerData.gender);
-            const addressParts = customerData.address.split(' - ');
+            const addressParts = customerData.address.split(',');
             reset({
                 ...customerData,
-                houseNumber: addressParts[0],
-                streetName: addressParts[1],
-                ward: addressParts[2],
-                city: addressParts[3],
-                postalCode: addressParts[4],
+                houseNumber: addressParts[0]?.trim(),
+                streetName: addressParts[1]?.trim(),
+                ward: addressParts[2]?.trim(),
+                city: addressParts[3]?.trim(),
+                postalCode: addressParts[4]?.trim(),
                 gender: customerData.gender ?? ""
             });
 
@@ -309,7 +310,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId }) => {
                             <button
                                 type="button"
                                 onClick={() => router.back()}
-                                className='h-full p-6 hover:bg-gray-100 border-r-[1px] '>
+                                className={`h-full p-6 hover:bg-gray-100 border-r-[1px] ${role !== 'admin' ? 'invisible' : ''} `}>
                                 <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
                             </button>
                             <p className="font-Averta-Bold text-4xl text-center my-auto ml-[10px]">User Info</p>
@@ -512,7 +513,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId }) => {
                                 {idCard ? (
                                     idCard.type.startsWith('image/') ? (
                                         <div className="text-center">
-                                            <div className="max-w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
+                                            <div className="md:w-[26.5vw] w-fit h-fit max-h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
                                                 <Image
                                                     src={idCardUrl || ''}
                                                     alt="identity"

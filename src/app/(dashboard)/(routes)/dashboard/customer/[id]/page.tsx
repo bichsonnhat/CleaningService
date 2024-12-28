@@ -3,7 +3,7 @@ import CustomerInfo from '@/components/customer/CustomerInfo';
 
 const CustomerDetail = ({ params }: { params: { id: string } }) => {
   return (
-    <CustomerInfo customerId={params.id}/>
+    <CustomerInfo role="admin" customerId={params.id}/>
   )
 }
 

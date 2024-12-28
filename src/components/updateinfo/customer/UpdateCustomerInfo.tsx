@@ -73,7 +73,7 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
       console.log("Initial gender:", customerData.gender);
       let addressParts;
       if (customerData.address) {
-        addressParts = customerData.address.split(' - ');
+        addressParts = customerData.address.split(',');
       }
       else {
         addressParts = "";
@@ -81,11 +81,11 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
 
       reset({
         ...customerData,
-        houseNumber: addressParts[0],
-        streetName: addressParts[1],
-        ward: addressParts[2],
-        city: addressParts[3],
-        postalCode: addressParts[4],
+        houseNumber: addressParts[0]?.trim(),
+        streetName: addressParts[1]?.trim(),
+        ward: addressParts[2]?.trim(),
+        city: addressParts[3]?.trim(),
+        postalCode: addressParts[4]?.trim(),
         gender: customerData.gender ?? ""
       });
 
@@ -567,7 +567,7 @@ const UpdateCustomerInfo: React.FC<UpdateCustomerInfoProps> = ({ userId }) => {
                 {idCard ? (
                   idCard.type.startsWith('image/') ? (
                     <div className="text-center">
-                      <div className="max-w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
+                      <div className="md:w-[26.5vw] h-fit max-h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden flex items-center justify-center">
                         <Image
                           src={idCardUrl || ''}
                           alt="identity"

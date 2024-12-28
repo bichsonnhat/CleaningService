@@ -91,18 +91,18 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
     if (helperData) {
       let addressParts;
       if (addressParts) {
-        addressParts = helperData.address.split(' - ');
+        addressParts = helperData.address.split(',');
       }
       else {
         addressParts = "";
       }
       reset({
         ...helperData,
-        houseNumber: addressParts[0],
-        streetName: addressParts[1],
-        ward: addressParts[2],
-        city: addressParts[3],
-        postalCode: addressParts[4],
+        houseNumber: addressParts[0]?.trim(),
+        streetName: addressParts[1]?.trim(),
+        ward: addressParts[2]?.trim(),
+        city: addressParts[3]?.trim(),
+        postalCode: addressParts[4]?.trim(),
         gender: helperData.gender ?? ""
       });
 
@@ -733,7 +733,7 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
                 {idCardUrl ? (
                   <>
                     <div className="text-center">
-                      <div className="lg:w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden bg-white flex items-center justify-center">
+                      <div className="md:w-[26.5vw] h-fit max-h-[250px] mx-auto border-2 border-gray-500 rounded-md overflow-hidden bg-white flex items-center justify-center">
                         <Image
                           src={idCardUrl}
                           alt="identity"
@@ -812,7 +812,7 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
                 {resumeUrl ? (
                   <>
                     <div className='text-center'>
-                      <div className="max-w-[26.5vw] h-[250px] mx-auto border-2 border-gray-500 bg-white rounded-md overflow-hidden flex items-center justify-center">
+                      <div className="md:w-[26.5vw] h-fit max-h-[250px] mx-auto border-2 border-gray-500 bg-white rounded-md overflow-hidden flex items-center justify-center">
                         <Image
                           src={resumeUrl}
                           alt="resume"
