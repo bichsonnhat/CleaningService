@@ -241,43 +241,43 @@ const Booking5Right = () => {
         </div>
       </div>
 
-      <div className="flex w-full bg-white  border-gray-300 rounded-lg cursor-pointer">
+      <div className="mb-[40px] flex w-full bg-white  border-gray-300 rounded-lg cursor-pointer">
         <div
           onClick={() => setPaymentMethod("Stripe")}
           className={cn(
-            "transition-colors  rounded-l-lg flex py-[10px] h-full flex-1 items-center gap-1 border-r-[1px] hover:border-r-2 border-2 justify-center font-Averta-Semibold hover:border-[#1A78F2]",
+            "transition-colors rounded-l-lg flex py-[10px] h-full flex-1 items-center gap-1 border-r-[1px] hover:border-r-2 border-2 justify-center font-Averta-Semibold hover:border-[#1A78F2]",
             paymentMethod === "Stripe"
               ? "border-[#1A78F2] border-r-2"
               : "border-gray-300 border-r-0"
           )}
         >
           <Image
-            src="/images/Payment/id1fBQ5zQQ_1735322002277.jpeg"
+            src="/images/Payment/visa-seeklogo.png"
             width={30}
             height={30}
             alt="Picture of the author"
-            className=" rounded-full"
+            className=" h-full "
           />
-          <div>Stripe</div>
+          <div>Visa</div>
         </div>
 
         <div
           onClick={() => setPaymentMethod("Payos")}
           className={cn(
-            `transition-colors rounded-r-lg flex flex-1 py-[10px] items-center gap-1 border-2 justify-center border-l-[1px] hover:border-l-2 font-Averta-Semibold hover:border-[#1A78F2]`,
+            `transition-colors rounded-r-lg flex flex-1 h-full py-[10px] items-center gap-1 border-2 justify-center border-l-[1px] hover:border-l-2 font-Averta-Semibold hover:border-[#1A78F2]`,
             paymentMethod === "Payos"
               ? "border-[#1A78F2] border-l-2"
               : "border-gray-300 border-l-0"
           )}
         >
           <Image
-            src="/images/Payment/payos.svg"
-            width={30}
-            height={30}
+            src="/images/Payment/payos.png"
+            width={18.75}
+            height={18.75}
             alt="Picture of the author"
-            className=" rounded-full"
+            className=" rounded-full aspect-square"
           />
-          <div>Payos</div>
+          <div>Ngân hàng</div>
         </div>
       </div>
 
