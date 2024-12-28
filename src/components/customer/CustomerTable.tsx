@@ -8,17 +8,39 @@ import ClipLoader from "react-spinners/ClipLoader";
 type Customer = {
   id: string;
   name: string;
+  gender: string;
   address: string;
   phone: string;
   email?: string;
+  status: string;
 };
 
+export enum UserStatus {
+  Active = "active",
+  In_Active = "in_active",
+  Blocked = "blocked",
+}
+
+export enum Gender {
+  Male = "Male",
+  Female = "Female",
+  Other = "Other",
+}
+
 const columns = [
-  { header: "ID", className: "w-[130px] hidden md:table-cell" },
-  { header: "NAME", className: "w-[230px] hidden md:table-cell" },
-  { header: "ADDRESS", className: "w-[370px] hidden md:table-cell" },
-  { header: "PHONE", className: "w-[140px] hidden md:table-cell" },
-  { header: "EMAIL", className: "w-[250px] hidden md:table-cell" },
+  { header: "ID", className: "w-[80px] flex-[2] hidden md:table-cell" },
+  { header: "NAME", className: "w-[230px] flex-[3] hidden md:table-cell" },
+  {
+    header: "GENDER",
+    className: "w-[160px] flex-[3] hidden md:table-cell mr-2 text-center",
+  },
+  { header: "ADDRESS", className: "w-[270px] flex-[5] hidden md:table-cell" },
+  { header: "PHONE", className: "w-[170px] flex-[4] hidden md:table-cell" },
+  { header: "EMAIL", className: "w-[220px] flex-[4] hidden md:table-cell" },
+  {
+    header: "STATUS",
+    className: "w-[130px] flex-[3] hidden md:table-cell text-center",
+  },
 ];
 
 const CustomerTable = () => {
@@ -46,10 +68,12 @@ const CustomerTable = () => {
             .filter((user: any) => !user.helper)
             .map((user: any) => ({
               id: user.id,
-              name: user.fullName || "Unknown",
-              address: user.address || "Unknown",
-              phone: user.phoneNumber || "Unknown",
-              email: user.email || undefined,
+              name: user.fullName || "-",
+              gender: user.gender || "-",
+              address: user.address || "-",
+              phone: user.phoneNumber || "-",
+              email: user.email || "-",
+              status: user.status || "-",
             }));
 
           setCustomersData(customers);
@@ -119,8 +143,8 @@ const CustomerTable = () => {
             <ClipLoader color="#2A88F5" loading={true} size={30} />
           </div>
         ) : (
-          currentData.map((customer: Customer) => (
-            <CustomerRow key={customer.id} {...customer} />
+          currentData.map((customer: Customer, index) => (
+            <CustomerRow key={customer.id} index={index + 1} {...customer} />
           ))
         )}
       </div>
