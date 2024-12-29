@@ -48,7 +48,7 @@ const JobHistoryTable = () => {
     setBookings(data);
     setRole(userInfo.role);
     setUserId(userInfo.userId);
-    console.log("Role: ", userInfo.role);
+    console.log("Role: ", userInfo);
     console.log("Job history response: ", data);
   };
   // const fetchUserInfo = async () => {

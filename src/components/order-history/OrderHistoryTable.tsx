@@ -62,7 +62,9 @@ const OrderHistoryTable = () => {
         const term = searchTerm.toLowerCase();
 
         if (searchBy === "Helper")
-          return order.helper.user.fullName.toLowerCase().includes(term);
+          return (
+            order.helper?.user?.fullName?.toLowerCase().includes(term) ?? true
+          );
         if (searchBy === "Price")
           return order.totalPrice.toString().includes(term);
         if (searchBy === "Status")
@@ -71,6 +73,7 @@ const OrderHistoryTable = () => {
         return order.customer.fullName.toLowerCase().includes(term);
       })
     : [];
+  //console.log("filteredData", filteredData);
 
   // Pagination
   const itemsPerPage = 10;

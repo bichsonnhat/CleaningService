@@ -3,25 +3,64 @@ import { UserButton } from "@clerk/nextjs";
 import { link } from "fs";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const links = ["Residential", "Office", "Commercial", "FAQ's"];
+
+  const [userId, setUserId] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const links = [
+    {
+      name: "About Us",
+      url: "/about-us",
+    },
+    {
+      name: "Career",
+      url: "/career",
+    },
+    {
+      name: "Dashboard",
+      url: "/dashboard",
+    },
+    {
+      name: "Booking",
+      url: "/select",
+      canAccess: "customer",
+    },
+  ];
+
+  const fetchUser = async () => {
+    const userResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+    );
+    const userInfo = await userResponse.json();
+    console.log("User: ", userInfo);
+    setUserId(userInfo.userId);
+    setRole(userInfo.role);
+  };
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  if (!userId || !role) {
+    return <></>;
+  }
   return (
     <header className="flex flex-wrap gap-10 justify-between items-center py-6 pr-5 pl-12 w-full bg-white min-h-[100px] max-md:pl-5 max-md:max-w-full">
-      <Image
-        src="/images/Header/Logo.svg"
-        alt="HeroIllustration"
-        width={0}
-        height={0}
-        sizes="100vw"
-        style={{ width: "126px", height: "auto" }}
-      />
+      <a href="/">
+        <Image
+          src="/images/Header/Logo.svg"
+          alt="HeroIllustration"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "126px", height: "auto" }}
+        />
+      </a>
       <div className="md:hidden flex items-center gap-3.5">
         <UserButton />
         <button
@@ -34,7 +73,7 @@ const Header: React.FC = () => {
       </div>
       {isMenuOpen && (
         <nav className="md:hidden flex flex-col w-full mt-4 bg-white rounded-lg shadow-lg p-4 space-y-4">
-          {links.map((link) => (
+          {/* {links.map((link) => (
             <a
               href={`#${link.toLowerCase()}`}
               key={link}
@@ -43,11 +82,26 @@ const Header: React.FC = () => {
             >
               {link}
             </a>
-          ))}
+          ))} */}
+          {links.map((link) => {
+            if (link.canAccess && link.canAccess !== role) {
+              return null;
+            }
+            return (
+              <a
+                href={`${link.url}`}
+                key={link.url}
+                className="text-gray-700 font-Averta-Semibold hover:text-blue-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.name}
+              </a>
+            );
+          })}
         </nav>
       )}
       <nav className="hidden md:flex md:flex-wrap gap-8 items-center self-stretch my-auto min-w-[240px] max-md:max-w-full">
-        {links.map((link) => (
+        {/* {links.map((link) => (
           <a
             href={`#${link.toLowerCase()}`}
             key={link}
@@ -55,7 +109,22 @@ const Header: React.FC = () => {
           >
             {link}
           </a>
-        ))}
+        ))} */}
+        {links.map((link) => {
+          if (link.canAccess && link.canAccess !== role) {
+            return null;
+          }
+          return (
+            <a
+              href={`${link.url}`}
+              key={link.url}
+              className="text-gray-700 font-Averta-Semibold hover:text-blue-600 transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {link.name}
+            </a>
+          );
+        })}
         <div className="hidden md:flex md:gap-3.5 md:items-start mr-2">
           <UserButton />
         </div>
