@@ -16,8 +16,8 @@ const LeaveRequestRow: React.FC<LeaveRequestRowProps> = ({
       ? "bg-[#ccf0eb] text-[#00b69b]"
       : status.toLowerCase() === "cancelled" ||
         status.toLowerCase() === "rejected"
-        ? "bg-[#fcd7d4] text-[#ef3826]"
-        : "bg-[#fce7af] text-[#FF9500]";
+      ? "bg-[#fcd7d4] text-[#ef3826]"
+      : "bg-[#fce7af] text-[#FF9500]";
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -69,7 +69,9 @@ const LeaveRequestRow: React.FC<LeaveRequestRowProps> = ({
       >
         <div className="flex overflow-hidden flex-1 lg:ml-3 items-center size-full">
           <div className="flex flex-row self-stretch px-3 my-auto w-[93px] text-[14px]">
-            <span className="lg:hidden font-Averta-Bold my-auto mr-2">STATUS: </span>
+            <span className="lg:hidden font-Averta-Bold my-auto mr-2">
+              STATUS:{" "}
+            </span>
             <div
               className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-h-[27px] ${statusColor} rounded-md`}
             >
@@ -83,7 +85,7 @@ const LeaveRequestRow: React.FC<LeaveRequestRowProps> = ({
       <div
         className={`flex flex-col lg:flex-[5] grow shrink justify-center lg:pl-2.5 text-sm  text-neutral-800 lg:w-[500px] w-full`}
       >
-        <div className="overflow-hidden self-stretch px-3 lg:py-4 py-2 w-full lg:min-w-[200px] font-Averta-Regular lg:font-Averta-Semibold text-[14px]">
+        <div className="overflow-hidden self-stretch px-3 xl:pl-5 lg:py-4 py-2 w-full lg:min-w-[200px] font-Averta-Regular lg:font-Averta-Semibold text-[14px]">
           <span className="lg:hidden font-Averta-Bold">REQUEST REASON: </span>
           {requestReason}
         </div>
@@ -91,8 +93,10 @@ const LeaveRequestRow: React.FC<LeaveRequestRowProps> = ({
       <div
         className={`flex flex-col lg:flex-[2] grow shrink justify-center lg:pl-2.5 text-sm text-neutral-800 w-full lg:w-[145px]`}
       >
-        <div className="overflow-hidden self-stretch lg:px-3 px-3 lg:min-w-[152px] lg:py-4 py-2 w-full  font-Averta-Regular xl:font-Averta-Semibold text-[#1D2C4C80] lg:text-center text-[16px]">
-          <span className="lg:hidden font-Averta-Bold text-neutral-800">TIME RANGE: </span>
+        <div className="overflow-hidden self-stretch px-3 xl:px-1 lg:min-w-[152px] lg:py-4 py-2 w-full  font-Averta-Regular xl:font-Averta-Semibold text-[#1D2C4C80] text-[16px]">
+          <span className="lg:hidden font-Averta-Bold text-neutral-800">
+            TIME RANGE:{" "}
+          </span>
           {checkDate(startDatetime, endDatetime)}
         </div>
       </div>

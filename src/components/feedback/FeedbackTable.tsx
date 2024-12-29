@@ -105,7 +105,7 @@ export default function FeedbackTable() {
     }, // Số liệu ngắn, đủ hẹp
     {
       header: "DATE",
-      className: "w-[120px] flex-[3] hidden md:table-cell text-center",
+      className: "w-[120px] flex-[3] hidden md:table-cell",
     },
   ];
 
@@ -313,6 +313,7 @@ export default function FeedbackTable() {
                 <FeedbackRow
                   key={feedback.id}
                   feedback={feedback}
+                  //onRowClick={handleRowClick}
                   onCheckboxToggle={handleCheckboxToggle}
                 />
               ))

@@ -8,10 +8,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { CreateLeaveRequestPopup } from "../popup/CreateLeaveRequestPopup";
 import { userStore } from "@/utils/store/role.store";
 
-
-
 const LeaveRequestTable = () => {
-
   const role = userStore((state) => state.role);
   const userId = userStore((state) => state.id);
 
@@ -37,7 +34,7 @@ const LeaveRequestTable = () => {
     }, // Số liệu ngắn, đủ hẹp
     {
       header: "DATE RANGE",
-      className: " flex-[2] hidden md:table-cell text-center",
+      className: " flex-[2] hidden md:table-cell ",
     },
   ];
 
@@ -46,7 +43,7 @@ const LeaveRequestTable = () => {
       let enpoint;
       console.log("Can create: " + role);
       console.log("Id: " + userId);
-      if (role === 'helper') {
+      if (role === "helper") {
         enpoint = `${process.env.NEXT_PUBLIC_API_URL}/api/helper_availability?helperId=${userId}`;
       } else {
         enpoint = `${process.env.NEXT_PUBLIC_API_URL}/api/helper_availability`;
@@ -132,7 +129,9 @@ const LeaveRequestTable = () => {
           onFilterChange={setFilter}
         />
         <div className="flex flex-row gap-2">
-          {role === 'helper' && <CreateLeaveRequestPopup></CreateLeaveRequestPopup>}
+          {role === "helper" && (
+            <CreateLeaveRequestPopup></CreateLeaveRequestPopup>
+          )}
         </div>
       </div>
       <div className="flex overflow-hidden flex-col justify-center mt-3.5 w-full max-md:max-w-full">
@@ -152,10 +151,7 @@ const LeaveRequestTable = () => {
           </div>
         ) : (
           currentData.map((request: LeaveRequest, index: any) => (
-            <LeaveRequestRow
-              key={request.id}
-              {...request}
-            />
+            <LeaveRequestRow key={request.id} {...request} />
           ))
         )}
       </div>
