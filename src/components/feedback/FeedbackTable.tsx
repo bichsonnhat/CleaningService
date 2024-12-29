@@ -236,7 +236,7 @@ export default function FeedbackTable() {
               className="flex flex-row gap-2 items-center justify-center px-4 h-[38px] bg-[#1b78f2] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white"
             >
               <Image
-                src="/images/Dashboard/Feedback/Trash.svg"
+                src="/images/icons/outline_plus.svg"
                 alt=""
                 width={18}
                 height={18}
