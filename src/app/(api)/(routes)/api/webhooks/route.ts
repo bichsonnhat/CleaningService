@@ -5,7 +5,6 @@ import { useToast } from "@/hooks/use-toast"
 
 
 export async function POST(req: Request) {
-  const { toast } = useToast()
   const SIGNING_SECRET = process.env.SIGNING_SECRET
 
   if (!SIGNING_SECRET) {
@@ -77,20 +76,16 @@ export async function POST(req: Request) {
     // });
   }
 
-  if (eventType === "user.deleted"){
+  // In your webhook handler
+  if (eventType === "user.deleted") {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${id}`, {
         method: 'DELETE',
       });
-      toast({ title: "Delete account successfully!" });
-    }
-    catch (error) {
-      console.error('Error deleting user:', error)
-      toast({
-        variant: "destructive",
-        title: "Failed to delete some feedback",
-      });
-      return new Response(`Error: Failed to delete user, ${error}`, {status: 500,})
+      if (!response.ok) throw new Error('Failed to delete user');
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      return new Response(`Error: Failed to delete user, ${error}`, { status: 500 });
     }
   }
 
