@@ -27,26 +27,27 @@ const DetailServiceRow: React.FC<DetailServiceRowProps> = ({
       )}
       onClick={() => onRowClick(id)}
     >
-      <div onClick={(e) => e.stopPropagation()}>
-        <div className="flex overflow-hidden items-center pl-px w-full min-h-[48px]">
-          {isLoading ? (
-            <Skeleton className="h-4 w-full"></Skeleton>
-          ) : (
-            <Checkbox
-              color="blue"
-              checked={isChecked}
-              onCheckedChange={(checked) => {
-                setIsChecked(checked === true);
-                if (onCheckboxToggle) {
-                  onCheckboxToggle(id, checked === true);
-                }
-              }}
-            />
-          )}
-        </div>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="flex xl:flex-[0.1] overflow-hidden items-center pl-px w-full min-h-[48px]"
+      >
+        {isLoading ? (
+          <Skeleton className="h-4 w-full"></Skeleton>
+        ) : (
+          <Checkbox
+            color="blue"
+            checked={isChecked}
+            onCheckedChange={(checked) => {
+              setIsChecked(checked === true);
+              if (onCheckboxToggle) {
+                onCheckboxToggle(id, checked === true);
+              }
+            }}
+          />
+        )}
       </div>
 
-      <div className="w-full xl:w-[210px] flex items-center justify-start xl:py-6 mb-2 xl:mb-0">
+      <div className="w-full xl:flex-[0.5] flex items-center justify-start xl:py-6 mb-2 xl:mb-0">
         {isLoading ? (
           <Skeleton className="h-4 w-full"></Skeleton>
         ) : (
@@ -56,7 +57,7 @@ const DetailServiceRow: React.FC<DetailServiceRowProps> = ({
           </div>
         )}
       </div>
-      <div className="w-full xl:w-[350px] flex items-center justify-start xl:py-6 mb-2 xl:mb-0">
+      <div className="w-full xl:flex-[0.5] flex items-center justify-start xl:py-6 mb-2 xl:mb-0">
         {isLoading ? (
           <Skeleton className="h-4 w-full"></Skeleton>
         ) : (
@@ -67,7 +68,7 @@ const DetailServiceRow: React.FC<DetailServiceRowProps> = ({
         )}
       </div>
 
-      <div className="w-full  xl:w-[276px] flex items-center justify-start xl:py-6 mb-2 xl:mb-0">
+      <div className="w-full xl:flex-[0.4] flex items-center justify-start xl:py-6 mb-2 xl:mb-0">
         {isLoading ? (
           <Skeleton className="h-4 w-full"></Skeleton>
         ) : (
@@ -77,7 +78,7 @@ const DetailServiceRow: React.FC<DetailServiceRowProps> = ({
           </div>
         )}
       </div>
-      <div className="w-full  xl:w-[276px] flex items-center justify-start xl:py-6 mb-2 xl:mb-0">
+      <div className="w-full  xl:flex-[0.4] flex items-center justify-start xl:py-6 mb-2 xl:mb-0">
         {isLoading ? (
           <Skeleton className="h-4 w-full"></Skeleton>
         ) : (
