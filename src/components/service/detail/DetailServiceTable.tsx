@@ -10,13 +10,20 @@ import { CreateServiceDetailPopup } from "@/components/popup/CreateServiceDetail
 import { Button } from "@/components/ui/button";
 import Pagination from "./Pagination";
 import { useToast } from "@/hooks/use-toast";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const columns = [
-  { header: "", className: "w-[48px] hidden md:table-cell" },
-  { header: "TYPE", className: "w-[210px] hidden md:table-cell" },
-  { header: "TITLE", className: "w-[350px] hidden md:table-cell" },
-  { header: "ADDITIONAL PRICE", className: "w-[276px] hidden md:table-cell" },
-  { header: "MULTIPLY PRICE", className: "w-[276px] hidden md:table-cell" },
+  { header: "", className: " flex-[0.1] hidden md:table-cell" },
+  { header: "TYPE", className: " flex-[0.5] hidden md:table-cell" },
+  { header: "TITLE", className: " flex-[0.5] hidden md:table-cell" },
+  {
+    header: "ADDITIONAL PRICE",
+    className: " flex-[0.4] hidden md:table-cell",
+  },
+  {
+    header: "MULTIPLY PRICE",
+    className: " flex-[0.4] hidden md:table-cell",
+  },
 ];
 const ServiceDetailsData: ServiceDetail[] = [
   {
@@ -196,6 +203,13 @@ const DetailServiceTable = () => {
   );
 
   const totalPages = Math.ceil(finalData.length / itemsPerPage);
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center w-full h-[500px]">
+        <ClipLoader color="#2A88F5" loading={true} size={30} />
+      </div>
+    );
 
   return (
     <>

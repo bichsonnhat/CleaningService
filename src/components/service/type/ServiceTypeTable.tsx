@@ -9,13 +9,14 @@ import ServiceTypeRow from "./ServiceTypeRow";
 import { CreateServiceTypePopup } from "@/components/popup/CreateServiceTypePopup";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const columns = [
-  { header: "", className: "w-[48px] hidden xl:table-cell" },
-  { header: "NAME", className: "w-[210px] hidden xl:table-cell" },
-  { header: "DESCRIPTION", className: "w-[552px] hidden xl:table-cell" },
-  { header: "SERVICE CATEGORY", className: "w-[210px] hidden xl:table-cell" },
-  { header: "BASE PRICE", className: "w-[150px] hidden xl:table-cell" },
+  { header: "", className: "flex-[0.1] hidden xl:table-cell" },
+  { header: "NAME", className: " flex-[0.4] hidden xl:table-cell" },
+  { header: "DESCRIPTION", className: " flex-[0.8] hidden xl:table-cell" },
+  { header: "SERVICE CATEGORY", className: " flex-[0.4] hidden xl:table-cell" },
+  { header: "BASE PRICE", className: " flex-[0.3] hidden xl:table-cell" },
 ];
 
 const ServiceTypesData: ServiceType[] = [
@@ -195,6 +196,13 @@ const ServiceTypeTable = () => {
   );
 
   const totalPages = Math.ceil(finalData.length / itemsPerPage);
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center w-full h-[500px]">
+        <ClipLoader color="#2A88F5" loading={true} size={30} />
+      </div>
+    );
 
   return (
     <>
