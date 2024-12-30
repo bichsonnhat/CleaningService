@@ -1,5 +1,5 @@
 "use client";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 import { link } from "fs";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
@@ -127,10 +127,6 @@ const Header: React.FC = () => {
         })}
         <div className="hidden md:flex md:gap-3.5 md:items-start mr-2">
           <UserButton />
-          <div className="flex flex-col text-slate-800 font-Averta-Semibold">
-            <span>{user?.fullName || "Guest"}</span>
-            <span>{String(user?.publicMetadata?.role) || "Guest"}</span>
-          </div>
         </div>
       </nav>
     </header>
