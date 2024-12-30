@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useToast } from "@/hooks/use-toast";
 export type Refund = {
   id: number;
   booking_id: string;
@@ -37,7 +38,9 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
   };
   const { id } = params;
   const router = useRouter();
+  const { toast } = useToast();
   const [detail, setDetail] = useState<Feedback2 | null>(null);
+  const [deleting, setDeleting] = useState(false);
   useEffect(() => {
     const fetchDetail = async (id: string) => {
       const response = await fetch(
@@ -73,6 +76,39 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
     return `${hours}:${minutes} - ${day}/${month}/${year}`;
   };
 
+  const handleDeleteFeedback = async () => {
+    try {
+      setDeleting(true);
+      // await Promise.all(
+      //   checkedRows.map((id) => {
+      //     return fetch(
+      //       `${process.env.NEXT_PUBLIC_API_URL}/api/feedback/${id}`,
+      //       {
+      //         method: "DELETE",
+      //       }
+      //     );
+      //   })
+      // );
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feedback/${id}`, {
+        method: "DELETE",
+      });
+
+      toast({ title: "Delete issue successfully!" });
+      console.log("Delete issue successfully!");
+      setTimeout(() => {
+        router.back();
+      }, 2000);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to delete some issue",
+      });
+      console.error(error);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (!detail)
     return (
       <div className="flex w-full h-full items-center justify-center">
@@ -98,9 +134,45 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
             {detail.title}
           </p>
 
-          <button className="h-full p-6 hover:bg-slate-200">
+          {/* <button className="h-full p-6 hover:bg-slate-200">
             <FaRegTrashAlt className="h-[19px]" />
-          </button>
+          </button> */}
+          <AlertDialog>
+            <AlertDialogTrigger>
+              {deleting ? (
+                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                  <ClipLoader color="#fff" loading={true} size={30} />
+                </div>
+              ) : (
+                <div className="h-full p-6 hover:bg-slate-200">
+                  <FaRegTrashAlt className="h-[19px]" />
+                </div>
+              )}
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This action will delete the
+                  issue.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <button
+                    onClick={() => handleDeleteFeedback()}
+                    // onClick={() => {
+                    //   toast({ title: "Delete issue successfully!" });
+                    // }}
+                    className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
         {/* End Title */}
 

@@ -9,7 +9,7 @@ import { Role } from "../feedback/FeedbackTable";
 export type Booking = {
   id: string;
   customerId: string;
-  helperId: string;
+  helperId: string | null;
   serviceTypeId: string;
   location: string;
   scheduledStartTime: string;
@@ -108,7 +108,9 @@ const OrderTable = () => {
         if (searchBy === "Customer")
           return order.customer.fullName.toLowerCase().includes(term);
         if (searchBy === "Helper")
-          return order.helper.user.fullName.toLowerCase().includes(term);
+          return (
+            order.helper?.user?.fullName?.toLowerCase().includes(term) ?? true
+          );
         if (searchBy === "Price")
           return order.totalPrice.toString().includes(term);
         if (searchBy === "Status")

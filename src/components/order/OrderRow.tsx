@@ -114,7 +114,7 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
         <div className="lg:flex-[3] w-full lg:w-[130px] flex items-center justify-start lg:py-6 mb-2 lg:mb-0">
           <div className="text-sm text-[#202224] font-semibold">
             <span className="lg:hidden font-bold">HELPER: </span>
-            {booking.helper.user.fullName}
+            {booking.helper?.user.fullName}
           </div>
         </div>
 
