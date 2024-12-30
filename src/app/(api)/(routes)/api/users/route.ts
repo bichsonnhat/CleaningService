@@ -18,13 +18,13 @@ export async function POST(req: Request) {
   const newUser = await prisma.user.create({
     data: {
       id: payload.data.id,
-      gender: "undefined",
+      gender: "",
       fullName: payload.data.first_name + " " + payload.data.last_name,
       email: payload.data.email_addresses["0"].email_address,
       dateOfBirth: new Date(),
-      identifyCard: "undefined",
-      address: "undefined",
-      phoneNumber: "undefined",
+      identifyCard: "",
+      address: "",
+      phoneNumber: "",
       status: "active",
       numberOfViolations: 0,
     }
