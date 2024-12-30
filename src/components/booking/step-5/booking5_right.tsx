@@ -12,7 +12,7 @@ const Booking5Right = () => {
   const [tax, setTax] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const handleDiscount = () => {
-    if (bookingData.bookingTiming === 1) {
+    if (bookingData.bookingTiming === 10.01) {
       return true;
     }
     return false;
@@ -215,8 +215,9 @@ const Booking5Right = () => {
 
       <div className="flex justify-center items-center ">
         <Button
+          id="place-order-step5"
           onClick={handlePayment}
-          className="md:w-1/3 h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]"
+          className="md:w-1/3 max-sm:hidden h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]"
         >
           Place order
         </Button>

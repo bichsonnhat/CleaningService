@@ -18,7 +18,7 @@ const timeSlots = [
   {
     type: "specific",
     time: "Flexible",
-    value: 1,
+    value: 10.01,
   },
   {
     type: "standard",
@@ -63,6 +63,42 @@ const Step_3 = () => {
   const handleClick = (time: number) => {
     bookingUpdate({ bookingTiming: time });
     setTimeSelected(time);
+  }
+
+  const isDisabled = (value: number) => {
+    const currentTime = new Date().getHours() + new Date().getMinutes() / 60;
+    switch (value) {
+      case 8:
+        if (currentTime < 8) {
+          return false;
+        } else {
+          return true;
+        }
+      case 8.5:
+        if (currentTime < 8.5) {
+          return false;
+        } else {
+          return true;
+        }
+      case 9:
+        if (currentTime < 9) {
+          return false;
+        } else {
+          return true;
+        }
+      case 9.5:
+        if (currentTime < 9.5) {
+          return false;
+        } else {
+          return true;
+        }
+      case 10:
+        if (currentTime < 10) {
+          return false;
+        } else {
+          return true;
+        }
+    }
   }
 
   const day = new Date(bookingData.bookingDate).getDate();
@@ -127,13 +163,14 @@ const Step_3 = () => {
           <div className="grid grid-cols-2">
             <p className="text-base font-Averta-Semibold leading-[23px] tracking-tight text-left">{slot.time}</p>
             <p className="text-xs font-Averta-Semibold leading-[14px] tracking-tight text-right self-center">Save $8.10 off</p>
-            <p className="text-sm font-Averta-Regular leading-[19px] tracking-tight text-left">Cleaner will arrive between 9am-4pm</p>
+            <p className="text-sm font-Averta-Regular leading-[19px] tracking-tight text-left">Agreement with staff later</p>
           </div>
         </Button>
       ) : (
         <Button 
           key={slot.time}
           className={`bg-white h-[73px] w-[400px] rounded-[10px] font-Averta-Semibold text-base leading-[23px] tracking-tight border-2 hover:text-white ${timeSelected === slot.value ? "border-[#1A78F2] text-[#1A78F2]" : "bg-white text-[#4F6071]"}`}
+          disabled={isDisabled(slot.value)}
           onClick={() => handleClick(slot.value)}>
           {slot.time}
         </Button>

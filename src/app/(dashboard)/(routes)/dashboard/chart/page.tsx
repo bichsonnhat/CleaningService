@@ -120,8 +120,8 @@ const ChartPage = () => {
       const data = await res.json();
       setUser(data);
     };
-    fetchBookingData(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=Admin&userId=asd`);
-    fetchUserData(`${process.env.NEXT_PUBLIC_API_URL}/api/users?role=Admin`);
+    fetchBookingData(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=admin&userId=asd`);
+    fetchUserData(`${process.env.NEXT_PUBLIC_API_URL}/api/users?role=admin`);
   }, []);
 
   useEffect(() => {

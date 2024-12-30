@@ -43,10 +43,11 @@ const ProgressBar = () => {
   }>({serviceDetail: '', howLong: ''})
   const [dateTimeBooking, setDateTimeBooking] = useState<string>('')
   const [addressBooking, setAddressBooking] = useState<string>('')
+  const [disableBtn, setDisableBtn] = useState<boolean>(false)
 
   const mappingValue = (value: number) => {
     switch (value) {
-      case 1:
+      case 10.01:
       return 'Flexible';
       case 8:
       return '08:00am';
@@ -82,7 +83,8 @@ const ProgressBar = () => {
         router.push('/booking/step-5')
         break;
       case '/booking/step-5':
-        router.push("/payment-success");
+        const targetBtn = document.getElementById("place-order-step5");
+        targetBtn?.click();
         break;
       default:
         break;
@@ -108,6 +110,7 @@ const ProgressBar = () => {
         setStep(1)
         const serviceType = bookingData.serviceCategory?.name || 'Other Services';
         setServiceType(serviceType)
+        setDisableBtn(false)
         break;
       case '/booking/step-2':
         setStep(2)
@@ -121,9 +124,19 @@ const ProgressBar = () => {
           const howLong = bookingData.bookingInfomation?.[1]?.value || '1 hour';
           setOtherServicesDetail({serviceDetail, howLong})
         }
+        if (bookingData.bookingDate === undefined) {
+          setDisableBtn(true)
+        } else {
+          setDisableBtn(false)
+        }
         break;
       case '/booking/step-3':
         setStep(2)
+        if (bookingData.bookingTiming === undefined) {
+          setDisableBtn(true)
+        } else {
+          setDisableBtn(false)
+        }
         break;
       case '/booking/step-4':
         setStep(3)
@@ -131,16 +144,22 @@ const ProgressBar = () => {
           day: '2-digit', month: '2-digit', year: 'numeric'
         }) + ' at ' + mappingValue(bookingData.bookingTiming) || 'Time Booking';
         setDateTimeBooking(dateTimeBooking)
+        if (bookingData.bookingAddress && bookingData.APT) {
+          setDisableBtn(false)
+        } else {
+          setDisableBtn(true)
+        }
         break;
       case '/booking/step-5':
         setStep(4)
         const addressBooking = bookingData.APT + ', ' + bookingData.bookingAddress;
         setAddressBooking(addressBooking)
+        setDisableBtn(false)
         break;
       default:
         break;
     }
-  }, [pathName])
+  }, [pathName, bookingData])
 
   return (
     <div className='w-full h-[75px] flex flex-row sm:shadow-xl bg-white'>
@@ -298,7 +317,12 @@ const ProgressBar = () => {
         </div>
       </div>
       <div className="sm:hidden w-[60%]">
-          <Button className="h-full rounded-none w-full bg-[#1A78F2] text-lg text-white font-Averta-Semibold" onClick={handleNextBtn}>Next</Button>
+          <Button 
+          disabled={disableBtn}
+          className="h-full rounded-none w-full bg-[#1A78F2] text-lg text-white font-Averta-Semibold" 
+          onClick={handleNextBtn}>
+            {pathName === '/booking/step-5' ? 'Place order' : 'Next'}
+          </Button>
       </div>
     </div>
   )

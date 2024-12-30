@@ -1,5 +1,5 @@
 "use client";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { link } from "fs";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import React, { useState } from "react";
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const links = ["Residential", "Office", "Commercial", "FAQ's"];
+  const {user} = useUser();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -46,7 +47,7 @@ const Header: React.FC = () => {
           ))}
         </nav>
       )}
-      <nav className="hidden md:flex md:flex-wrap gap-8 items-center self-stretch my-auto min-w-[240px] max-md:max-w-full">
+      <nav className="hidden md:flex md:flex-wrap gap-8 items-center justify-center self-stretch my-auto min-w-[240px] max-md:max-w-full">
         {links.map((link) => (
           <a
             href={`#${link.toLowerCase()}`}
@@ -56,8 +57,12 @@ const Header: React.FC = () => {
             {link}
           </a>
         ))}
-        <div className="hidden md:flex md:gap-3.5 md:items-start mr-2">
+        <div className="hidden md:flex flex-row md:gap-3.5 mr-2">
           <UserButton />
+          <div className="flex flex-col text-slate-800 font-Averta-Semibold">
+            <span>{user?.fullName || "Guest"}</span>
+            <span>{String(user?.publicMetadata?.role) || "Guest"}</span>
+          </div>
         </div>
       </nav>
     </header>
