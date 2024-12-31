@@ -139,7 +139,7 @@ const JobHistoryRow: React.FC<JobHistoryRowProps> = ({
         </div>
       </div>
 
-      <div className="lg:flex-[5] w-full lg:w-[200px] flex items-center justify-start lg:justify-center lg:py-6 mb-2 lg:mb-0">
+      <div className="lg:flex-[5] w-full lg:w-[200px] flex items-center justify-start lg:py-6 mb-2 lg:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="lg:hidden font-bold">ADDRESS: </span>
           {booking.location}

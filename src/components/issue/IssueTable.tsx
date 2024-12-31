@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "../employee/Pagination";
 import SearchBarAndFilter from "./SearchBarAndFilter";
 import IssueRow from "./IssueRow";
 import Image from "next/image";
@@ -17,6 +16,7 @@ import {
 import { Feedback2 } from "../feedback/FeedbackTable";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
+import Pagination from "../job-history/Pagination";
 
 export default function IssueTable() {
   // const role = "Admin";
@@ -241,7 +241,7 @@ export default function IssueTable() {
         <div className="flex flex-col w-full rounded max-md:max-w-full">
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 max-md:max-w-full">
             {issueData2.length === 0 ? (
-              <div className="flex justify-center items-center w-full bg-white">
+              <div className="flex justify-center items-center w-full py-8 bg-white">
                 <p className="text-lg font-Averta-Semibold text-neutral-900">
                   We have no issue
                 </p>

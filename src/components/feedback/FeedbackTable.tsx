@@ -307,7 +307,7 @@ export default function FeedbackTable() {
                 <p className="text-lg font-Averta-Semibold text-neutral-900">
                   {role == "admin"
                     ? "We have no feedback"
-                    : "You hasn't sent any feedback yet"}
+                    : "You haven't sent any feedback yet"}
                 </p>
               </div>
             ) : (

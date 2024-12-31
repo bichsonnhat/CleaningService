@@ -127,7 +127,7 @@ const OrderHistoryTable = () => {
       <SearchBar setSearchTerm={handleSearch} setSearchBy={setSearchBy} />
 
       {/* title column */}
-      <div className="flex flex-wrap gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
+      <div className="flex-wrap gap-3 w-full hidden lg:flex bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
         {columns.map((col, index) => (
           <div
             key={index}
