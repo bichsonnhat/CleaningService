@@ -1,5 +1,5 @@
 "use client";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { link } from "fs";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const { isSignedIn } = useUser();
   const [userId, setUserId] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const links = [
@@ -22,11 +23,12 @@ const Header: React.FC = () => {
     {
       name: "Dashboard",
       url: "/dashboard",
+      canAccess: ["customer", "admin", "helper"],
     },
     {
       name: "Booking",
       url: "/select",
-      canAccess: "customer",
+      canAccess: ["customer"],
     },
   ];
 
@@ -46,9 +48,9 @@ const Header: React.FC = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  if (!userId || !role) {
-    return <></>;
-  }
+  // if (!userId || !role) {
+  //   return <></>;
+  // }
   return (
     <header className="flex flex-wrap gap-10 justify-between items-center py-6 pr-5 pl-12 w-full bg-white min-h-[100px] max-md:pl-5 max-md:max-w-full">
       <a href="/">
@@ -84,8 +86,14 @@ const Header: React.FC = () => {
             </a>
           ))} */}
           {links.map((link) => {
-            if (link.canAccess && link.canAccess !== role) {
-              return null;
+            if (link.canAccess) {
+              if (
+                !isSignedIn ||
+                !role ||
+                !link.canAccess.some((canAccess) => canAccess === role)
+              ) {
+                return null;
+              }
             }
             return (
               <a
@@ -111,8 +119,14 @@ const Header: React.FC = () => {
           </a>
         ))} */}
         {links.map((link) => {
-          if (link.canAccess && link.canAccess !== role) {
-            return null;
+          if (link.canAccess) {
+            if (
+              !isSignedIn ||
+              !role ||
+              !link.canAccess.some((canAccess) => canAccess === role)
+            ) {
+              return null;
+            }
           }
           return (
             <a
