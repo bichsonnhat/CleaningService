@@ -9,14 +9,16 @@ interface FileDownloadCardProps {
   className?: string;
   onUpdate?: () => void;
   onDownload?: () => void;
+  canUpdate?: boolean;
 }
 
 const FileDownloadCard: React.FC<FileDownloadCardProps> = ({
-  fileName = "CV.docx",
+  fileName = "Employment Contract",
   fileSize = 0,
   className,
   onUpdate,
-  onDownload
+  onDownload,
+  canUpdate = true,
 }) => {
   // Hàm chuyển đổi kích thước tệp thành MB
   const formatFileSize = (size: number) => {
@@ -55,11 +57,15 @@ const FileDownloadCard: React.FC<FileDownloadCardProps> = ({
           >
             Download
           </button>
-          <button  type="button" className="text-blue-500 hover:text-blue-600 text-sm font-medium"
-            onClick={onUpdate}
-          >
-            Update
-          </button>
+          {canUpdate && (
+            <button
+              type="button"
+              className="text-blue-500 hover:text-blue-600 text-sm font-medium"
+              onClick={onUpdate}
+            >
+              Update
+            </button>
+          )}
         </div>
 
         <p className="text-sm text-gray-500 font-medium">{formatFileSize(fileSize)}</p>

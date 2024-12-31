@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 const Booking5Right = () => {
   const bookingData = bookingStore((state: any) => state.bookingData);
   const bookingUpdate = bookingStore((state: any) => state.updateBookingData);
+  const validateFields = bookingStore((state: any) => state.validateFields);
 
   const [paymentMethod, setPaymentMethod] = useState<string>("Stripe");
   const [discount, setDiscount] = useState<number>(0);
@@ -55,6 +56,68 @@ const Booking5Right = () => {
   //console.log("Info: ", bookingData.bookingInfomation);
   const handlePayment = async () => {
     try {
+      const isValid = validateFields();
+      console.log(isValid);
+      if (isValid) {
+        console.log("Validation passed! Proceeding to payment...");
+        
+        const userResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+        );
+        const userInfo = await userResponse.json();
+        const cleanType = bookingData.bookingInfomation.find(
+          (item: any) =>
+            item.name === "Clean type" || item.name === "For how long?"
+        );
+        const scheduleDates = createScheduleDates(
+          bookingData.bookingDate,
+          bookingData.bookingTiming,
+          cleanType.value
+        );
+  
+        const bookingPayload = {
+          customerId: userInfo.userId,
+          serviceCategoryId: bookingData.serviceCategory?.id,
+          location: bookingData.bookingAddress,
+          scheduledStartTime: scheduleDates.scheduleDateStart,
+          scheduledEndTime: scheduleDates.scheduleDateEnd,
+          bookingNote: bookingData.bookingNote,
+          totalPrice: totalPrice,
+        };
+        //console.log("Booking Payload: ", bookingPayload);
+        if (paymentMethod === "Stripe") {
+          const bookingResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/bookings`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(bookingPayload),
+            }
+          );
+  
+          if (!bookingResponse.ok) {
+            throw new Error("Failed to create booking");
+          }
+  
+          // Gọi Stripe payment
+          const stripeResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/stripe?unit_amount=${
+              totalPrice * 100
+            }`
+          );
+  
+          const data = await stripeResponse.json();
+          router.push(data.url);
+        } else {
+          await paymentMutation.mutateAsync(bookingPayload);
+        }
+        // return;
+      } else {
+        console.log("Validation failed. Fix errors on left.");
+        return;
+      }
       setLoading(true);
 
       //   JSON.stringify({
@@ -290,6 +353,7 @@ const Booking5Right = () => {
           id="place-order-step5"
           onClick={handlePayment}
           className="md:w-1/3 max-sm:hidden h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]"
+          disabled={bookingData.checked === undefined || bookingData.checked}
         >
           Place order
         </Button>

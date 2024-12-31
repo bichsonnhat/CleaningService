@@ -15,6 +15,7 @@ interface InputWithLabelProps {
     error?: string;
     value?: string | number;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 export function InputWithLabel({
@@ -28,6 +29,7 @@ export function InputWithLabel({
     error,
     value,
     onChange,
+    onBlur,
 }: InputWithLabelProps) {
 
     return (
@@ -47,6 +49,7 @@ export function InputWithLabel({
                     style={plusPX ? { width: `calc(${inputWidth} + ${plusPX})` } : { width: `${inputWidth}` }}
                     value={value}
                     onChange={onChange}
+                    onBlur={onBlur}
                 />
                 {error && (
                     <p className="lg:absolute text-[14px] text-red-500 font-Averta-Regular top-full mt-[2px]">
