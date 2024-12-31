@@ -30,6 +30,10 @@ const columns = [
   },
   { header: "PRICE", className: " flex-[2] hidden md:table-cell text-center" },
   { header: "STATUS", className: " flex-[3] hidden md:table-cell text-center" },
+  {
+    header: "PAYMENT",
+    className: " flex-[3] hidden md:table-cell text-center",
+  },
 ];
 
 const JobHistoryTable = () => {

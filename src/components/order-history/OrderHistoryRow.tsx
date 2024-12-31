@@ -44,6 +44,10 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
       : booking.status === BookingStatus.Declined
       ? "bg-[#F97316] text-[#C2410C]"
       : "";
+  const paymentColor =
+    booking.paymentStatus === "paid"
+      ? "bg-[#00B69B] text-[#00B69B]"
+      : "bg-[#F87171] text-[#B91C1C]";
 
   const percentage =
     (booking.feedbacks.find((fb) => !fb.reportedBy)?.helperRating ?? 0) * 20;
@@ -72,6 +76,31 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
     );
   };
 
+  const formatBookingTime = (
+    scheduledStartTime: Date,
+    scheduledEndTime: Date
+  ): string => {
+    const startHour = scheduledStartTime.getHours().toString().padStart(2, "0");
+    const startMinute = scheduledStartTime
+      .getMinutes()
+      .toString()
+      .padStart(2, "0");
+
+    const endHour = scheduledEndTime.getHours().toString().padStart(2, "0");
+    const endMinute = scheduledEndTime.getMinutes().toString().padStart(2, "0");
+
+    return `${startHour}:${startMinute} - ${endHour}:${endMinute}`;
+  };
+
+  const formatBookingDate = (scheduledStartTime: Date): string => {
+    const startDate = scheduledStartTime.getDate().toString().padStart(2, "0");
+    const startMonth = (scheduledStartTime.getMonth() + 1)
+      .toString()
+      .padStart(2, "0");
+    const startYear = scheduledStartTime.getFullYear();
+    return `${startDate}/${startMonth}/${startYear}`;
+  };
+
   const [toggleCustomerPopup, setToggleCustomerPopup] = useState(false);
   const handleToggleCustomerPopup = () => {
     setToggleCustomerPopup(!toggleCustomerPopup);
@@ -82,35 +111,49 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
       onClick={handleToggleCustomerPopup}
       className="flex flex-wrap gap-3 w-full border-b border-gray-200 bg-white hover:bg-[#f4f7ff] h-auto items-start md:items-center p-2.5 cursor-pointer"
     >
-      <div className="w-full md:w-[210px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
+      <div className="w-full lg:flex-[2] md:w-[210px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="md:hidden font-bold">HELPER: </span>
           {booking.helper?.user.fullName}
         </div>
       </div>
 
-      <div className="w-full md:w-[340px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
+      <div className="w-full lg:flex-[5] md:w-[340px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="md:hidden font-bold">ADDRESS: </span>
           {booking.location}
         </div>
       </div>
 
-      <div className="w-full md:w-[200px] flex items-center justify-start md:pl-0 mb-2 md:mb-0">
+      <div className="w-full lg:flex-[3] md:w-[200px] flex items-center justify-start md:pl-0 mb-2 md:mb-0">
         <div className="text-xs text-[#1D2C4C80] font-semibold">
           <span className="md:hidden font-bold text-[#202224]">TIME:</span>
 
-          <div className="flex flex-col  md:items-center">
+          {/* <div className="flex flex-col  md:items-center">
             <span className="text-[#677582]">
               {startTimeString}{" "}
               <span className="text-[#1D2C4C80] mx-1">to</span> {endTimeString}
             </span>
             <span className="text-[#1D2C4C80] md:ml-2">{dateString}</span>
+          </div> */}
+          <div className="flex flex-row lg:flex-col lg:items-center items-center lg:text-sm">
+            <span className="text-[#677582]">
+              {formatBookingTime(
+                new Date(booking.scheduledStartTime),
+                new Date(booking.scheduledEndTime)
+              )}
+            </span>
+            <span className="text-[#1D2C4C80] ml-2 lg:hidden">
+              | {formatBookingDate(new Date(booking.scheduledStartTime))}
+            </span>
+            <span className="text-[#1D2C4C80] hidden lg:block">
+              {formatBookingDate(new Date(booking.scheduledStartTime))}
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="w-full md:w-[110px] flex items-center justify-start md:pl-0 mb-2 md:mb-0 mr-10">
+      <div className="w-full md:w-[110px] lg:flex-[3] flex items-center justify-start md:pl-0 mb-2 md:mb-0 mr-10">
         <div className="text-xs text-[#1D2C4C80] font-semibold text-center">
           <span className="md:hidden font-bold text-[#202224]">RATING:</span>
           {renderRating()}
@@ -125,14 +168,14 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
         </div>
       </div>
 
-      <div className="w-full md:w-[120px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
+      <div className="w-full lg:flex-[2] md:w-[120px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224cc]">
           <span className="md:hidden font-bold">PRICE: </span>
           {`${booking.totalPrice}/vnđ`}
         </div>
       </div>
 
-      <div className="w-full md:w-[120px] flex items-center justify-start md:py-6 mb-2 md:mb-0">
+      <div className="w-full md:w-[120px] lg:flex-[3] flex items-center justify-start md:py-6 mb-2 md:mb-0">
         <div className="text-sm text-[#202224cc]">
           <span className="md:hidden font-bold">STATUS: </span>
           <div
@@ -140,6 +183,18 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
           >
             <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px]">
               {booking.status}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="lg:flex-[3] w-full lg:w-[140px] flex items-center lg:justify-center lg:py-6 mb-2 lg:mb-0">
+        <div className=" flex flex-row items-center text-sm text-[#202224cc]">
+          <span className="lg:hidden font-bold mr-2">PAYMENT STATUS: </span>
+          <div
+            className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-w-28 min-h-[27px] ${paymentColor}  bg-opacity-20 rounded-md`}
+          >
+            <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px] text-center">
+              {booking.paymentStatus}
             </div>
           </div>
         </div>
