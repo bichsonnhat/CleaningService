@@ -1,4 +1,5 @@
 import prisma from "@/lib/db";
+import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 //Get all bookings
 export async function GET(req: Request) {
@@ -136,15 +137,97 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const newBooking = await prisma.booking.create({
-      data,
+
+    if (!data || typeof data !== "object") {
+      return NextResponse.json(
+        { error: "Invalid input data" },
+        { status: 400 }
+      );
+    }
+    const { detailIds, ...bookingData } = data;
+
+    if (!bookingData.customerId || !bookingData.serviceCategoryId) {
+      return NextResponse.json(
+        { error: "Missing required booking data" },
+        { status: 400 }
+      );
+    }
+    if (!Array.isArray(detailIds) || detailIds.length === 0) {
+      return NextResponse.json(
+        { error: "detailIds must be a non-empty array" },
+        { status: 400 }
+      );
+    }
+
+    const result = await prisma.$transaction(async (prisma) => {
+      const newBooking = await prisma.booking.create({
+        data: bookingData,
+      });
+
+      const bookingDetails = detailIds.map((serviceDetailId) => ({
+        bookingId: newBooking.id,
+        serviceDetailId: serviceDetailId,
+      }));
+
+      await prisma.bookingDetail.createMany({
+        data: bookingDetails,
+      });
+
+      return newBooking;
     });
-    return NextResponse.json(newBooking);
+
+    return NextResponse.json(result, { status: 201 });
   } catch (error) {
-    console.error("Error creating booking: ", error);
+    console.error("Error processing booking request:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case "P2002":
+          return NextResponse.json(
+            { error: "Duplicate entry for booking or booking detail" },
+            { status: 409 }
+          );
+        case "P2025":
+          return NextResponse.json(
+            { error: "Referenced record not found" },
+            { status: 404 }
+          );
+        default:
+          return NextResponse.json(
+            { error: "Database error", details: error.message },
+            { status: 500 }
+          );
+      }
+    }
+
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "Internal server error", details: error.message },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
-      { error: "Failed to create a new booking" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
 }
+
+// export async function POST(req: Request) {
+//   try {
+//     const data = await req.json();
+//     const {detailIds, ...bookingData} = data;
+//     const newBooking = await prisma.booking.create({
+//       data: bookingData,
+//     });
+
+//     return NextResponse.json(newBooking);
+//   } catch (error) {
+//     console.error("Error creating booking: ", error);
+//     return NextResponse.json(
+//       { error: "Failed to create a new booking" },
+//       { status: 500 }
+//     );
+//   }
+// }

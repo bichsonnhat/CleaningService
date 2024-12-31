@@ -92,9 +92,12 @@ const Booking5Right = () => {
       const scheduleDates = createScheduleDates(
         bookingData.bookingDate,
         bookingData.bookingTiming,
-        cleanType.value
+        cleanType.duration
       );
 
+      const detailIds = bookingData.bookingInfomation.map(
+        (detail: any) => detail.detailId
+      );
       const bookingPayload = {
         customerId: userInfo.userId,
         serviceCategoryId: bookingData.serviceCategory?.id,
@@ -103,6 +106,7 @@ const Booking5Right = () => {
         scheduledEndTime: scheduleDates.scheduleDateEnd,
         bookingNote: bookingData.bookingNote,
         totalPrice: totalPrice,
+        detailIds: detailIds,
       };
       //console.log("Booking Payload: ", bookingPayload);
       if (paymentMethod === "Stripe") {

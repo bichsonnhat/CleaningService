@@ -37,7 +37,8 @@ export const getBookingDuration = (serviceType: string): number => {
 export const createScheduleDates = (
   dateStr: string,
   startTimeDecimal: number,
-  serviceType: string
+  //serviceType: string
+  duration: number
 ): ScheduleDates => {
   try {
     const baseDate = new Date(dateStr);
@@ -50,9 +51,11 @@ export const createScheduleDates = (
     const scheduleDateStart = new Date(baseDate);
     scheduleDateStart.setHours(hours, minutes, 0, 0);
 
-    const durationHours = getBookingDuration(serviceType);
+    //const durationHours = getBookingDuration(duration);
     const scheduleDateEnd = new Date(scheduleDateStart);
-    scheduleDateEnd.setHours(scheduleDateStart.getHours() + durationHours);
+    scheduleDateEnd.setHours(scheduleDateStart.getHours() + duration);
+
+    console.log("Go here", scheduleDateEnd);
     scheduleDateEnd.setMinutes(scheduleDateStart.getMinutes());
 
     if (

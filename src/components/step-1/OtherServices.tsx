@@ -7,6 +7,8 @@ import { ClipLoader } from "react-spinners"; // Import ClipLoader
 type ServiceDetail = {
   name: string;
   price: number;
+  duration: number;
+  id: string;
 };
 
 const OtherServices = () => {
@@ -26,8 +28,10 @@ const OtherServices = () => {
         const services = data
           .filter((item: any) => item.serviceType.name === "Service details")
           .map((item: any) => ({
+            id: item.id,
             name: item.title,
             price: parseInt(item.additionalPrice),
+            duration: item.duration,
           }));
         setServices(services);
 
@@ -35,8 +39,10 @@ const OtherServices = () => {
         const howLong = data
           .filter((item: any) => item.serviceType.name === "For how long?")
           .map((item: any) => ({
+            id: item.id,
             name: item.title,
             price: parseInt(item.additionalPrice),
+            duration: item.duration,
           }));
         setForHowLong(howLong);
 
@@ -100,8 +106,18 @@ const OtherServices = () => {
   useEffect(() => {
     updateBookingData({
       bookingInfomation: [
-        { name: "Service details", value: services[selectedService]?.name },
-        { name: "For how long?", value: forHowLong[selectedHowLong]?.name },
+        {
+          name: "Service details",
+          value: services[selectedService]?.name,
+          detailId: services[selectedService]?.id,
+          duration: services[selectedService]?.duration,
+        },
+        {
+          name: "For how long?",
+          value: forHowLong[selectedHowLong]?.name,
+          detailId: forHowLong[selectedHowLong]?.id,
+          duration: forHowLong[selectedHowLong]?.duration,
+        },
       ],
     });
     updateBookingData({
