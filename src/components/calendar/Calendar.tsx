@@ -30,6 +30,7 @@ const Calendar: React.FC<CalendarProps> = ({
     const currentYear = today.getFullYear();
     const isCurrentMonth = currentMonth === month && currentYear === year;
 
+    // Update the type to allow null
     const [selectedDay, setSelectedDay] = useState<SelectedDay | null>(null);
 
     if (month === 0) month = 12;
@@ -39,7 +40,6 @@ const Calendar: React.FC<CalendarProps> = ({
         const dateToCheck = new Date(year, month - 1, day);
         const todayDate = new Date(currentYear, currentMonth - 1, currentDate);
 
-        // Set hours, minutes, seconds, and milliseconds to 0 for accurate date comparison
         dateToCheck.setHours(0, 0, 0, 0);
         todayDate.setHours(0, 0, 0, 0);
 
