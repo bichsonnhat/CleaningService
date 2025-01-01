@@ -1,5 +1,5 @@
 import { bookingStore } from "@/utils/store/booking.store";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface CalendarProps {
     month: number;
@@ -30,7 +30,17 @@ const Calendar: React.FC<CalendarProps> = ({
     const currentYear = today.getFullYear();
     const isCurrentMonth = currentMonth === month && currentYear === year;
 
-    const [selectedDay, setSelectedDay] = useState<SelectedDay | null>(null);
+    const [selectedDay, setSelectedDay] = useState<SelectedDay>({
+        day: currentDate,
+        month: currentMonth,
+        year: currentYear
+    });
+
+    useEffect(() => {
+        bookingUpdate({
+            bookingDate: `${currentYear}-${currentMonth}-${currentDate}`,
+        });
+    }, []);  // Empty dependency array means this runs once when component mounts
 
     if (month === 0) month = 12;
 
