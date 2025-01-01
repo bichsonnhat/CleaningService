@@ -40,6 +40,10 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
       : booking.status === BookingStatus.Declined
       ? "bg-[#F97316] text-[#C2410C]"
       : "";
+  const paymentColor =
+    booking.paymentStatus === "paid"
+      ? "bg-[#00B69B] text-[#00B69B]"
+      : "bg-[#F87171] text-[#B91C1C]";
 
   const [toggleAdminPopup, setToggleAdminPopup] = useState(false);
   const handleToggleAdminPopup = () => {
@@ -133,8 +137,6 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
 
             <div className="flex flex-row lg:flex-col lg:items-center items-center lg:text-sm">
               <span className="text-[#677582]">
-                {/* {startTimeString}{" "}
-              <span className="text-[#1D2C4C80] mx-1">-</span> {endTimeString} */}
                 {formatBookingTime(
                   new Date(booking.scheduledStartTime),
                   new Date(booking.scheduledEndTime)
@@ -185,6 +187,19 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
             >
               <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px] text-center">
                 {booking.status}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:flex-[3] w-full lg:w-[140px] flex items-center lg:justify-center lg:py-6 mb-2 lg:mb-0">
+          <div className=" flex flex-row items-center text-sm text-[#202224cc]">
+            <span className="lg:hidden font-bold mr-2">PAYMENT STATUS: </span>
+            <div
+              className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-w-28 min-h-[27px] ${paymentColor}  bg-opacity-20 rounded-md`}
+            >
+              <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px] text-center">
+                {booking.paymentStatus}
               </div>
             </div>
           </div>

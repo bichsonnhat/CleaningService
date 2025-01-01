@@ -20,11 +20,12 @@ const Header = () => {
     {
       name: "Dashboard",
       url: "/dashboard",
+      canAccess: ["customer", "admin", "helper"],
     },
     {
       name: "Booking",
       url: "/select",
-      canAccess: "customer",
+      canAccess: ["customer"],
     },
   ];
 
@@ -34,8 +35,8 @@ const Header = () => {
     );
     const userInfo = await userResponse.json();
     console.log("User: ", userInfo);
-    setUserId(userInfo.userId);
-    setRole(userInfo.role);
+    setUserId(userInfo.userId ? userInfo.userId : "");
+    setRole(userInfo.role ? userInfo.role : "");
   };
   useEffect(() => {
     fetchUser();
@@ -51,9 +52,9 @@ const Header = () => {
     router.push("/sign-in");
   };
 
-  if (!userId || !role) {
-    return <></>;
-  }
+  // if (!userId || !role) {
+  //   return <></>;
+  // }
 
   return (
     <header className="flex justify-center bg-transparent w-full">
@@ -92,8 +93,18 @@ const Header = () => {
               </a>
             ))} */}
             {links.map((link) => {
-              if (link.canAccess && link.canAccess !== role) {
-                return null;
+              // if (link.canAccess && link.canAccess !== role) {
+              //   return null;
+              // }
+
+              if (link.canAccess) {
+                if (
+                  !isSignedIn ||
+                  !role ||
+                  !link.canAccess.some((canAccess) => canAccess === role)
+                ) {
+                  return null;
+                }
               }
               return (
                 <a
@@ -136,8 +147,17 @@ const Header = () => {
               </a>
             ))} */}
             {links.map((link) => {
-              if (link.canAccess && link.canAccess !== role) {
-                return null;
+              // if (link.canAccess && link.canAccess !== role) {
+              //   return null;
+              // }
+              if (link.canAccess) {
+                if (
+                  !isSignedIn ||
+                  !role ||
+                  !link.canAccess.some((canAccess) => canAccess === role)
+                ) {
+                  return null;
+                }
               }
               return (
                 <a

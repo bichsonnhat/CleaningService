@@ -65,6 +65,10 @@ const JobHistoryRow: React.FC<JobHistoryRowProps> = ({
       : booking.status === BookingStatus.Declined
       ? "bg-[#F97316] text-[#C2410C]"
       : "";
+  const paymentColor =
+    booking.paymentStatus === "paid"
+      ? "bg-[#00B69B] text-[#00B69B]"
+      : "bg-[#F87171] text-[#B91C1C]";
 
   const [toggleHelperPopup, setToggleHelperPopup] = useState(false);
   const handleToggleHelperPopup = () => {
@@ -135,7 +139,7 @@ const JobHistoryRow: React.FC<JobHistoryRowProps> = ({
         </div>
       </div>
 
-      <div className="lg:flex-[5] w-full lg:w-[200px] flex items-center justify-start lg:justify-center lg:py-6 mb-2 lg:mb-0">
+      <div className="lg:flex-[5] w-full lg:w-[200px] flex items-center justify-start lg:py-6 mb-2 lg:mb-0">
         <div className="text-sm text-[#202224] font-semibold">
           <span className="lg:hidden font-bold">ADDRESS: </span>
           {booking.location}
@@ -200,6 +204,19 @@ const JobHistoryRow: React.FC<JobHistoryRowProps> = ({
           >
             <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px] text-center">
               {booking.status}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="lg:flex-[3] w-full lg:w-[140px] flex items-center lg:justify-center lg:py-6 mb-2 lg:mb-0">
+        <div className=" flex flex-row items-center text-sm text-[#202224cc]">
+          <span className="lg:hidden font-bold mr-2">PAYMENT STATUS: </span>
+          <div
+            className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-w-28 min-h-[27px] ${paymentColor}  bg-opacity-20 rounded-md`}
+          >
+            <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px] text-center">
+              {booking.paymentStatus}
             </div>
           </div>
         </div>

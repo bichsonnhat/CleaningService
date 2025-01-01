@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import FeedbackRow from "./FeedbackRow";
-import Pagination from "../employee/Pagination";
 import SearchBarAndFilter from "./SearchBarAndFilter";
 import Image from "next/image";
 import {
@@ -19,6 +18,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 import QuickPopupFeedback from "../quickpopup/QuickPopupFeedback";
+import Pagination from "../job-history/Pagination";
 
 export type Feedback2 = {
   id: string;
@@ -303,10 +303,12 @@ export default function FeedbackTable() {
         <div className="flex flex-col w-full rounded ">
           <div className="flex overflow-hidden flex-col justify-center w-full rounded bg-neutral-700 ">
             {feedbacks == null || feedbacks.length === 0 ? (
-              <div className="flex justify-center items-center w-full bg-white">
-                {role == "admin"
-                  ? "We have no feedback"
-                  : "This customer has no feedback"}
+              <div className="flex justify-center items-center w-full py-8 bg-white">
+                <p className="text-lg font-Averta-Semibold text-neutral-900">
+                  {role == "admin"
+                    ? "We have no feedback"
+                    : "You haven't sent any feedback yet"}
+                </p>
               </div>
             ) : (
               currentData.map((feedback: Feedback2, index: any) => (

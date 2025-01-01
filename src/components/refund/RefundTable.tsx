@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import RefundRow from "./RefundRow";
-import Pagination from "../employee/Pagination";
 import SearchBarAndFilter from "./SearchBarAndFilter";
 import Image from "next/image";
 import { useEffect } from "react";
@@ -21,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Role } from "../feedback/FeedbackTable";
 import QuickPopupReturn from "../quickpopup/QuickPopupReturn";
 import { set } from "zod";
+import Pagination from "../job-history/Pagination";
 
 export type Refund = {
   id: string;
@@ -299,7 +299,7 @@ export default function RefundTable() {
                 />
               ))
             ) : (
-              <div className="flex justify-center items-center w-full bg-white">
+              <div className="flex justify-center items-center w-full py-8 bg-white">
                 <p className="text-lg font-Averta-Semibold text-neutral-900">
                   {role == "admin"
                     ? "We have no refund request"

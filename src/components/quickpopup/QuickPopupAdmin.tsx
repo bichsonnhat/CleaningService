@@ -228,12 +228,12 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
                       className="max-xl:hidden"
                     />
                     <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
-                      {booking.helper.user.fullName}
+                      {booking.helper?.user.fullName}
                     </p>
                   </div>
                   <div className="flex flex-row h-fit gap-[2px]">
                     <p className="text-[#88929c] text-xl font-Averta-Semibold leading-[25px]">
-                      {booking.helper.averageRating}
+                      {booking.helper?.averageRating}
                     </p>
                     <Image
                       src="/images/QuickPopUp/StarRating.svg"
