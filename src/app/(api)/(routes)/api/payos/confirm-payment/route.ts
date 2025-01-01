@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import createPaymentLink from "@/app/(api)/(routes)/(lib)/payos-service";
 import { WebhookDataType, WebhookType } from "@payos/node/lib/type";
 
 export async function POST(req: Request) {
   try {
     const body: WebhookType = await req.json();
+
+    if (body.data.description == "VQRIO123") {
+      return NextResponse.json({ error: "Webhook Confirmed" }, { status: 200 });
+    }
+
+    console.log("Webhook data: ", body);
 
     const data = body.data as WebhookDataType;
 
@@ -14,6 +19,12 @@ export async function POST(req: Request) {
         orderNumber: data.orderCode,
       },
     });
+
+    if (!booking) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+
+    console.log("Booking found: ", booking);
 
     const updatedBooking = await prisma.booking.update({
       where: {
