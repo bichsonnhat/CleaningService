@@ -86,7 +86,7 @@ const RefundRow: React.FC<RefundRowProps> = ({ refund, onCheckboxToggle }) => {
               className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-h-[27px] ${statusColor} min-w-24 rounded-md`}
             >
               <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px]">
-                {refund.status}
+                {refund.status.charAt(0).toUpperCase() + refund.status.slice(1)}
               </div>
             </div>
           </div>

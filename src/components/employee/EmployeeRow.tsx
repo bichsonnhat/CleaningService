@@ -143,7 +143,7 @@ const EmployeeRow: React.FC<EmployeeRowProps> = ({
             className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-w-28 min-h-[27px] ${statusColor}  bg-opacity-20 rounded-md`}
           >
             <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px] text-center">
-              {status}
+              {status.charAt(0).toUpperCase() + status.slice(1)}
             </div>
           </div>
         </div>

@@ -131,43 +131,43 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
     bookingState === BookingStatus.Pending ? (
       <div className="w-[60%] h-full bg-[#ffd154] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#ff9400] text-xl font-bold">
-          {bookingState}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.InProgress ? (
       <div className="w-[60%] h-full bg-[#1a78f2] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#1a78f2] text-xl font-bold">
-          {bookingState}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Completed ? (
       <div className="w-[60%] h-full bg-[#00b69b] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#00b69b] text-xl font-bold">
-          {bookingState}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Cancelled ? (
       <div className="w-[60%] h-full bg-[#e01a1a] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#e01a1a] text-xl font-bold">
-          {bookingState}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Requested ? (
       <div className="w-[60%] h-full bg-[#F87171] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#B91C1C] text-xl font-bold">
-          {bookingState}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Refunded ? (
       <div className="w-[60%] h-full bg-[#60A5FA] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#1D4ED8] text-xl font-bold">
-          {bookingState}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Declined ? (
       <div className="w-[60%] h-full bg-[#F97316] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#C2410C] text-xl font-bold">
-          {bookingState}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : (

@@ -3,11 +3,14 @@ import React, { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { ClipLoader } from "react-spinners";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  
   const links = [
     {
       name: "About Us",
@@ -30,14 +33,18 @@ const Header = () => {
   ];
 
   const fetchUser = async () => {
-    const userResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
-    );
-    const userInfo = await userResponse.json();
-    console.log("User: ", userInfo);
-    setUserId(userInfo.userId ? userInfo.userId : "");
-    setRole(userInfo.role ? userInfo.role : "");
+    try {
+      const userResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+      );
+      const userInfo = await userResponse.json();
+      setUserId(userInfo.userId ? userInfo.userId : "");
+      setRole(userInfo.role ? userInfo.role : "");
+    } finally {
+      setLoading(false);
+    }
   };
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -55,6 +62,13 @@ const Header = () => {
   // if (!userId || !role) {
   //   return <></>;
   // }
+  if (loading) {
+    return (
+      <div className="flex h-[38px] items-center justify-center mt-5">
+        <ClipLoader color="#1b78f2" size={30} />
+      </div>
+    );
+  }
 
   return (
     <header className="flex justify-center bg-transparent w-full">

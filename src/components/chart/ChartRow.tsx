@@ -34,7 +34,7 @@ export const ChartRow: React.FC<ChartRowProps> = ({service_name, location, date_
                 <div className='flex flex-row gap-4'>
                     <span className='md:hidden font-bold uppercase text-[#202224] opacity-80'>status: </span>
                     <div className={`${bgColor} h-[30px] rounded-lg w-[90px] px-3`}>
-                        <div className={`${textColor} text-xs font-bold flex items-center justify-center h-full`}>{status}</div>
+                        <div className={`${textColor} text-xs font-bold flex items-center justify-center h-full`}>{status.charAt(0).toUpperCase() + status.slice(1)}</div>
                     </div>
                 </div>
             </div>
