@@ -7,6 +7,9 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
 import QuickPopupFeedback from "./QuickPopupFeedback";
 import QuickPopupReturn from "./QuickPopupReturn";
+import { ScrollArea } from "../ui/scroll-area";
+import { Label } from "../ui/label";
+import FileDownloadCard from "../card/FileDownloadCard";
 
 interface QuickPopupCustomer {
   toggle: () => void;
@@ -20,6 +23,8 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
   const { toast } = useToast();
 
   const [booking, setBooking] = useState<Order | null>(null);
+  const [contract, setContract] = useState<File | null>(null);
+
   const fetchBooking = async () => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/${bookingId}`
@@ -29,8 +34,51 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
     console.log("Booking: ", data);
   };
   useEffect(() => {
+
+    const contractUrl = "https://res.cloudinary.com/dk4auce82/image/upload/v1735639521/image-upload/xdsiy7nayojazkxphrbt.pdf";
+
+
+    if (contractUrl) {
+      fetch(contractUrl)
+        .then((response) => response.blob())
+        .then((blob) => {
+          // Kiểm tra loại MIME của file để xác định tên và kiểu đúng
+          const mimeType = blob.type;
+
+          // Nếu là file PDF
+          const file = new File([blob], 'Employment Contract', { type: mimeType });
+
+          // Set file vào state (setIdCard sẽ nhận file)
+          setContract(file);
+        })
+        .catch((error) => console.error('Error fetching the identity card:', error));
+    }
+
     fetchBooking();
   }, []);
+
+  const handleDownload = (file: File | null) => {
+    if (!file) {
+      // alert("No file selected to download.");
+      toast({
+        variant: "destructive",
+        title: "No file selected to download.",
+      });
+      return;
+    }
+
+    const fileUrl = URL.createObjectURL(file);
+
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = file.name;
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(fileUrl);
+  };
 
   const [handling, setHandling] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
@@ -106,10 +154,9 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
         <Button
           onClick={() =>
             router.push(
-              `feedback/${
-                booking?.feedbacks?.find(
-                  (feedback) => feedback.reportedBy === false
-                )?.id
+              `feedback/${booking?.feedbacks?.find(
+                (feedback) => feedback.reportedBy === false
+              )?.id
               }`
             )
           }
@@ -249,12 +296,12 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
           </button>
         </div>
         <div className="flex flex-col lg:flex-row w-full h-[90%] mt-5 gap-10">
-          <div className="w-full lg:w-[50%] h-full flex flex-col gap-[32px] content-between">
-            <div className="w-full h-full flex flex-col gap-[8px]">
+          <div className="w-full lg:w-[50%] h-full flex flex-col gap-4 content-between">
+            <div className="w-full h-full flex flex-col gap-[7px]">
               <p className="text-[#12153a] text-lg font-Averta-Semibold uppercase leading-snug tracking-tight">
                 helper section
               </p>
-              <div className="flex flex-col p-[16px] gap-[11px] rounded-lg">
+              <div className="flex flex-col px-[16px] pt-[12px] gap-[11px] rounded-lg">
                 <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
                   helper
                 </p>
@@ -289,7 +336,7 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
               <p className="text-[#12153a] text-lg font-Averta-Semibold uppercase leading-snug tracking-tight">
                 service details
               </p>
-              <div className="flex flex-col h-full px-[16px] pt-[16px] rounded-lg gap-5 pb-7">
+              <div className="flex flex-col h-full px-[16px] pt-[12px] rounded-lg gap-3 pb-7">
                 <div className="flex flex-col w-full h-fit gap-[11px]">
                   <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
                     service type
@@ -304,10 +351,10 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
                   <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
                     Description
                   </p>
-                  <div className="flex flex-col w-full h-[90px] gap-[11px] p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
-                    <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
+                  <div className="flex flex-col w-full h-[70px] gap-[11px] px-[13px] py-[8px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
+                    <ScrollArea className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
                       {booking.serviceCategory.description}
-                    </p>
+                    </ScrollArea>
                   </div>
                 </div>
                 {/* <div className="flex flex-col w-full h-fit gap-[11px]">
@@ -330,6 +377,18 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
                     </p>
                   </div>
                 </div> */}
+                <div className="flex flex-col w-full h-fit gap-[11px]">
+                  <Label className="text-[14px] w-fit font-Averta-Semibold text-[#9FA7B0]">
+                    CONTRACT
+                  </Label>
+                  <FileDownloadCard
+                    className="min-w-[360px] w-[25vw]"
+                    canUpdate={false}
+                    fileName={contract?.name}
+                    fileSize={contract?.size}
+                    onDownload={() => handleDownload(contract)}
+                  />
+                </div>
                 {bookingState == BookingStatus.Completed && (
                   <div className="h-[55px]">
                     <Button
@@ -347,7 +406,7 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
             <p className="text-[#12153a] text-lg font-Averta-Semibold uppercase leading-snug tracking-tight">
               customer-related info
             </p>
-            <div className="w-full h-full flex flex-col p-[16px] rounded-lg gap-6">
+            <div className="w-full h-full flex flex-col px-[16px] pb-[16px] pt-[12px] rounded-lg gap-[14.5px]">
               <div className="flex flex-col w-full h-fit gap-[11px]">
                 <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
                   customer
@@ -392,8 +451,8 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
                 <p className="text-[#9ea7af] text-sm font-Averta-Semibold uppercase leading-[17px] tracking-tight">
                   price
                 </p>
-                <div className="flex flex-row w-full h-full gap-[16px]">
-                  <div className="w-[40%] h-full justify-between p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
+                <div className="flex flex-col w-full h-full gap-[16px]">
+                  <div className="h-full justify-between p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
                     <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
                       {booking.totalPrice}/vnđ
                     </p>
@@ -436,16 +495,16 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
         <QuickPopupFeedback
           toggle={handleToggleFeedbackPopup}
           defaultBookingId={booking.id}
-          // mutate={fetchRefund}
-          // defaultBookingId={null}
+        // mutate={fetchRefund}
+        // defaultBookingId={null}
         />
       )}
       {toggleRefund && (
         <QuickPopupReturn
           toggle={handleToggleRefundPopup}
           defaultBookingId={booking.id}
-          // mutate={fetchRefund}
-          // defaultBookingId={null}
+        // mutate={fetchRefund}
+        // defaultBookingId={null}
         />
       )}
     </div>
