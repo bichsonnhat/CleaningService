@@ -218,7 +218,7 @@ const CreateIssuePopup: React.FC<CreateIssuePopupProps> = ({
         className="relative flex flex-col bg-white rounded-lg shadow-lg p-[20px] md:px-[50px] md:py-[30px] w-fit xl:w-[50%] h-fit max-h-[95%] gap-[20px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="absolute top-8 right-8 p-2 flex items-center justify-center rounded-full hover:bg-gray-200 hover:shadow-md transition duration-200 ease-in-out">
+        <div className="absolute top-3 right-3 xl:top-8 xl:right-8 p-2 flex items-center justify-center rounded-full hover:bg-gray-200 hover:shadow-md transition duration-200 ease-in-out">
           <button onClick={toggle}>
             <Image
               src="/images/ProgressBar/Group.svg"

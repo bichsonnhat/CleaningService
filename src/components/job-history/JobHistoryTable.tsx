@@ -21,7 +21,7 @@ const columns = [
   { header: "CUSTOMER", className: " flex-[2] hidden md:table-cell" },
   {
     header: "ADDRESS",
-    className: " flex-[5] hidden md:table-cell text-center",
+    className: " flex-[5] hidden md:table-cell",
   },
   { header: "TIME", className: " flex-[3]  hidden md:table-cell text-center" },
   {
@@ -30,6 +30,10 @@ const columns = [
   },
   { header: "PRICE", className: " flex-[2] hidden md:table-cell text-center" },
   { header: "STATUS", className: " flex-[3] hidden md:table-cell text-center" },
+  {
+    header: "PAYMENT",
+    className: " flex-[3] hidden md:table-cell text-center",
+  },
 ];
 
 const JobHistoryTable = () => {
@@ -51,14 +55,7 @@ const JobHistoryTable = () => {
     console.log("Role: ", userInfo);
     console.log("Job history response: ", data);
   };
-  // const fetchUserInfo = async () => {
-  //   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-info`);
-  //   const data = await response.json();
-  //   setRole(data.role);
-  //   setUserId(data.userId);
-  // }
   useEffect(() => {
-    //fetchUserInfo();
     fetchData();
   }, []);
 

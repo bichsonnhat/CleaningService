@@ -5,6 +5,7 @@ import OrderRow from "./OrderRow";
 import Pagination from "./Pagination";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Role } from "../feedback/FeedbackTable";
+import { headers } from "next/headers";
 
 export type Booking = {
   id: string;
@@ -55,7 +56,11 @@ const columns = [
   {
     header: "STATUS",
     className: "w-[120px] flex-[3] hidden md:table-cell text-center",
-  }, // Có thể cần rộng hơn chút
+  },
+  {
+    header: "PAYMENT",
+    className: "w-[120px] flex-[3] hidden md:table-cell text-center",
+  },
 ];
 
 const OrderTable = () => {

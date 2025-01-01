@@ -1,13 +1,15 @@
 interface BookingInfoItem {
   name: string;
   value: string;
+  detailId: string;
+  duration: number;
 }
 
 export interface BookingData {
   // Step 0: Select service category
   serviceCategory?: {
-    id: string,
-    name: string
+    id: string;
+    name: string;
   };
 
   // Step 1: Booking Information

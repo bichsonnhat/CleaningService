@@ -7,6 +7,8 @@ import { ClipLoader } from "react-spinners"; // Import ClipLoader
 type ServiceDetail = {
   name: string;
   price: number;
+  duration: number;
+  id: string;
 };
 
 const HomeCleaning = () => {
@@ -27,8 +29,10 @@ const HomeCleaning = () => {
         const beds = data
           .filter((item: any) => item.serviceType.name === "Number of bedrooms")
           .map((item: any) => ({
+            id: item.id,
             name: item.title,
             price: parseInt(item.additionalPrice),
+            duration: item.duration,
           }));
         setNumberOfBed(beds);
 
@@ -38,8 +42,10 @@ const HomeCleaning = () => {
             (item: any) => item.serviceType.name === "Number of bathrooms"
           )
           .map((item: any) => ({
+            id: item.id,
             name: item.title,
             price: parseInt(item.additionalPrice),
+            duration: item.duration,
           }));
         setNumberOfBathroom(bathrooms);
 
@@ -47,8 +53,10 @@ const HomeCleaning = () => {
         const cleans = data
           .filter((item: any) => item.serviceType.name === "Clean type")
           .map((item: any) => ({
+            id: item.id,
             name: item.title,
             price: parseInt(item.additionalPrice),
+            duration: item.duration,
           }));
         setCleanTypes(cleans);
 
@@ -126,12 +134,21 @@ const HomeCleaning = () => {
         {
           name: "Number of bedrooms",
           value: numberOfBed[selectedNumberOfBed]?.name,
+          detailId: numberOfBed[selectedNumberOfBed]?.id,
+          duration: numberOfBed[selectedNumberOfBed]?.duration,
         },
         {
           name: "Number of bathrooms",
           value: numberOfBathroom[selectedNumberOfBathroom]?.name,
+          detailId: numberOfBathroom[selectedNumberOfBathroom]?.id,
+          duration: numberOfBathroom[selectedNumberOfBathroom]?.duration,
         },
-        { name: "Clean type", value: cleanTypes[selectedCleanType]?.name },
+        {
+          name: "Clean type",
+          value: cleanTypes[selectedCleanType]?.name,
+          detailId: cleanTypes[selectedCleanType]?.id,
+          duration: cleanTypes[selectedCleanType]?.duration,
+        },
       ],
     });
     updateBookingData({

@@ -7,13 +7,41 @@ import { Booking } from "../order/OrderTable";
 import { Role } from "../feedback/FeedbackTable";
 import ClipLoader from "react-spinners/ClipLoader";
 
+// const columns = [
+//   { header: "HELPER", className: "w-[210px] hidden md:table-cell" },
+//   { header: "ADDRESS", className: "w-[340px] hidden md:table-cell" },
+//   { header: "TIME", className: "w-[200px] hidden md:table-cell" },
+//   { header: "RATING", className: "w-[110px] hidden md:table-cell mr-10" },
+//   { header: "PRICE", className: "w-[120px] hidden md:table-cell " },
+//   { header: "STATUS", className: "w-[120px] hidden md:table-cell" },
+// ];
+
 const columns = [
-  { header: "HELPER", className: "w-[210px] hidden md:table-cell" },
-  { header: "ADDRESS", className: "w-[340px] hidden md:table-cell" },
-  { header: "TIME", className: "w-[200px] hidden md:table-cell" },
-  { header: "RATING", className: "w-[110px] hidden md:table-cell mr-10" },
-  { header: "PRICE", className: "w-[120px] hidden md:table-cell " },
-  { header: "STATUS", className: "w-[120px] hidden md:table-cell" },
+  { header: "HELPER", className: " flex-[2] w-[210px] hidden md:table-cell" },
+  {
+    header: "ADDRESS",
+    className: " flex-[5] w-[340px] hidden md:table-cell",
+  },
+  {
+    header: "TIME",
+    className: " flex-[3] w-[200px] hidden md:table-cell text-center",
+  },
+  {
+    header: "RATING",
+    className: " flex-[3] w-[110px] hidden md:table-cell text-center",
+  },
+  {
+    header: "PRICE",
+    className: " flex-[2] w-[120px] hidden md:table-cell text-center",
+  },
+  {
+    header: "STATUS",
+    className: " flex-[3] w-[120px] hidden md:table-cell text-center",
+  },
+  {
+    header: "PAYMENT",
+    className: " flex-[3] w-[120px] hidden md:table-cell text-center",
+  },
 ];
 
 const OrderHistoryTable = () => {
@@ -99,7 +127,7 @@ const OrderHistoryTable = () => {
       <SearchBar setSearchTerm={handleSearch} setSearchBy={setSearchBy} />
 
       {/* title column */}
-      <div className="flex flex-wrap gap-3 w-full bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
+      <div className="flex-wrap gap-3 w-full hidden lg:flex bg-[#f5f5f5] h-[48px] items-center mt-4 p-2.5">
         {columns.map((col, index) => (
           <div
             key={index}

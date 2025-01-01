@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "../employee/Pagination";
 import SearchBarAndFilter from "./SearchBarAndFilter";
 import IssueRow from "../issue/IssueRow";
 import Image from "next/image";
@@ -21,6 +20,7 @@ import QuickPopupAdmin from "../quickpopup/QuickPopupAdmin";
 import QuickPopupCustomer from "../quickpopup/QuickPopupCustomer";
 import QuickPopupHelperProps from "../quickpopup/QuickPopupHelper";
 import CreateIssuePopup from "../quickpopup/CreateIssuePopup";
+import Pagination from "../job-history/Pagination";
 
 export type Issue = {
   id: number;
@@ -274,9 +274,9 @@ export default function IssueHistoryTable() {
             />
           ))
         ) : (
-          <div className="flex justify-center items-center w-full bg-white">
+          <div className="flex justify-center items-center w-full py-8 bg-white">
             <p className="text-lg font-Averta-Semibold text-neutral-900">
-              This helper has no issue history
+              You haven't created any issue yet
             </p>
           </div>
         )}
