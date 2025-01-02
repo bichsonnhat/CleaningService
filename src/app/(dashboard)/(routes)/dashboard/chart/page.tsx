@@ -138,8 +138,12 @@ const ChartPage = () => {
       if (data.status.toLowerCase() === "pending") {
         pendingCount++;
       }
+      console.log("newTotalIncome forEach", newTotalIncome);
+      console.log("pendingCount forEach", pendingCount);
     });
-    
+
+    console.log("newTotalIncome", newTotalIncome);
+    console.log("pendingCount", pendingCount);
     setTotalIncome(newTotalIncome);
     setTotalPending(pendingCount);
   }, [user, chartTableData]);
