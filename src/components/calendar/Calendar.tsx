@@ -32,7 +32,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
   // Update the type to allow null
   //const [selectedDay, setSelectedDay] = useState<SelectedDay | null>(null);
-  const [selectedDay, setSelectedDay] = useState<SelectedDay | null>({
+  const [selectedDay, setSelectedDay] = useState<SelectedDay>({
     day: currentDate,
     month: currentMonth,
     year: currentYear,
@@ -62,7 +62,7 @@ const Calendar: React.FC<CalendarProps> = ({
         selectedDay?.month === month &&
         selectedDay?.year === year
       ) {
-        setSelectedDay(null);
+        //setSelectedDay(null);
       } else {
         setSelectedDay(selectedDate);
       }
@@ -106,7 +106,7 @@ const Calendar: React.FC<CalendarProps> = ({
                 bookingDate: `${res.year}-${res.month}-${res.day}`,
               });
             }}
-            className={`lg:w-[132px] lg:h-[55px] p-2 text-center rounded-[10px] border-2 cursor-pointer font-Averta-Semibold pt-[10px] ${
+            className={`lg:w-[132px] lg:h-[55px] p-2 text-center rounded-[10px] border-2 cursor-pointer font-Averta-Semibold pt-[10px] select-none ${
               isSelected ? "border-blue-600 shadow-lg" : "border-[#DADDE1]"
             } ${
               isDisabled ? "text-gray-400 cursor-not-allowed" : "text-[#5e6976]"
