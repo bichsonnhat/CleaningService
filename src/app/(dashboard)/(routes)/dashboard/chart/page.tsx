@@ -12,8 +12,8 @@ const ChartPage = () => {
   const [filter, setFilter] = useState("None");
   const itemsPerPage = 5;
 
-  const [totalIncome, setTotalIncome] = useState(Array(12).fill(0));
-  const [totalPeding, setTotalPending] = useState(0);
+  const [totalIncome, setTotalIncome] = useState<number[]>(Array(12).fill(0));
+  const [totalPending, setTotalPending] = useState(0);
   const [user, setUser] = useState<IUserResponse[]>([]);
   const [chartTableData, setChartTableData] = useState<
     {
@@ -24,15 +24,7 @@ const ChartPage = () => {
       status: string;
     }[]
   >([]);
-  const [chartCardData] = useState<
-    {
-      titleInfo: string;
-      dataInfo: string;
-      urliconInfo: string;
-      percentageChangeInfo: string;
-      trend: string;
-    }[]
-  >([
+  const [chartCardData, setChartCardData] = useState([
     {
       titleInfo: "Total User",
       dataInfo: "",
@@ -90,7 +82,7 @@ const ChartPage = () => {
   const currentData = [...chartTableData];
 
   const finalData =
-    filter !== "none"
+    filter.toLowerCase() !== "none"
       ? currentData
           .sort((a, b) => {
             if (filter === "Ascending")
@@ -109,11 +101,11 @@ const ChartPage = () => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
   };
 
+  // Fetch data
   useEffect(() => {
     const fetchBookingData = async (url: string) => {
       const res = await fetch(url);
       const data = await res.json();
-      console.log("Data from fetchBookingData", data);
       mappingChartData(data);
     };
     const fetchUserData = async (url: string) => {
@@ -125,112 +117,133 @@ const ChartPage = () => {
     fetchUserData(`${process.env.NEXT_PUBLIC_API_URL}/api/users?role=admin`);
   }, []);
 
+  // Calculate income and pending
   useEffect(() => {
-    let pendingCount = 0;
-    const newTotalIncome = Array(12).fill(0);
-    
-    chartTableData.forEach((data) => {
-      console.log("Data from chartTableData", data);
-      if (data.status.toLowerCase() === "completed") {
-        const month = new Date(data.date_time).getMonth();
-        newTotalIncome[month] += Number(data.service_fee);
-      }
-      if (data.status.toLowerCase() === "pending") {
-        pendingCount++;
-      }
-      console.log("newTotalIncome forEach", newTotalIncome);
-      console.log("pendingCount forEach", pendingCount);
-    });
+    const calculateIncomeAndPending = () => {
+      const newTotalIncome = Array(12).fill(0);
+      let pendingCount = 0;
 
-    console.log("newTotalIncome", newTotalIncome);
-    console.log("pendingCount", pendingCount);
-    setTotalIncome(newTotalIncome);
-    setTotalPending(pendingCount);
-  }, [user, chartTableData]);
+      chartTableData.forEach((data) => {
+        const date = new Date(data.date_time);
+        const month = date.getMonth();
 
+        if (data.status.toLowerCase() === "completed") {
+          newTotalIncome[month] += Number(data.service_fee);
+        }
+        if (data.status.toLowerCase() === "pending") {
+          pendingCount++;
+        }
+      });
+
+      setTotalIncome(newTotalIncome);
+      setTotalPending(pendingCount);
+    };
+
+    calculateIncomeAndPending();
+  }, [chartTableData]);
+
+  // Update card data
   useEffect(() => {
-    const totalUserToday = user.filter((data) => {
+    const updateCardData = () => {
       const today = new Date();
-      const createdAt = new Date(data.createdAt);
-      return today.getDate() === createdAt.getDate();
-    }).length;
-
-    const totalUserYesterday = user.filter((data) => {
-      const yesterday = new Date();
+      const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
-      const createdAt = new Date(data.createdAt);
-      return yesterday.getDate() === createdAt.getDate();
-    }).length;
 
-    const totalOrderToday = chartTableData.filter((data) => {
-      const today = new Date();
-      const date = new Date(data.date_time);
-      return today.getDate() === date.getDate();
-    }).length;
+      const totalUserToday = user.filter(
+        (data) => new Date(data.createdAt).getDate() === today.getDate()
+      ).length;
 
-    const totalOrderYesterday = chartTableData.filter((data) => {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const date = new Date(data.date_time);
-      return yesterday.getDate() === date.getDate();
-    }).length;
+      const totalUserYesterday = user.filter(
+        (data) => new Date(data.createdAt).getDate() === yesterday.getDate()
+      ).length;
 
-    const totalIncomeToday = chartTableData.filter((data) => {
-      const today = new Date();
-      const date = new Date(data.date_time);
-      return today.getDate() === date.getDate();
-    }).length;
+      const totalOrderToday = chartTableData.filter(
+        (data) => new Date(data.date_time).getDate() === today.getDate()
+      ).length;
 
-    const totalIncomeYesterday = chartTableData.filter((data) => {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const date = new Date(data.date_time);
-      return yesterday.getDate() === date.getDate();
-    }).length;
+      const totalOrderYesterday = chartTableData.filter(
+        (data) => new Date(data.date_time).getDate() === yesterday.getDate()
+      ).length;
 
-    const totalPendingToday = chartTableData.filter((data) => {
-      const today = new Date();
-      const date = new Date(data.date_time);
-      return today.getDate() === date.getDate();
-    }).length;
+      const todayIncome = chartTableData
+        .filter((data) => {
+          const date = new Date(data.date_time);
+          return date.getDate() === today.getDate() && data.status.toLowerCase() === "completed";
+        })
+        .reduce((sum, data) => sum + data.service_fee, 0);
 
-    const totalPendingYesterday = chartTableData.filter((data) => {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const date = new Date(data.date_time);
-      return yesterday.getDate() === date.getDate();
-    }).length;
+      const yesterdayIncome = chartTableData
+        .filter((data) => {
+          const date = new Date(data.date_time);
+          return date.getDate() === yesterday.getDate() && data.status.toLowerCase() === "completed";
+        })
+        .reduce((sum, data) => sum + data.service_fee, 0);
 
-    const percentageUserChange = totalUserYesterday !== 0 ?
-      ((totalUserToday - totalUserYesterday) / totalUserYesterday) * 100 : 0;
-    const percentageOrderChange = totalOrderYesterday !== 0 ?
-      ((totalOrderToday - totalOrderYesterday) / totalOrderYesterday) * 100 : 0;
-    const percentageIncomeChange = totalIncomeYesterday !== 0 ?
-      ((totalIncomeToday - totalIncomeYesterday) / totalIncomeYesterday) * 100 : 0;
-    const percentagePendingChange = totalPendingYesterday !== 0 ?
-      ((totalPendingToday - totalPendingYesterday) / totalPendingYesterday) * 100 : 0;
+      const calculatePercentageChange = (today: number, yesterday: number) =>
+        yesterday !== 0 ? ((today - yesterday) / yesterday) * 100 : 0;
 
-    chartCardData[0].dataInfo = user.length.toString();
-    chartCardData[0].percentageChangeInfo = `${percentageUserChange.toFixed(
-      2
-    )}%`;
-    chartCardData[0].trend = percentageUserChange > 1 ? "up" : "down";
-    chartCardData[1].dataInfo = chartTableData.length.toString();
-    chartCardData[1].percentageChangeInfo = `${percentageOrderChange.toFixed(
-      2
-    )}%`;
-    chartCardData[1].trend = percentageOrderChange > 1 ? "up" : "down";
-    chartCardData[2].dataInfo = `$${totalIncome.reduce((a, b) => a + b, 0)}`;
-    chartCardData[2].percentageChangeInfo = `${percentageIncomeChange.toFixed(
-      2
-    )}%`;
-    chartCardData[2].trend = percentageIncomeChange > 1 ? "up" : "down";
-    chartCardData[3].dataInfo = totalPeding.toString();
-    chartCardData[3].percentageChangeInfo = `${percentagePendingChange.toFixed(
-      2
-    )}%`;
-    chartCardData[3].trend = percentagePendingChange > 1 ? "up" : "down";
-  }, [user, chartTableData, chartCardData, totalIncome, totalPeding]);
+      const newChartCardData = [
+        {
+          ...chartCardData[0],
+          dataInfo: user.length.toString(),
+          percentageChangeInfo: `${calculatePercentageChange(
+            totalUserToday,
+            totalUserYesterday
+          ).toFixed(2)}%`,
+          trend:
+            calculatePercentageChange(totalUserToday, totalUserYesterday) > 0
+              ? "up"
+              : "down",
+        },
+        {
+          ...chartCardData[1],
+          dataInfo: chartTableData.length.toString(),
+          percentageChangeInfo: `${calculatePercentageChange(
+            totalOrderToday,
+            totalOrderYesterday
+          ).toFixed(2)}%`,
+          trend:
+            calculatePercentageChange(totalOrderToday, totalOrderYesterday) > 0
+              ? "up"
+              : "down",
+        },
+        {
+          ...chartCardData[2],
+          dataInfo: `$${totalIncome.reduce((a, b) => a + b, 0)}`,
+          percentageChangeInfo: `${calculatePercentageChange(
+            todayIncome,
+            yesterdayIncome
+          ).toFixed(2)}%`,
+          trend:
+            calculatePercentageChange(todayIncome, yesterdayIncome) > 0
+              ? "up"
+              : "down",
+        },
+        {
+          ...chartCardData[3],
+          dataInfo: totalPending.toString(),
+          percentageChangeInfo: `${calculatePercentageChange(
+            chartTableData.filter(
+              (data) =>
+                new Date(data.date_time).getDate() === today.getDate() &&
+                data.status.toLowerCase() === "pending"
+            ).length,
+            chartTableData.filter(
+              (data) =>
+                new Date(data.date_time).getDate() === yesterday.getDate() &&
+                data.status.toLowerCase() === "pending"
+            ).length
+          ).toFixed(2)}%`,
+          trend: totalPending > 0 ? "up" : "down",
+        },
+      ];
+
+      setChartCardData(newChartCardData);
+    };
+
+    updateCardData();
+  }, [user, chartTableData, totalIncome, totalPending]);
+
   return (
     <>
       <div className="flex flex-col gap-[30px] h-full w-full">
