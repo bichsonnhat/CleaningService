@@ -53,14 +53,14 @@ const Booking5Right = () => {
     return `${startDate}-${startMonth}-${startYear}`;
   };
 
-  //console.log("Info: ", bookingData.bookingInfomation);
+  //console.log("Info: ", bookingData);
   const handlePayment = async () => {
     try {
       const isValid = validateFields();
       console.log(isValid);
       if (isValid) {
         console.log("Validation passed! Proceeding to payment...");
-        
+
         const userResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
         );
@@ -72,9 +72,11 @@ const Booking5Right = () => {
         const scheduleDates = createScheduleDates(
           bookingData.bookingDate,
           bookingData.bookingTiming,
-          cleanType.value
+          cleanType.duration
         );
-  
+        const detailIds = bookingData.bookingInfomation.map(
+          (detail: any) => detail.detailId
+        );
         const bookingPayload = {
           customerId: userInfo.userId,
           serviceCategoryId: bookingData.serviceCategory?.id,
@@ -83,6 +85,7 @@ const Booking5Right = () => {
           scheduledEndTime: scheduleDates.scheduleDateEnd,
           bookingNote: bookingData.bookingNote,
           totalPrice: totalPrice,
+          detailIds: detailIds,
         };
         //console.log("Booking Payload: ", bookingPayload);
         if (paymentMethod === "Stripe") {
@@ -96,18 +99,18 @@ const Booking5Right = () => {
               body: JSON.stringify(bookingPayload),
             }
           );
-  
+
           if (!bookingResponse.ok) {
             throw new Error("Failed to create booking");
           }
-  
+
           // Gọi Stripe payment
           const stripeResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/stripe?unit_amount=${
               totalPrice * 100
             }`
           );
-  
+
           const data = await stripeResponse.json();
           router.push(data.url);
         } else {
