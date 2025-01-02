@@ -126,17 +126,21 @@ const ChartPage = () => {
   }, []);
 
   useEffect(() => {
+    let pendingCount = 0;
     const newTotalIncome = Array(12).fill(0);
+    
     chartTableData.forEach((data) => {
       if (data.status.toLowerCase() === "completed") {
         const month = new Date(data.date_time).getMonth();
         newTotalIncome[month] += Number(data.service_fee);
       }
       if (data.status.toLowerCase() === "pending") {
-        setTotalPending((prev) => prev + 1);
+        pendingCount++;
       }
     });
+    
     setTotalIncome(newTotalIncome);
+    setTotalPending(pendingCount);
   }, [user, chartTableData]);
 
   useEffect(() => {
