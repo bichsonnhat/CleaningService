@@ -130,6 +130,7 @@ const ChartPage = () => {
     const newTotalIncome = Array(12).fill(0);
     
     chartTableData.forEach((data) => {
+      console.log("Data from chartTableData", data);
       if (data.status.toLowerCase() === "completed") {
         const month = new Date(data.date_time).getMonth();
         newTotalIncome[month] += Number(data.service_fee);
