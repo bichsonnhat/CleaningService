@@ -459,7 +459,7 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
       // alert("Something went wrong during form submission.");
     } finally {
       if (checkSubmit) {
-        // router.push(`${process.env.NEXT_PUBLIC_API_URL}`);
+        router.push(`${process.env.NEXT_PUBLIC_API_URL}`);
         // (window.location.href = `${process.env.NEXT_PUBLIC_API_URL}`)
       }
       else {
