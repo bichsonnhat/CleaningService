@@ -1,6 +1,7 @@
 import prisma from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { assignHelperToBooking } from "../../(lib)/assignHelperToBooking";
 //Get all bookings
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -162,6 +163,24 @@ export async function POST(req: Request) {
     const result = await prisma.$transaction(async (prisma) => {
       const newBooking = await prisma.booking.create({
         data: bookingData,
+      });
+
+      const helperId = await assignHelperToBooking(newBooking);
+
+      if (helperId === null) {
+        return NextResponse.json(
+          { error: "No available helpers" },
+          { status: 404 }
+        );
+      }
+
+      await prisma.booking.update({
+        where: {
+          id: newBooking.id,
+        },
+        data: {
+          helperId,
+        },
       });
 
       const bookingDetails = detailIds.map((serviceDetailId) => ({
