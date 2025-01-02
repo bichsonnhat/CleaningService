@@ -48,15 +48,15 @@ export const createScheduleDates = (
 
     if (startTimeDecimal > 10) startTimeDecimal = 10.5;
     const { hours, minutes } = parseDecimalTime(startTimeDecimal);
-
+    //console.log("Ho here");
     const scheduleDateStart = new Date(baseDate);
     scheduleDateStart.setHours(hours, minutes, 0, 0);
 
     //const durationHours = getBookingDuration(duration);
     const scheduleDateEnd = new Date(scheduleDateStart);
     scheduleDateEnd.setHours(scheduleDateStart.getHours() + duration);
-
-    console.log("Go here", scheduleDateEnd);
+    //console.log("Duration", duration);
+    //console.log("Go here", scheduleDateEnd);
     scheduleDateEnd.setMinutes(scheduleDateStart.getMinutes());
 
     if (
