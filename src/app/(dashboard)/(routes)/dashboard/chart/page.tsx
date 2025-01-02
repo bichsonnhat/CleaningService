@@ -137,7 +137,7 @@ const ChartPage = () => {
       }
     });
     setTotalIncome(newTotalIncome);
-  }, [chartTableData]);
+  }, [user, chartTableData]);
 
   useEffect(() => {
     const totalUserToday = user.filter((data) => {
@@ -221,7 +221,7 @@ const ChartPage = () => {
       2
     )}%`;
     chartCardData[3].trend = percentagePendingChange > 1 ? "up" : "down";
-  }, [user, chartTableData]);
+  }, [user, chartTableData, chartCardData, totalIncome, totalPeding]);
   return (
     <>
       <div className="flex flex-col gap-[30px] h-full w-full">
