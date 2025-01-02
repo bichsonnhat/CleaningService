@@ -124,7 +124,7 @@ export async function PUT(
     // Xử lý lỗi nếu có
     console.error("Error updating customer info:", error);
     return NextResponse.json(
-      { status: "error", error: "Failed to update customer info" },
+      { status: "error", error },
       { status: 500 }
     );
   }
