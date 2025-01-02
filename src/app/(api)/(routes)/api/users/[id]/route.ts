@@ -105,6 +105,12 @@ export async function DELETE(
     { params }: { params: { id: string } }
 ) {
     try {
+        const helper = await prisma.helper.delete({
+            where: {
+                id: params.id,
+            },
+        });
+        
         const user = await prisma.user.delete({
             where: {
                 id: params.id,
