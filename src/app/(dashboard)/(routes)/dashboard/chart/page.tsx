@@ -113,6 +113,7 @@ const ChartPage = () => {
     const fetchBookingData = async (url: string) => {
       const res = await fetch(url);
       const data = await res.json();
+      console.log("Data from fetchBookingData", data);
       mappingChartData(data);
     };
     const fetchUserData = async (url: string) => {

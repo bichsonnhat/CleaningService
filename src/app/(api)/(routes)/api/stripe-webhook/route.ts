@@ -20,6 +20,7 @@ export async function POST(request: Request) {
     switch (event.type) {
         case 'payment_intent.succeeded':
             const paymentIntent = event.data.object;
+            
             console.log('PaymentIntent was successful!');
             // Then define and call a method to handle the successful payment intent.
             // handlePaymentIntentSucceeded(paymentIntent);

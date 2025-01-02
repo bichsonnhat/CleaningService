@@ -6,6 +6,7 @@ export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const unitAmount = searchParams.get('unit_amount');
+        
 
         if (!unitAmount) {
             return new NextResponse("Unit amount is required", { status: 400 });
@@ -38,7 +39,8 @@ export async function GET(request: Request) {
                 }
             ],
             metadata: {
-                userId: user.id
+                userId: user.id,
+
             }
         });
         return NextResponse.json({
