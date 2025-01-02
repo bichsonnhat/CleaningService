@@ -90,16 +90,35 @@ const CalendarComponent = () => {
   );
   const [view, setView] = useState<"month" | "day">("month");
 
+  // const tasks: Task[] = Array.isArray(bookings)
+  //   ? bookings.map((booking: Booking) => ({
+  //       date: new Date(booking.scheduledStartTime).toISOString().slice(0, 10),
+  //       title: booking.serviceCategory.name,
+  //       startTime: new Date(booking.scheduledStartTime)
+  //         .toISOString()
+  //         .slice(11, 16),
+  //       endTime: new Date(booking.scheduledEndTime).toISOString().slice(11, 16),
+  //       location: booking.location,
+  //     }))
+  //   : [];
+
   const tasks: Task[] = Array.isArray(bookings)
-    ? bookings.map((booking: Booking) => ({
-        date: new Date(booking.scheduledStartTime).toISOString().slice(0, 10),
-        title: booking.serviceCategory.name,
-        startTime: new Date(booking.scheduledStartTime)
-          .toISOString()
-          .slice(11, 16),
-        endTime: new Date(booking.scheduledEndTime).toISOString().slice(11, 16),
-        location: booking.location,
-      }))
+    ? bookings.map((booking: Booking) => {
+        const startUTC = new Date(booking.scheduledStartTime); // Lấy thời gian gốc ở UTC
+        const endUTC = new Date(booking.scheduledEndTime);
+
+        // Chuyển đổi UTC sang GMT+7
+        const startLocal = new Date(startUTC.getTime() + 7 * 60 * 60 * 1000); // Bù 7 giờ
+        const endLocal = new Date(endUTC.getTime() + 7 * 60 * 60 * 1000);
+
+        return {
+          date: startLocal.toISOString().slice(0, 10), // yyyy-MM-dd
+          startTime: startLocal.toISOString().slice(11, 16), // HH:mm
+          endTime: endLocal.toISOString().slice(11, 16), // HH:mm
+          location: booking.location,
+          title: booking.serviceCategory.name,
+        };
+      })
     : [];
 
   const toggleView = (newView: "month" | "day") => {
@@ -162,7 +181,7 @@ const CalendarComponent = () => {
       const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(
         day
       ).padStart(2, "0")}`;
-      return tasks.find((task) => task.date === dateStr);
+      return tasks.filter((task) => task.date === dateStr);
     };
 
     return (
@@ -177,7 +196,7 @@ const CalendarComponent = () => {
           <div
             key={`prev-${day}`}
             onClick={() => changeDate(-1)}
-            className="bg-white min-w-[34px] h-[84px] sm:h-[119px] border rounded-lg p-2 relative text-gray-400 cursor-pointer"
+            className="bg-white min-w-[34px] h-[84px] sm:h-[119px] border rounded-lg px-2 relative text-gray-400 cursor-pointer"
           >
             <div className="sm:mt-3 mt-1 text-left text-[#202224] text-opacity-[0.5] text-[14px] font-medium">
               {String(day).padStart(2, "0")}
@@ -191,14 +210,31 @@ const CalendarComponent = () => {
             <div
               key={`current-${day}`}
               onClick={() => handleDayClick(day)}
-              className="bg-white min-w-[34px] h-[84px] sm:h-[119px] border rounded-lg p-2 relative cursor-pointer"
+              className="bg-white min-w-[34px] h-[84px] sm:h-[119px] border rounded-lg px-2 pb-2 relative cursor-pointer"
             >
-              <div className="sm:mt-3 mt-1 text-left text-[#202224] text-[14px] font-medium">
+              <div className="flex flex-row items-center sm:my-3 my-1 text-left text-[#202224] text-[14px] font-medium">
                 {String(day).padStart(2, "0")}
+                {task.length > 2 && (
+                  <div className="absolute text-blue-500 text-[12px] text-center mt-1 right-1 top-2">
+                    +{task.length - 2} more...
+                  </div>
+                )}
               </div>
-              {task && (
+              {/* {task && (
                 <div className="absolute left-2 right-2 bg-blue-500 text-white text-[14px] rounded p-1 text-center overflow-hidden text-ellipsis whitespace-nowrap">
                   {task.title}
+                </div>
+              )} */}
+              {task.length > 0 && (
+                <div className="absolute left-2 right-2 flex flex-col gap-1">
+                  {task.slice(0, 2).map((task, index) => (
+                    <div
+                      key={index}
+                      className="bg-blue-500 text-white text-[14px] rounded p-1 text-center truncate"
+                    >
+                      {task.title}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -209,7 +245,7 @@ const CalendarComponent = () => {
           <div
             key={`next-${day}`}
             onClick={() => changeDate(1)}
-            className="bg-white min-w-[34px] h-[84px] sm:h-[119px] border rounded-lg p-2 relative text-gray-400 cursor-pointer"
+            className="bg-white min-w-[34px] h-[84px] sm:h-[119px] border rounded-lg px-2 relative text-gray-400 cursor-pointer"
           >
             <div className="sm:mt-3 mt-1 text-left text-[#202224] text-opacity-[0.5] text-[14px] font-medium">
               {String(day).padStart(2, "0")}
@@ -274,12 +310,17 @@ const CalendarComponent = () => {
                   const taskStart = startHour + startMin / 60;
                   const taskEnd = endHour + endMin / 60;
                   const duration = taskEnd - taskStart;
+                  const backgroundColor =
+                    (startHour >= 10 && startMin > 0) || startHour > 10
+                      ? "bg-orange-100 text-orange-800"
+                      : "bg-blue-100 text-blue-800";
 
                   if (hour === startHour) {
+                    console.log("Task:", task);
                     return (
                       <div
                         key={index}
-                        className={`absolute bg-blue-100 text-blue-800 w-[250px] sm:w-[calc(100vw-350px)] lg:w-[calc(100vw-400px)] xl:w-[calc(100vw-450px)] 2xl:w-[calc(100vw-550px)]  rounded-lg shadow-sm flex items-center`}
+                        className={`absolute ${backgroundColor} text-blue-800 w-[250px] sm:w-[calc(100vw-350px)] lg:w-[calc(100vw-400px)] xl:w-[calc(100vw-450px)] 2xl:w-[calc(100vw-550px)]  rounded-lg shadow-sm flex items-center`}
                         style={{
                           top: `${(startMin / 60) * 80 + 5}px`,
                           height: `${duration * 80 - 10}px`,

@@ -46,6 +46,7 @@ export const createScheduleDates = (
       throw new Error("Invalid date string");
     }
 
+    if (startTimeDecimal > 10) startTimeDecimal = 10.5;
     const { hours, minutes } = parseDecimalTime(startTimeDecimal);
 
     const scheduleDateStart = new Date(baseDate);
