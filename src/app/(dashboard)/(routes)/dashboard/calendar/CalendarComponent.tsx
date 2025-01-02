@@ -90,16 +90,35 @@ const CalendarComponent = () => {
   );
   const [view, setView] = useState<"month" | "day">("month");
 
+  // const tasks: Task[] = Array.isArray(bookings)
+  //   ? bookings.map((booking: Booking) => ({
+  //       date: new Date(booking.scheduledStartTime).toISOString().slice(0, 10),
+  //       title: booking.serviceCategory.name,
+  //       startTime: new Date(booking.scheduledStartTime)
+  //         .toISOString()
+  //         .slice(11, 16),
+  //       endTime: new Date(booking.scheduledEndTime).toISOString().slice(11, 16),
+  //       location: booking.location,
+  //     }))
+  //   : [];
+
   const tasks: Task[] = Array.isArray(bookings)
-    ? bookings.map((booking: Booking) => ({
-        date: new Date(booking.scheduledStartTime).toISOString().slice(0, 10),
-        title: booking.serviceCategory.name,
-        startTime: new Date(booking.scheduledStartTime)
-          .toISOString()
-          .slice(11, 16),
-        endTime: new Date(booking.scheduledEndTime).toISOString().slice(11, 16),
-        location: booking.location,
-      }))
+    ? bookings.map((booking: Booking) => {
+        const startUTC = new Date(booking.scheduledStartTime); // Lấy thời gian gốc ở UTC
+        const endUTC = new Date(booking.scheduledEndTime);
+
+        // Chuyển đổi UTC sang GMT+7
+        const startLocal = new Date(startUTC.getTime() + 7 * 60 * 60 * 1000); // Bù 7 giờ
+        const endLocal = new Date(endUTC.getTime() + 7 * 60 * 60 * 1000);
+
+        return {
+          date: startLocal.toISOString().slice(0, 10), // yyyy-MM-dd
+          startTime: startLocal.toISOString().slice(11, 16), // HH:mm
+          endTime: endLocal.toISOString().slice(11, 16), // HH:mm
+          location: booking.location,
+          title: booking.serviceCategory.name,
+        };
+      })
     : [];
 
   const toggleView = (newView: "month" | "day") => {
@@ -274,12 +293,16 @@ const CalendarComponent = () => {
                   const taskStart = startHour + startMin / 60;
                   const taskEnd = endHour + endMin / 60;
                   const duration = taskEnd - taskStart;
+                  const backgroundColor =
+                    startHour >= 10 && startMin > 0
+                      ? "bg-orange-100 text-orange-800"
+                      : "bg-blue-100 text-blue-800";
 
                   if (hour === startHour) {
                     return (
                       <div
                         key={index}
-                        className={`absolute bg-blue-100 text-blue-800 w-[250px] sm:w-[calc(100vw-350px)] lg:w-[calc(100vw-400px)] xl:w-[calc(100vw-450px)] 2xl:w-[calc(100vw-550px)]  rounded-lg shadow-sm flex items-center`}
+                        className={`absolute ${backgroundColor} text-blue-800 w-[250px] sm:w-[calc(100vw-350px)] lg:w-[calc(100vw-400px)] xl:w-[calc(100vw-450px)] 2xl:w-[calc(100vw-550px)]  rounded-lg shadow-sm flex items-center`}
                         style={{
                           top: `${(startMin / 60) * 80 + 5}px`,
                           height: `${duration * 80 - 10}px`,
