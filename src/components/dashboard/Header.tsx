@@ -22,8 +22,13 @@ const Header: React.FC = () => {
     },
     {
       name: "Dashboard",
-      url: "/dashboard",
-      canAccess: ["customer", "admin", "helper"],
+      url: "/dashboard/chart",
+      canAccess: ["admin"],
+    },
+    {
+      name: "Dashboard",
+      url: "/dashboard/personal",
+      canAccess: ["customer", "helper"],
     },
     {
       name: "Booking",

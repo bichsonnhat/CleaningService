@@ -10,7 +10,7 @@ const Header = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
   const links = [
     {
       name: "About Us",
@@ -22,8 +22,13 @@ const Header = () => {
     },
     {
       name: "Dashboard",
-      url: "/dashboard",
-      canAccess: ["customer", "admin", "helper"],
+      url: "/dashboard/chart",
+      canAccess: ["admin"],
+    },
+    {
+      name: "Dashboard",
+      url: "/dashboard/personal",
+      canAccess: ["customer", "helper"],
     },
     {
       name: "Booking",
