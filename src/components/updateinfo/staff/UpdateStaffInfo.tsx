@@ -460,7 +460,7 @@ const UpdateStaffInfo: React.FC<UpdateStaffInfoProps> = ({ userId }) => {
     } finally {
       if (checkSubmit) {
         // router.push(`${process.env.NEXT_PUBLIC_API_URL}`);
-        (window.location.href = `${process.env.NEXT_PUBLIC_API_URL}`)
+        // (window.location.href = `${process.env.NEXT_PUBLIC_API_URL}`)
       }
       else {
         setIsSubmitting(false);
