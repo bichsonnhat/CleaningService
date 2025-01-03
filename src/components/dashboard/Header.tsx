@@ -145,7 +145,9 @@ const Header: React.FC = () => {
           );
         })}
         <div className="hidden md:flex flex-row md:gap-3.5 mr-2">
-          <UserButton />
+          <div className="items-center justify-center flex">
+            <UserButton />
+          </div>
           <div className="flex flex-col text-slate-800 font-Averta-Semibold">
             <span>{user?.fullName || "Guest"}</span>
             <span>
