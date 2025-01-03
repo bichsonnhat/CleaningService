@@ -148,7 +148,7 @@ const Header: React.FC = () => {
           <UserButton />
           <div className="flex flex-col text-slate-800 font-Averta-Semibold">
             <span>{user?.fullName || "Guest"}</span>
-            <span>{String(user?.publicMetadata?.role) || "Guest"}</span>
+            <span>{String(user?.publicMetadata?.role).charAt(0) + String(user?.publicMetadata?.role).slice(1) || "Guest"}</span>
           </div>
         </div>
       </nav>
