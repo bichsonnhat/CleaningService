@@ -138,6 +138,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const data = await req.json();
+    let bookingID;
 
     if (!data || typeof data !== "object") {
       return NextResponse.json(
@@ -160,42 +161,52 @@ export async function POST(req: Request) {
       );
     }
 
+
     const result = await prisma.$transaction(async (prisma) => {
-      const newBooking = await prisma.booking.create({
-        data: bookingData,
-      });
-
-      const helperId = await assignHelperToBooking(newBooking);
-
-      if (helperId === null) {
-        return NextResponse.json(
-          { error: "No available helpers" },
-          { status: 404 }
-        );
+      try {
+        const newBooking = await prisma.booking.create({
+          data: bookingData,
+        });
+    
+        const helperId = await assignHelperToBooking(newBooking);
+    
+        if (helperId === null) {
+          return NextResponse.json(
+            { error: "No available helpers" },
+            { status: 404 }
+          );
+        }
+    
+        await prisma.booking.update({
+          where: {
+            id: newBooking.id,
+          },
+          data: {
+            helperId,
+          },
+        });
+    
+        const bookingDetails = detailIds.map((serviceDetailId) => ({
+          bookingId: newBooking.id,
+          serviceDetailId: serviceDetailId,
+        }));
+    
+        await prisma.bookingDetail.createMany({
+          data: bookingDetails,
+        });
+    
+        return newBooking;
+      } catch (error) {
+        console.error("Error inside transaction:", error);
+        throw error; // Rethrow để transaction cuộn lại
       }
-
-      await prisma.booking.update({
-        where: {
-          id: newBooking.id,
-        },
-        data: {
-          helperId,
-        },
-      });
-
-      const bookingDetails = detailIds.map((serviceDetailId) => ({
-        bookingId: newBooking.id,
-        serviceDetailId: serviceDetailId,
-      }));
-
-      await prisma.bookingDetail.createMany({
-        data: bookingDetails,
-      });
-
-      return newBooking;
     });
 
-    return NextResponse.json(result, { status: 201 });
+    // return NextResponse.json(result, { status: 201 });
+    return NextResponse.json({
+      status: 201,
+      result: result,
+    });
   } catch (error) {
     console.error("Error processing booking request:", error);
 
@@ -230,6 +241,8 @@ export async function POST(req: Request) {
       { error: "Internal server error" },
       { status: 500 }
     );
+  }
+  finally{
   }
 }
 

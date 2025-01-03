@@ -119,7 +119,7 @@ const Step_2 = () => {
                 <Calendar month={currentIndex} />
             </div>
             <button
-                className="mt-[50px] py-[20px] px-[70px] bg-blue-600 rounded-[10px] text-white w-[180px] h-[60px] text-center font-Averta-Semibold"
+                className="max-sm:hidden mt-[50px] py-[20px] px-[70px] bg-blue-600 rounded-[10px] text-white w-[180px] h-[60px] text-center font-Averta-Semibold"
                 onClick={handleRoute}
             >
                 Next

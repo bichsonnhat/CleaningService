@@ -1,11 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ChartTable } from "@/components/chart/ChartTable";
 import Dropdown from "@/components/chart/DropDown";
 import { InfoCard } from "@/components/chart/InfoCard";
 import { Chart } from "@/components/chart/Chart";
 import Pagination from "@/components/chart/Pagination";
 import { IBookingResponse, IUserResponse } from "@/utils/interfaces";
+import { ChartRow } from "@/components/chart/ChartRow";
+import ClipLoader from "react-spinners/ClipLoader";
+import { Skeleton } from "@/components/ui/skeleton"
 
 const ChartPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -113,7 +115,7 @@ const ChartPage = () => {
       const data = await res.json();
       setUser(data);
     };
-    fetchBookingData(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=admin&userId=asd`);
+    fetchBookingData(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=admin&userId=adminID`);
     fetchUserData(`${process.env.NEXT_PUBLIC_API_URL}/api/users?role=admin`);
   }, []);
 
@@ -248,9 +250,17 @@ const ChartPage = () => {
     <>
       <div className="flex flex-col gap-[30px] h-full w-full">
         <div className="grid grid-cols-2 sm:flex sm:flex-row justify-between h-fit max-sm:gap-4">
-          {chartCardData.map((chart) => (
-            <InfoCard key={chart.titleInfo} {...chart} />
-          ))}
+            {chartTableData.length === 0 ? (
+            <div className="flex justify-between w-full bg-slate-100 rounded-lg">
+              {[...Array(4)].map((_, index) => (
+                <Skeleton key={index} className="w-[22%] h-[200px] bg-slate-200 rounded-lg" />
+              ))}
+            </div>
+            ) : (
+            chartCardData.map((chart) => (
+              <InfoCard key={chart.titleInfo} {...chart} />
+            ))
+            )}
         </div>
         <div className="bg-white rounded-xl h-[500px]">
           <div className="w-[95%] m-auto mt-[30px] flex flex-row justify-between h-[10%]">
@@ -258,9 +268,15 @@ const ChartPage = () => {
               Total Income Details
             </div>
           </div>
-          <div className="w-[95%] m-auto my-[25px] h-[90%]">
-            <Chart totalIncome={totalIncome} />
-          </div>
+            <div className="w-[95%] m-auto my-[25px] h-[90%]">
+            {chartTableData.length === 0 ? (
+              <div className='flex justify-center items-center h-full'>
+                <ClipLoader color='#3B82F6' loading={true} size={50} />
+              </div>
+            ) : (
+              <Chart totalIncome={totalIncome} />
+            )}
+            </div>
         </div>
         <div className="bg-white rounded-xl h">
           <div className="w-[95%] m-auto mt-[30px] flex flex-row justify-between">
@@ -269,7 +285,40 @@ const ChartPage = () => {
             </div>
             <Dropdown setFilter={setFilter} />
           </div>
-          <ChartTable chartTableData={finalData} />
+          <div className='w-[95%] m-auto my-[25px]'>
+              <div className='max-sm:hidden flex flex-row bg-[#F1F4F9] h-[48px] p-[10px] gap-[10px] rounded-t-xl'>
+                  <div className='w-[20.5%] pl-[12px] m-auto'>
+                      <div className='text-[#202224] text-sm font-bold'>Service Name</div>
+                  </div>
+                  <div className='w-[22.5%] pl-[12px] m-auto'>
+                      <div className='text-[#202224] text-sm font-bold'>Location</div>
+                  </div>
+                  <div className='w-[25.8%] pl-[12px] m-auto'>
+                      <div className='text-[#202224] text-sm font-bold'>Date - Time</div>
+                  </div>
+                  <div className='w-[16%] pl-[12px] m-auto'>
+                      <div className='text-[#202224] text-sm font-bold'>Service Fee</div>
+                  </div>
+                  <div className='w-[15.2%] pl-[12px] m-auto'>
+                      <div className='text-[#202224] text-sm font-bold'>Status</div>
+                  </div>
+              </div>
+              <div className='divide-y'>
+                {chartTableData.length === 0 ? (
+                  <div className='flex justify-center items-center h-[300px]'>
+                    <ClipLoader color='#3B82F6' loading={true} size={50} />
+                  </div>
+                ) : ( finalData.length === 0 ? (
+                  <div className='flex justify-center items-center h-[300px]'>
+                    <p className='text-[#202224] text-lg font-bold'>No data found</p>
+                  </div>
+                ) : (
+                  finalData.map((chart) => (
+                    <ChartRow key={chart.date_time} {...chart} />
+                )))
+                )}
+              </div>
+          </div>
         </div>
       </div>
       <Pagination

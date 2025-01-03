@@ -41,6 +41,7 @@ const ProgressBar = () => {
     serviceDetail: string;
     howLong: string;
   }>({serviceDetail: '', howLong: ''})
+  const [dateBooking, setDateBooking] = useState<string>('')
   const [dateTimeBooking, setDateTimeBooking] = useState<string>('')
   const [addressBooking, setAddressBooking] = useState<string>('')
   const [disableBtn, setDisableBtn] = useState<boolean>(false)
@@ -99,8 +100,8 @@ const ProgressBar = () => {
       cleanType: homeCleaningDetail.cleanType,
       serviceDetail: otherServicesDetail.serviceDetail,
       howLong: otherServicesDetail.howLong,
-      scheduleDate: dateTimeBooking === 'Invalid Date at Invalid Date' ? '-' : dateTimeBooking,
-      address: addressBooking === 'undefined undefined' ? '-' : addressBooking,
+      scheduleDate: dateTimeBooking,
+      address: addressBooking,
       subTotal: bookingData.totalPrice})
   }, [serviceType, homeCleaningDetail, otherServicesDetail, dateTimeBooking, addressBooking])
 
@@ -124,26 +125,25 @@ const ProgressBar = () => {
           const howLong = bookingData.bookingInfomation?.[1]?.value || '1 hour';
           setOtherServicesDetail({serviceDetail, howLong})
         }
-        if (bookingData.bookingDate === undefined) {
-          setDisableBtn(true)
-        } else {
-          setDisableBtn(false)
-        }
+        setDisableBtn(false)
         break;
       case '/booking/step-3':
         setStep(2)
-        if (bookingData.bookingTiming === undefined) {
-          setDisableBtn(true)
-        } else {
+        const date = new Date(bookingData.bookingDate).toLocaleDateString('en-GB', {
+          day: '2-digit', month: '2-digit', year: 'numeric'
+        }) || 'Date Booking';
+        setDateBooking(date)
+        setDateTimeBooking(`${date}`)
+        if (bookingData.bookingTiming) {
           setDisableBtn(false)
+        } else {
+          setDisableBtn(true)
         }
         break;
       case '/booking/step-4':
         setStep(3)
-        const dateTimeBooking = new Date(bookingData.bookingDate).toLocaleDateString('en-GB', {
-          day: '2-digit', month: '2-digit', year: 'numeric'
-        }) + ' at ' + mappingValue(bookingData.bookingTiming) || 'Time Booking';
-        setDateTimeBooking(dateTimeBooking)
+        const time = mappingValue(bookingData.bookingTiming) || 'Time Booking';
+        setDateTimeBooking(`${dateBooking} at ${time}`)
         if (bookingData.bookingAddress && bookingData.APT) {
           setDisableBtn(false)
         } else {
@@ -154,7 +154,11 @@ const ProgressBar = () => {
         setStep(4)
         const addressBooking = bookingData.APT + ', ' + bookingData.bookingAddress;
         setAddressBooking(addressBooking)
-        setDisableBtn(false)
+        if (bookingData.checked) {
+          setDisableBtn(false)
+        } else {
+          setDisableBtn(true)
+        }
         break;
       default:
         break;

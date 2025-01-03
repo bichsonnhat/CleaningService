@@ -66,39 +66,44 @@ const Step_3 = () => {
   }
 
   const isDisabled = (value: number) => {
-    const currentTime = new Date().getHours() + new Date().getMinutes() / 60;
-    switch (value) {
-      case 8:
-        if (currentTime < 8) {
-          return false;
-        } else {
-          return true;
-        }
-      case 8.5:
-        if (currentTime < 8.5) {
-          return false;
-        } else {
-          return true;
-        }
-      case 9:
-        if (currentTime < 9) {
-          return false;
-        } else {
-          return true;
-        }
-      case 9.5:
-        if (currentTime < 9.5) {
-          return false;
-        } else {
-          return true;
-        }
-      case 10:
-        if (currentTime < 10) {
-          return false;
-        } else {
-          return true;
-        }
+    if (new Date(bookingData.bookingDate).getDate() === new Date().getDate()) {
+      const currentTime = new Date().getHours() + new Date().getMinutes() / 60;
+      switch (value) {
+        case 8:
+          if (currentTime < 8) {
+            return false;
+          } else {
+            return true;
+          }
+        case 8.5:
+          if (currentTime < 8.5) {
+            return false;
+          } else {
+            return true;
+          }
+        case 9:
+          if (currentTime < 9) {
+            return false;
+          } else {
+            return true;
+          }
+        case 9.5:
+          if (currentTime < 9.5) {
+            return false;
+          } else {
+            return true;
+          }
+        case 10:
+          if (currentTime < 10) {
+            return false;
+          } else {
+            return true;
+          }
+      }
+    } else {
+      return false;
     }
+    
   }
 
   const day = new Date(bookingData.bookingDate).getDate();
@@ -129,13 +134,6 @@ const Step_3 = () => {
   })
   return (
     <div className="h-full w-full">
-      <div className='sm:hidden w-full h-[70px] flex flex-row bg-white justify-end items-end pr-10'>
-        <div className='h-full w-[5.2%]'>
-          <div className='h-full w-full flex justify-center items-center hover:cursor-pointer' onClick={handleRouteExit}>
-              <Image src='/images/ProgressBar/Group.svg' alt='exitButton' width={20} height={20}/>
-          </div>
-        </div>
-      </div>
       <div className="w-3/4 sm:w-1/2 max-sm:pl-10 sm:m-auto mb-[35px]">
         <div className="justify-center text-left sm:text-center h-[80px]">
           <p className="text-4xl font-Averta-Bold mb-2 mt-[50px] ">
@@ -145,44 +143,43 @@ const Step_3 = () => {
             Save even more by booking off-peak dates and times.
           </p>
         </div>
-    </div>
-    <Carousel className="w-full max-w-6xl mx-auto" opts={{ loop: true }}>
-      <CarouselContent>
-        {displayDays}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
-    <div className="grid w-3/4 m-auto justify-center gap-4 mt-[40px]">
-    {timeSlots.map((slot) => (
-      slot.type === "specific" ? (
-        <Button
-          key={slot.time}
-          className={`bg-white h-[73px] w-[400px] rounded-[10px] font-Averta-Semibold text-xl border-2 hover:text-white ${timeSelected === slot.value ? "border-[#1A78F2] text-[#1A78F2]" : "bg-white text-[#4F6071]"}`}
-          onClick={() => handleClick(slot.value)}>
-          <div className="grid grid-cols-2">
-            <p className="text-base font-Averta-Semibold leading-[23px] tracking-tight text-left">{slot.time}</p>
-            <p className="text-xs font-Averta-Semibold leading-[14px] tracking-tight text-right self-center">Save $8.10 off</p>
-            <p className="text-sm font-Averta-Regular leading-[19px] tracking-tight text-left">Agreement with staff later</p>
-          </div>
-        </Button>
-      ) : (
-        <Button 
-          key={slot.time}
-          className={`bg-white h-[73px] w-[400px] rounded-[10px] font-Averta-Semibold text-base leading-[23px] tracking-tight border-2 hover:text-white ${timeSelected === slot.value ? "border-[#1A78F2] text-[#1A78F2]" : "bg-white text-[#4F6071]"}`}
-          disabled={isDisabled(slot.value)}
-          onClick={() => handleClick(slot.value)}>
-          {slot.time}
-        </Button>
-      )
-    ))}
-    </div>
+      </div>
+      <Carousel className="w-full max-w-6xl mx-auto" opts={{ loop: true }}>
+        <CarouselContent>
+          {displayDays}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+      <div className="grid w-3/4 m-auto justify-center gap-4 mt-[40px]">
+      {timeSlots.map((slot) => (
+        slot.type === "specific" ? (
+          <Button
+            key={slot.time}
+            className={`bg-white h-[73px] w-[400px] rounded-[10px] font-Averta-Semibold text-xl border-2 hover:text-white ${timeSelected === slot.value ? "border-[#1A78F2] text-[#1A78F2]" : "bg-white text-[#4F6071]"}`}
+            onClick={() => handleClick(slot.value)}>
+            <div className="grid grid-cols-2">
+              <p className="text-base font-Averta-Semibold leading-[23px] tracking-tight text-left">{slot.time}</p>
+              <p className="text-xs font-Averta-Semibold leading-[14px] tracking-tight text-right self-center">Save $8.10 off</p>
+              <p className="text-sm font-Averta-Regular leading-[19px] tracking-tight text-left">Agreement with staff later</p>
+            </div>
+          </Button>
+        ) : (
+          <Button 
+            key={slot.time}
+            className={`bg-white h-[73px] w-[400px] rounded-[10px] font-Averta-Semibold text-base leading-[23px] tracking-tight border-2 hover:text-white ${timeSelected === slot.value ? "border-[#1A78F2] text-[#1A78F2]" : "bg-white text-[#4F6071]"}`}
+            disabled={isDisabled(slot.value)}
+            onClick={() => handleClick(slot.value)}>
+            {slot.time}
+          </Button>
+        )
+      ))}
+      </div>
 
-    <div className="max-sm:hidden flex justify-center items-center mt-[35px]">
-      <Button className="w-[165px] h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold" disabled={bookingData.bookingTiming===undefined} onClick={handleRoute}>Next</Button>
+      <div className="max-sm:hidden flex justify-center items-center mt-[35px]">
+        <Button className="w-[165px] h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold" disabled={bookingData.bookingTiming===undefined} onClick={handleRoute}>Next</Button>
+      </div>
     </div>
-</div>
-
   )
 }
 

@@ -87,8 +87,8 @@ const Booking5Right = () => {
           totalPrice: totalPrice,
           detailIds: detailIds,
         };
-        //console.log("Booking Payload: ", bookingPayload);
         if (paymentMethod === "Stripe") {
+          console.log("Stripe: haha");
           const bookingResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/bookings`,
             {
@@ -103,6 +103,10 @@ const Booking5Right = () => {
           if (!bookingResponse.ok) {
             throw new Error("Failed to create booking");
           }
+          const postResult = await bookingResponse.json();
+          console.log("POST API result:", postResult);
+          
+          console.log("Booking ID: ", postResult.result.id);
 
           // Gọi Stripe payment
           const stripeResponse = await fetch(
@@ -111,8 +115,8 @@ const Booking5Right = () => {
             }`
           );
 
-          const data = await stripeResponse.json();
-          router.push(data.url);
+          // const data = await stripeResponse.json();
+          // router.push(data.url);
         } else {
           await paymentMutation.mutateAsync(bookingPayload);
         }
@@ -122,87 +126,6 @@ const Booking5Right = () => {
         return;
       }
       setLoading(true);
-
-      //   JSON.stringify({
-      //     status: "Success",
-      //     bookingDate: new Date(bookingData.bookingDate || ""),
-      //     bookingTime: bookingData.bookingTiming,
-      //     serviceType: bookingData.serviceCategory?.name,
-      //     serviceCategoryId: bookingData.serviceCategory?.id,
-      //     location: bookingData.bookingAddress,
-      //     apt: bookingData.APT,
-      //     accessInstructions: bookingData.howToGetIn,
-      //     specificInstructions: bookingData.anySpecificSpot,
-      //     hasPets: bookingData.anyPet,
-      //     petNotes: bookingData.petNote,
-      //     additionalNotes: bookingData.additionalNote,
-      //     customerName: bookingData.fullName,
-      //     customerEmail: bookingData.emailAddress,
-      //     customerPhone: bookingData.phoneNumber,
-      //     customerNotes: bookingData.contactNote,
-      //     termsAccepted: bookingData.checked,
-      //     totalAmount: totalPrice,
-      //     bookingNotes: bookingData.bookingNote,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //   })
-      // );
-      const userResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
-      );
-      const userInfo = await userResponse.json();
-      const cleanType = bookingData.bookingInfomation.find(
-        (item: any) =>
-          item.name === "Clean type" || item.name === "For how long?"
-      );
-      const scheduleDates = createScheduleDates(
-        bookingData.bookingDate,
-        bookingData.bookingTiming,
-        cleanType.duration
-      );
-
-      const detailIds = bookingData.bookingInfomation.map(
-        (detail: any) => detail.detailId
-      );
-      const bookingPayload = {
-        customerId: userInfo.userId,
-        serviceCategoryId: bookingData.serviceCategory?.id,
-        location: bookingData.bookingAddress,
-        scheduledStartTime: scheduleDates.scheduleDateStart,
-        scheduledEndTime: scheduleDates.scheduleDateEnd,
-        bookingNote: bookingData.bookingNote,
-        totalPrice: totalPrice,
-        detailIds: detailIds,
-      };
-      //console.log("Booking Payload: ", bookingPayload);
-      if (paymentMethod === "Stripe") {
-        const bookingResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/bookings`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(bookingPayload),
-          }
-        );
-
-        if (!bookingResponse.ok) {
-          throw new Error("Failed to create booking");
-        }
-
-        // Gọi Stripe payment
-        const stripeResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/stripe?unit_amount=${
-            totalPrice * 100
-          }`
-        );
-
-        const data = await stripeResponse.json();
-        router.push(data.url);
-      } else {
-        await paymentMutation.mutateAsync(bookingPayload);
-      }
     } catch (error) {
       console.log(error);
     } finally {
