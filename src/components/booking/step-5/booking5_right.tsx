@@ -115,8 +115,8 @@ const Booking5Right = () => {
             }`
           );
 
-          // const data = await stripeResponse.json();
-          // router.push(data.url);
+          const data = await stripeResponse.json();
+          router.push(data.url);
         } else {
           await paymentMutation.mutateAsync(bookingPayload);
         }
