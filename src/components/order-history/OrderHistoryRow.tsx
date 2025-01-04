@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Booking } from "../order/OrderTable";
 import { BookingStatus } from "../quickpopup/QuickPopupAdmin";
 import QuickPopupCustomer from "../quickpopup/QuickPopupCustomer";
+import { useRouter } from "next/navigation";
 
 type OrderHistoryRowProps = {
   booking: Booking;
@@ -86,6 +87,25 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
     const startYear = scheduledStartTime.getFullYear();
     return `${startDate}/${startMonth}/${startYear}`;
   };
+
+  const router = useRouter();
+
+  const handlePaymentStatus = (booking: Booking) => async () => {
+    console.log("Payment status clicked", booking.id);
+    if (booking.paymentStatus === "paid" && booking.paymentMethod) {
+      router.push(booking.paymentMethod);
+    }
+    if (booking.paymentStatus === "pending") {
+      const stripeResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/stripe?unit_amount=${
+          booking.totalPrice * 100
+        }&booking_id=${booking.id}`,
+      );
+
+      const data = await stripeResponse.json();
+      router.push(data.url);
+    }
+  }
 
   return (
     <div
@@ -175,7 +195,8 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
           <div
             className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-w-28 min-h-[27px] ${paymentColor}  bg-opacity-20 rounded-md`}
           >
-            <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px] text-center">
+            <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px] text-center"
+              onClick={handlePaymentStatus(booking)}>
               {booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1)}
             </div>
           </div>

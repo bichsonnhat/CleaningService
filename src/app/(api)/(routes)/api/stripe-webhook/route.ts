@@ -19,21 +19,23 @@ export async function POST(request: Request) {
     switch (event.type) {
         case 'checkout.session.completed':
             const paymentSession = event.data.object;
-            const response = await fetch(
+            const paymentIntent = await stripe.paymentIntents.retrieve(
+                paymentSession.payment_intent as string
+            );
+        
+            const charge = await stripe.charges.retrieve(paymentIntent.latest_charge as string);
+            await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/${paymentSession.metadata?.bookingId}`,
                 {
                   method: "PATCH",
                   headers: {
                     "Content-Type": "application/json",
                   },
-                  body: JSON.stringify({ paymentStatus: "paid" }),
+                  body: JSON.stringify({ paymentStatus: "paid", paymentMethod: charge.receipt_url }),
                 }
               );
-            
-            // Then define and call a method to handle the successful payment intent.
-            // handlePaymentIntentSucceeded(paymentIntent);
             break;
-        // ... handle other event types
+
         default:
             console.log(`Unhandled event type ${event.type}`);
     }
