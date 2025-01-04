@@ -112,7 +112,7 @@ const Booking5Right = () => {
           const stripeResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/stripe?unit_amount=${
               totalPrice * 100
-            }`
+            }&booking_id=${postResult.result.id}`,
           );
 
           const data = await stripeResponse.json();

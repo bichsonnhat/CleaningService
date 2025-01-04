@@ -2,7 +2,6 @@ import { stripe } from '@/lib/stripe';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-
 export async function POST(request: Request) {
     console.log('Stripe webhook received');
     const sig = request.headers.get('stripe-signature') || '';
@@ -18,10 +17,19 @@ export async function POST(request: Request) {
     }
     // Handle the event
     switch (event.type) {
-        case 'payment_intent.succeeded':
-            const paymentIntent = event.data.object;
+        case 'checkout.session.completed':
+            const paymentSession = event.data.object;
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/${paymentSession.metadata?.bookingId}`,
+                {
+                  method: "PATCH",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ paymentStatus: "paid" }),
+                }
+              );
             
-            console.log('PaymentIntent was successful!');
             // Then define and call a method to handle the successful payment intent.
             // handlePaymentIntentSucceeded(paymentIntent);
             break;
