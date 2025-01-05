@@ -31,11 +31,10 @@ export async function POST(request: Request) {
                   headers: {
                     "Content-Type": "application/json",
                   },
-                  body: JSON.stringify({ paymentStatus: "paid", paymentMethod: charge.receipt_url }),
+                  body: JSON.stringify({ paymentStatus: "paid", paymentMethod: charge.receipt_url, paymentIntentId: paymentSession.payment_intent }),
                 }
               );
             break;
-
         default:
             console.log(`Unhandled event type ${event.type}`);
     }

@@ -175,7 +175,7 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
         <div className="lg:flex-[2] w-full lg:w-[90px] flex items-center lg:justify-center lg:py-6 mb-2 lg:mb-0">
           <div className="text-sm text-[#202224cc] lg:text-sm">
             <span className="lg:hidden font-bold">PRICE: </span>
-            {`${booking.totalPrice}/vnđ`}
+            {`${booking.totalPrice}/USD`}
           </div>
         </div>
 

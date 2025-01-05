@@ -475,7 +475,7 @@ const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
                 <div className="flex flex-col w-full h-full gap-[16px]">
                   <div className="h-full justify-between p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
                     <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
-                      {booking.totalPrice}/vnđ
+                      {booking.totalPrice}/USD
                     </p>
                   </div>
                   {style}

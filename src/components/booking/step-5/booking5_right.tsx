@@ -7,6 +7,7 @@ import { createScheduleDates } from "@/utils/dateUtils";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { ClipLoader } from "react-spinners";
 
 const Booking5Right = () => {
   const bookingData = bookingStore((state: any) => state.bookingData);
@@ -54,13 +55,12 @@ const Booking5Right = () => {
   };
 
   //console.log("Info: ", bookingData);
+
   const handlePayment = async () => {
     try {
+      setLoading(true);
       const isValid = validateFields();
-      console.log(isValid);
       if (isValid) {
-        console.log("Validation passed! Proceeding to payment...");
-
         const userResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
         );
@@ -87,8 +87,8 @@ const Booking5Right = () => {
           totalPrice: totalPrice,
           detailIds: detailIds,
         };
+        
         if (paymentMethod === "Stripe") {
-          console.log("Stripe: haha");
           const bookingResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/bookings`,
             {
@@ -104,11 +104,7 @@ const Booking5Right = () => {
             throw new Error("Failed to create booking");
           }
           const postResult = await bookingResponse.json();
-          console.log("POST API result:", postResult);
           
-          console.log("Booking ID: ", postResult.result.id);
-
-          // Gọi Stripe payment
           const stripeResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/stripe?unit_amount=${
               totalPrice * 100
@@ -120,12 +116,9 @@ const Booking5Right = () => {
         } else {
           await paymentMutation.mutateAsync(bookingPayload);
         }
-        // return;
       } else {
         console.log("Validation failed. Fix errors on left.");
-        return;
       }
-      setLoading(true);
     } catch (error) {
       console.log(error);
     } finally {
@@ -274,14 +267,16 @@ const Booking5Right = () => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center ">
+      <div className="flex justify-center items-center gap-2">
         <Button
           id="place-order-step5"
           onClick={handlePayment}
           className="md:w-1/3 max-sm:hidden h-[60px] bg-[#1A78F2] font-Averta-Semibold text-[16px]"
           disabled={bookingData.checked === undefined || bookingData.checked}
         >
-          Place order
+        {loading && (
+          <ClipLoader color="#FFFFFF" loading={loading} size={30} />
+        ) || "Place order"}
         </Button>
       </div>
     </div>

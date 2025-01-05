@@ -29,7 +29,7 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
   const paymentColor =
     booking.paymentStatus === "paid"
       ? "bg-[#00B69B] text-[#00B69B]"
-      : "bg-[#F87171] text-[#B91C1C]";
+      : "bg-[#FFD154] text-[#FF9500]";
 
   const [toggleHelperPopup, setToggleHelperPopup] = useState(false);
   const handleToggleHelperPopup = () => {
@@ -90,7 +90,8 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
 
   const router = useRouter();
 
-  const handlePaymentStatus = (booking: Booking) => async () => {
+  const handlePaymentStatus = (e: React.MouseEvent, booking: Booking) => async () => {
+    e.stopPropagation();
     console.log("Payment status clicked", booking.id);
     if (booking.paymentStatus === "paid" && booking.paymentMethod) {
       router.push(booking.paymentMethod);
@@ -172,7 +173,7 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
       <div className="lg:flex-[2] w-full lg:w-[90px] flex items-center lg:justify-center lg:py-6 mb-2 lg:mb-0">
         <div className="text-sm text-[#202224cc] lg:text-sm">
           <span className="lg:hidden font-bold">PRICE: </span>
-          {`${booking.totalPrice}/vnđ`}
+          {`${booking.totalPrice}/USD`}
         </div>
       </div>
 
@@ -193,10 +194,10 @@ const OrderHistoryRow: React.FC<OrderHistoryRowProps> = ({ booking }) => {
         <div className=" flex flex-row items-center text-sm text-[#202224cc]">
           <span className="lg:hidden font-bold mr-2">PAYMENT STATUS: </span>
           <div
-            className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-w-28 min-h-[27px] ${paymentColor}  bg-opacity-20 rounded-md`}
+            className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-w-28 min-h-[27px] ${paymentColor}  bg-opacity-20 hover:opacity-80 rounded-md`}
           >
             <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px] text-center"
-              onClick={handlePaymentStatus(booking)}>
+              onClick={(e) => handlePaymentStatus(e, booking)()}>
               {booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1)}
             </div>
           </div>

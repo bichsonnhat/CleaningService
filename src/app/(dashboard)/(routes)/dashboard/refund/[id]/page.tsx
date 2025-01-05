@@ -87,21 +87,31 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
   const handleRefund = async (status: string) => {
     setHandling(true);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/refunds/${params.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: status, resolved_at: new Date() }),
-        }
-      );
-      //const data = await response.json();
-      fetchDetail(params.id);
-      toast({
-        description: "Refund submitted successfully!",
-      });
+      if (status === "declined") {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/refunds/${params.id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status: status, resolved_at: new Date() }),
+          }
+        );
+        //const data = await response.json();
+        fetchDetail(params.id);
+        toast({
+          description: "Refund submitted successfully!",
+        });
+      } else {
+        const bookingId = detail?.booking_id;
+        const booking = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/${bookingId}`
+        );
+        const bookingData = await booking.json();
+        const paymentIntentId = bookingData.paymentIntentId;
+        router.push(`https://dashboard.stripe.com/test/payments/${paymentIntentId}`);
+      }
     } catch (error) {
       toast({
         variant: "destructive",
@@ -163,8 +173,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
                         Are you absolutely sure?
                       </AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action cannot be undone. This action will accept
-                        the request and refund to customer.
+                        You will be redirected to Stripe's refund page.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -216,7 +225,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
                 <div
                   className={`flex justify-center items-center px-8 py-2 md:w-[130px] rounded-lg ${statusColor} font-Averta-Bold text-[13px]`}
                 >
-                  {detail.status}
+                  {detail.status.charAt(0).toUpperCase() + detail.status.slice(1)}
                 </div>
               </div>
             )}
@@ -225,7 +234,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
                 <div
                   className={`flex justify-center items-center px-8 py-2 md:w-[130px] rounded-lg ${statusColor} font-Averta-Bold text-[13px]`}
                 >
-                  {detail.status}
+                  {detail.status.charAt(0).toUpperCase() + detail.status.slice(1)}
                 </div>
               </div>
             )}

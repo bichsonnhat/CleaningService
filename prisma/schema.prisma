@@ -194,7 +194,8 @@ model Booking {
   cancellationReason String?
   totalPrice        Decimal       @db.Decimal(10, 2)
   paymentStatus     String        @default("pending") @db.VarChar(50)
-  paymentMethod     String?       @db.VarChar(50)
+  paymentMethod     String?       
+  paymentIntentId   String?       
   createdAt         DateTime      @default(now()) @db.Timestamp()
   updatedAt         DateTime      @default(now()) @updatedAt @db.Timestamp()
 
