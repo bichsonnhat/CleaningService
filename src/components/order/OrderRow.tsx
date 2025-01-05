@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import Star from "../employee/Star";
 import { Booking } from "./OrderTable";
 import QuickPopupAdmin, { BookingStatus } from "../quickpopup/QuickPopupAdmin";
+import { useRouter } from "next/navigation";
 
 type OrderRowProps = {
   booking: Booking;
 };
 
 const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
+  const router = useRouter();
   const startTimeString: string = new Date(
     booking.scheduledStartTime
   ).toLocaleTimeString([], {
@@ -76,6 +78,24 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
       </div>
     );
   };
+
+  const handlePaymentStatus = (e: React.MouseEvent, booking: Booking) => async () => {
+    e.stopPropagation();
+    console.log("Payment status clicked", booking.id);
+    if (booking.paymentStatus === "paid" && booking.paymentMethod) {
+      router.push(booking.paymentMethod);
+    }
+    if (booking.paymentStatus === "pending") {
+      const stripeResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/stripe?unit_amount=${
+          booking.totalPrice * 100
+        }&booking_id=${booking.id}`,
+      );
+
+      const data = await stripeResponse.json();
+      router.push(data.url);
+    }
+  }
 
   const formatBookingTime = (
     scheduledStartTime: Date,
@@ -196,8 +216,8 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
           <div className=" flex flex-row items-center text-sm text-[#202224cc]">
             <span className="lg:hidden font-bold mr-2">PAYMENT STATUS: </span>
             <div
-              className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-w-28 min-h-[27px] ${paymentColor}  bg-opacity-20 rounded-md`}
-            >
+              className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-w-28 min-h-[27px] ${paymentColor}  bg-opacity-20 rounded-md hover:opacity-80`}
+              onClick={(e) => handlePaymentStatus(e, booking)()}>
               <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px] text-center">
                 {booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1)}
               </div>

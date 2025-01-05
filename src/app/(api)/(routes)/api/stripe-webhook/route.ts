@@ -42,7 +42,8 @@ export async function POST(request: Request) {
             const booking = bookings.find((booking: any) => booking.paymentIntentId === paymentIntentId);
             const refundResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/refunds?role=admin&userId=adminID`);
             const refunds = await refundResponse.json();
-            const refund = refunds.find((refund: any) => refund.bookingId === booking.id);
+            const refund = refunds.find((refund: any) => refund.booking_id === booking.id);
+            try {
             await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/refunds/${refund.id}`,
                 {
@@ -53,6 +54,9 @@ export async function POST(request: Request) {
                   body: JSON.stringify({ status: "refunded", resolved_at: new Date() }),
                 }
               );
+            } catch (error) {
+                console.error("Error refunding booking", error);
+            }
         default:
             console.log(`Unhandled event type ${event.type}`);
     }
