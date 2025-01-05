@@ -54,7 +54,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
     fetchUserInfo();
   }, [params.id]);
 
-  const [handling, setHandling] = useState(false);
+  const [handling, setHandling] = useState("");
 
   const logo = [
     {
@@ -85,7 +85,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
   };
 
   const handleRefund = async (status: string) => {
-    setHandling(true);
+    setHandling(status);
     try {
       if (status === "declined") {
         await fetch(
@@ -118,7 +118,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
         description: "Failed to submit refund",
       });
     } finally {
-      setHandling(false);
+      setHandling("");
     }
   };
 
@@ -160,7 +160,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
                 <AlertDialog>
                   <AlertDialogTrigger>
                     <div className="flex items-center justify-center px-8 py-2 md:w-[130px] rounded-lg font-Averta-Bold text-[13px] text-white bg-blue-600 hover:bg-blue-500">
-                      {handling ? (
+                      {handling === "refunded" ? (
                         <ClipLoader color="#fff" loading={true} size={30} />
                       ) : (
                         "Refund"
@@ -190,7 +190,7 @@ const RefundDetail = ({ params }: { params: { id: string } }) => {
                 <AlertDialog>
                   <AlertDialogTrigger>
                     <div className="flex items-center justify-center px-8 py-2 md:w-[130px] rounded-lg font-Averta-Bold text-[13px] text-white bg-red-600 hover:bg-red-500">
-                      {handling ? (
+                      {handling === "declined" ? (
                         <ClipLoader color="#fff" loading={true} size={30} />
                       ) : (
                         "Decline"
