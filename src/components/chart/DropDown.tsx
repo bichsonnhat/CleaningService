@@ -4,7 +4,7 @@ import Image from 'next/image';
 type DropdownProps = {
   setFilter: (filter: string) => void;
 }
-const filterOption = ['Descending', 'Ascending', 'None'];
+const filterOption = ['Price ASC', 'Price DESC', 'Newest', 'Oldest', 'None'];
 
 const Dropdown: React.FC<DropdownProps> = ({setFilter}) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +15,7 @@ const Dropdown: React.FC<DropdownProps> = ({setFilter}) => {
 
   return (
     <div className="relative">
-        <button className="w-[104px] h-[38px] bg-[#fcfcfc] rounded-lg border border-neutral-300 flex items-center justify-between px-4 hover:bg-gray-400 duration-300" onClick={toggleDropdown}>
+        <button className="w-[110px] h-[38px] bg-[#fcfcfc] rounded-lg border border-neutral-300 flex items-center justify-between px-4 hover:bg-gray-400 duration-300" onClick={toggleDropdown}>
             <div className='text-[#2b3034] text-[13px] font-black leading-[10px] font-gilroy-regular'>
             Filter By
             </div>
@@ -23,7 +23,7 @@ const Dropdown: React.FC<DropdownProps> = ({setFilter}) => {
         </button>
         {isOpen && <div className="fixed inset-0" onClick={toggleDropdown}></div>}
       {isOpen && (
-        <div className="origin-top-right absolute right-0 mt-2 w-[104px] shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+        <div className="origin-top-right absolute right-0 mt-2 w-[110px] shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           {filterOption.map((option) => (
             <button key={option} 
             onClick={() => {setFilter(option); toggleDropdown()}} 

@@ -13,9 +13,9 @@ export const InfoCard:React.FC<InfoCardProps> = ({titleInfo, dataInfo, urliconIn
     const bgIconColor = titleInfo === "Total User" ? 'bg-[#caf0ff]' : 
                         titleInfo === "Total Order" ? 'bg-[#f8e0c9cc]' : 
                         titleInfo === "Total Income" ? 'bg-[#cefad8]' : 'bg-[#ffd2d1]';
-    const urlTrend = trend === "down" ? "/images/Chart/down.svg" : "/images/Chart/up.svg";
-    const textColorTrend = trend === "down" ? "text-[#B60000]" : "text-[#00B69B]";
-    const changeInfoText = trend === "down" ? "Down from yesterday" : "Up from yesterday";
+    const urlTrend = trend === "down" ? "/images/Chart/down.svg" : trend === 'up' ? "/images/Chart/up.svg" : "/images/Chart/unchanged.png";
+    const textColorTrend = trend === "down" ? "text-[#B60000]" : trend === 'up' ? "text-[#00B69B]" : "text-[#FF8C00]";
+    const changeInfoText = trend === "down" ? "Down from yesterday" : trend === 'up' ? "Up from yesterday" : "No change from yesterday";
   return (
     <div className='sm:flex sm:flex-col justify-center items-center w-[24%] max-sm:w-full bg-white py-[25px] px-[25px] gap-[32px] rounded-xl'>
         <div className='inline-flex w-full justify-between'>
@@ -27,9 +27,11 @@ export const InfoCard:React.FC<InfoCardProps> = ({titleInfo, dataInfo, urliconIn
                 <Image src={urliconInfo} alt='totalUser' width={35} height={30}/>
             </div>
         </div>
-        <div className='flex flex-row w-full items-start'>
-            <Image src={`${urlTrend}`} alt='down' width={26} height={26} className='pr-[8px]'/>
-            <p className='text-[#606060] text-[16px] not-italic font-[600] leading-normal'><span className={`${textColorTrend}}`}>{percentageChangeInfo}</span> {`${changeInfoText}`}</p>
+        <div className='flex flex-row w-full items-center'>
+            <Image src={`${urlTrend}`} alt='down' width={26} height={26} className='pr-[8px]' />
+            <p className='text-[#606060] text-[16px] not-italic font-[600] leading-normal'>
+                <span className={`${textColorTrend}`}>{percentageChangeInfo}</span> {`${changeInfoText}`}
+            </p>
         </div>
     </div>
   )

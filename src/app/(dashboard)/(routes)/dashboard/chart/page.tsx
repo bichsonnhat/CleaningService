@@ -12,7 +12,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 const ChartPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState("None");
-  const itemsPerPage = 5;
 
   const [totalIncome, setTotalIncome] = useState<number[]>(Array(12).fill(0));
   const [totalPending, setTotalPending] = useState(0);
@@ -76,28 +75,36 @@ const ChartPage = () => {
         service_fee: data.totalPrice,
         status: data.status,
       };
-    });
+    }).sort((a, b) => new Date(b.date_time).getTime() - new Date(a.date_time).getTime());
     setChartTableData(chartData);
   };
 
+  const itemsPerPage = 5;
   const totalPages = Math.ceil(chartTableData.length / itemsPerPage);
-  const currentData = [...chartTableData];
+  const defaultData = [...chartTableData];
+  
+  const finalData = defaultData.sort((a, b) => {
+    switch (filter) {
+      case 'Price ASC':
+        return a.service_fee - b.service_fee;
+      case 'Price DESC':
+        return b.service_fee - a.service_fee;
+      case 'Newest':
+        return new Date(b.date_time).getTime() - new Date(a.date_time).getTime();
+      case 'Oldest':
+        return new Date(a.date_time).getTime() - new Date(b.date_time).getTime();
+      default:
+        return 0;
+    }
+  });
 
-  const finalData =
-    filter.toLowerCase() !== "none"
-      ? currentData
-          .sort((a, b) => {
-            if (filter === "Ascending")
-              return a.date_time.localeCompare(b.date_time);
-            if (filter === "Descending")
-              return b.date_time.localeCompare(a.date_time);
-            return 0;
-          })
-          .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-      : chartTableData.slice(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage
-        );
+  const currentData = filter !== 'None' ? finalData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  ) : chartTableData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) setCurrentPage(newPage);
@@ -181,6 +188,18 @@ const ChartPage = () => {
         })
         .reduce((sum, data) => sum + data.service_fee, 0);
 
+      const todayPending = chartTableData.filter(
+        (data) =>
+          new Date(data.date_time).getDate() === today.getDate() &&
+          data.status === "pending"
+      ).length;
+
+      const yesterdayPending = chartTableData.filter(
+        (data) =>
+          new Date(data.date_time).getDate() === yesterday.getDate() &&
+          data.status === "pending"
+      ).length;
+
       const calculatePercentageChange = (today: number, yesterday: number) =>
         yesterday !== 0 ? ((today - yesterday) / yesterday) * 100 : 0;
 
@@ -193,8 +212,9 @@ const ChartPage = () => {
             totalUserYesterday
           ).toFixed(1)}%`,
           trend:
-            calculatePercentageChange(totalUserToday, totalUserYesterday) > 0
-              ? "up"
+            calculatePercentageChange(totalUserToday, totalUserYesterday) === 0
+              ? "unchanged"
+              : calculatePercentageChange(totalUserToday, totalUserYesterday) > 0 ? "up"
               : "down",
         },
         {
@@ -205,9 +225,10 @@ const ChartPage = () => {
             totalOrderYesterday
           ).toFixed(1)}%`,
           trend:
-            calculatePercentageChange(totalOrderToday, totalOrderYesterday) > 0
-              ? "up"
-              : "down",
+            calculatePercentageChange(totalOrderToday, totalOrderYesterday) === 0
+            ? "unchanged"
+            : calculatePercentageChange(totalOrderToday, totalOrderYesterday) > 0 ? "up"
+            : "down",
         },
         {
           ...chartCardData[2],
@@ -217,26 +238,22 @@ const ChartPage = () => {
             yesterdayIncome
           ).toFixed(1)}%`,
           trend:
-            calculatePercentageChange(todayIncome, yesterdayIncome) > 0
-              ? "up"
-              : "down",
+            calculatePercentageChange(todayIncome, yesterdayIncome) === 0
+            ? "unchanged"
+            : calculatePercentageChange(todayIncome, yesterdayIncome) > 0 ? "up"
+            : "down",
         },
         {
           ...chartCardData[3],
           dataInfo: totalPending.toString(),
           percentageChangeInfo: `${calculatePercentageChange(
-            chartTableData.filter(
-              (data) =>
-                new Date(data.date_time).getDate() === today.getDate() &&
-                data.status === "pending"
-            ).length,
-            chartTableData.filter(
-              (data) =>
-                new Date(data.date_time).getDate() === yesterday.getDate() &&
-                data.status === "pending"
-            ).length
+            todayPending,
+            yesterdayPending
           ).toFixed(1)}%`,
-          trend: totalPending > 0 ? "up" : "down",
+          trend: calculatePercentageChange(todayPending, yesterdayPending) === 0
+          ? "unchanged"
+          : calculatePercentageChange(todayPending, yesterdayPending) > 0 ? "up"
+          : "down",
         },
       ];
 
@@ -308,13 +325,15 @@ const ChartPage = () => {
                   <div className='flex justify-center items-center h-[300px]'>
                     <ClipLoader color='#3B82F6' loading={true} size={50} />
                   </div>
-                ) : ( finalData.length === 0 ? (
+                ) : ( currentData.length === 0 ? (
                   <div className='flex justify-center items-center h-[300px]'>
                     <p className='text-[#202224] text-lg font-bold'>No data found</p>
                   </div>
                 ) : (
-                  finalData.map((chart) => (
-                    <ChartRow key={chart.date_time} {...chart} />
+                  currentData.map((chart) => (
+                    <>
+                      <ChartRow key={chart.date_time} {...chart} />
+                    </>
                 )))
                 )}
               </div>
