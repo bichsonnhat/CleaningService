@@ -41,6 +41,8 @@ export async function assignHelperToBooking(
         helper.servicesOffered.includes(booking.serviceCategoryId)
     );
 
+    let helpers: Helper[] = [];
+
     for (const helper of availableHelpers) {
       // Get bookings for the current helper
       const helperBookings = await prisma.booking.findMany({
@@ -70,23 +72,22 @@ export async function assignHelperToBooking(
 
       if (minJobTaken === null || jobCount < minJobTaken) {
         minJobTaken = jobCount;
-        availableHelpers = [helper];
+        helpers = [helper];
       } else if (jobCount === minJobTaken) {
-        availableHelpers.push(helper);
+        helpers.push(helper);
       }
     }
 
-    console.log("Selected service helper: ", availableHelpers);
+    console.log("Selected service helper: ", helpers);
 
-    if (availableHelpers.length === 0) {
+    if (helpers.length === 0) {
       return null;
     }
 
     // Select a random helper from the most suitable ones
-    const selectedHelper =
-      availableHelpers[Math.floor(Math.random() * availableHelpers.length)];
+    const selectedHelper = helpers[Math.floor(Math.random() * helpers.length)];
 
-    console.log("Selected helper: ", selectedHelper);
+    console.log("Selected helper: ", helpers);
 
     return selectedHelper.id;
   } catch (error) {
