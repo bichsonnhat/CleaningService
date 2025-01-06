@@ -18,13 +18,30 @@ export async function assignHelperToBooking(
     // Get the list of all helpers
     const allHelpers = await prisma.helper.findMany();
 
-    console.log("All helpers: ", allHelpers);
-
     let availableHelpers: Helper[] = [];
     let minJobTaken: number | null = null;
     const relevantStatuses = ["Confirmed", "InProgress"];
 
-    for (const helper of allHelpers) {
+    console.log("Available helpers: ", availableHelpers);
+
+    // Filter helpers blacklisted by the customer
+    availableHelpers = allHelpers.filter(
+      (helper) =>
+        !customer.blacklistsCreated.some(
+          (blacklist) => blacklist.userId === helper.id
+        )
+    );
+
+    console.log("Available helpers blacklisted: ", availableHelpers);
+
+    // Filter helpers who do not offer the required service
+    availableHelpers = availableHelpers.filter(
+      (helper) =>
+        helper.servicesOffered &&
+        helper.servicesOffered.includes(booking.serviceCategoryId)
+    );
+
+    for (const helper of availableHelpers) {
       // Get bookings for the current helper
       const helperBookings = await prisma.booking.findMany({
         where: {
@@ -58,25 +75,6 @@ export async function assignHelperToBooking(
         availableHelpers.push(helper);
       }
     }
-
-    console.log("Available helpers: ", availableHelpers);
-
-    // Filter helpers blacklisted by the customer
-    availableHelpers = availableHelpers.filter(
-      (helper) =>
-        !customer.blacklistsCreated.some(
-          (blacklist) => blacklist.userId === helper.id
-        )
-    );
-
-    console.log("Available helpers blacklisted: ", availableHelpers);
-
-    // Filter helpers who do not offer the required service
-    availableHelpers = availableHelpers.filter(
-      (helper) =>
-        helper.servicesOffered &&
-        helper.servicesOffered.includes(booking.serviceCategoryId)
-    );
 
     console.log("Selected service helper: ", availableHelpers);
 
