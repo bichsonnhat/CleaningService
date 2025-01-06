@@ -113,11 +113,11 @@ export default function IssueHistoryTable() {
     ? issueData.filter((Issue) => {
         switch (searchBy) {
           case "Helper":
-            return Issue.booking.helper.user.fullName
+            return Issue.booking.helper?.user?.fullName
               .toLowerCase()
               .includes(searchTerm.toLowerCase());
           default:
-            return Issue.booking.helper.user.fullName
+            return Issue.booking.helper?.user?.fullName
               .toLowerCase()
               .includes(searchTerm.toLowerCase());
         }
