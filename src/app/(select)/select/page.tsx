@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { IServiceCategoryResponse } from "@/utils/interfaces";
 import { bookingStore } from "@/utils/store/booking.store";
+import { ClipLoader } from "react-spinners";
 
 type SelectService = {
   id: string;
@@ -21,6 +22,7 @@ const Select = () => {
     IServiceCategoryResponse[]
   >([]);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const handleRoute = () => {
     bookingUpdate({ serviceCategory: selectService });
     router.push("/booking/step-1");
@@ -32,16 +34,30 @@ const Select = () => {
   };
 
   useEffect(() => {
-    const fetchServiceCategoriesData = async (url: string) => {
-      const res = await fetch(url, {
-        cache: "force-cache",
-      });
-      const data = await res.json();
-      setServiceCategories(data);
-    };
-    fetchServiceCategoriesData("/api/service-categories");
+    setLoading(true);
+    try {
+      const fetchServiceCategoriesData = async (url: string) => {
+        const res = await fetch(url, {
+          cache: "force-cache",
+        });
+        const data = await res.json();
+        setServiceCategories(data);
+      };
+      fetchServiceCategoriesData("/api/service-categories");
+    } catch (error) {
+      console.error("Failed to fetch service categories:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <ClipLoader color="#2A88F5" loading={true} size={30} />
+      </div>
+    )
+  }
   return (
     <div className="flex flex-col w-full h-full pb-8">
       <div className="w-full h-[75px]">

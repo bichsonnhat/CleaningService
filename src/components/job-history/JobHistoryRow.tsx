@@ -68,7 +68,7 @@ const JobHistoryRow: React.FC<JobHistoryRowProps> = ({
   const paymentColor =
     booking.paymentStatus === "paid"
       ? "bg-[#00B69B] text-[#00B69B]"
-      : "bg-[#F87171] text-[#B91C1C]";
+      : "bg-[#FFD154] text-[#FF9500]";
 
   const [toggleHelperPopup, setToggleHelperPopup] = useState(false);
   const handleToggleHelperPopup = () => {

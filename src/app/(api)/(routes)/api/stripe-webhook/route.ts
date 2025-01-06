@@ -57,6 +57,28 @@ export async function POST(request: Request) {
             } catch (error) {
                 console.error("Error refunding booking", error);
             }
+        case 'refund.failed':
+            const paymentIntentId4Failed = event.data.object.payment_intent;
+            const bookingResponse4Failed = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings?role=admin&userId=adminID`);
+            const bookings4Failed = await bookingResponse4Failed.json();
+            const booking4Failed = bookings4Failed.find((booking: any) => booking.paymentIntentId === paymentIntentId4Failed);
+            const refundResponse4Failed = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/refunds?role=admin&userId=adminID`);
+            const refunds4Failed = await refundResponse4Failed.json();
+            const refund4Failed = refunds4Failed.find((refund: any) => refund.booking_id === booking4Failed.id);
+            try {
+            await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/refunds/${refund4Failed.id}`,
+                {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ status: "pending", resolved_at: new Date() }),
+                }
+              );
+            } catch (error) {
+                console.error("Error refunding booking", error);
+            }
         default:
             console.log(`Unhandled event type ${event.type}`);
     }

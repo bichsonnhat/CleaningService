@@ -45,7 +45,7 @@ const OrderRow: React.FC<OrderRowProps> = ({ booking }) => {
   const paymentColor =
     booking.paymentStatus === "paid"
       ? "bg-[#00B69B] text-[#00B69B]"
-      : "bg-[#F87171] text-[#B91C1C]";
+      : "bg-[#FFD154] text-[#FF9500]";
 
   const [toggleAdminPopup, setToggleAdminPopup] = useState(false);
   const handleToggleAdminPopup = () => {
