@@ -129,10 +129,10 @@ const ChartPage = () => {
         const date = new Date(data.date_time);
         const month = date.getMonth();
 
-        if (data.status.toLowerCase() === "completed") {
+        if (data.status === "completed") {
           newTotalIncome[month] += Number(data.service_fee);
         }
-        if (data.status.toLowerCase() === "pending") {
+        if (data.status === "pending") {
           pendingCount++;
         }
       });
@@ -170,14 +170,14 @@ const ChartPage = () => {
       const todayIncome = chartTableData
         .filter((data) => {
           const date = new Date(data.date_time);
-          return date.getDate() === today.getDate() && data.status.toLowerCase() === "completed";
+          return date.getDate() === today.getDate() && data.status === "completed";
         })
         .reduce((sum, data) => sum + data.service_fee, 0);
 
       const yesterdayIncome = chartTableData
         .filter((data) => {
           const date = new Date(data.date_time);
-          return date.getDate() === yesterday.getDate() && data.status.toLowerCase() === "completed";
+          return date.getDate() === yesterday.getDate() && data.status === "completed";
         })
         .reduce((sum, data) => sum + data.service_fee, 0);
 
@@ -191,7 +191,7 @@ const ChartPage = () => {
           percentageChangeInfo: `${calculatePercentageChange(
             totalUserToday,
             totalUserYesterday
-          ).toFixed(2)}%`,
+          ).toFixed(1)}%`,
           trend:
             calculatePercentageChange(totalUserToday, totalUserYesterday) > 0
               ? "up"
@@ -203,7 +203,7 @@ const ChartPage = () => {
           percentageChangeInfo: `${calculatePercentageChange(
             totalOrderToday,
             totalOrderYesterday
-          ).toFixed(2)}%`,
+          ).toFixed(1)}%`,
           trend:
             calculatePercentageChange(totalOrderToday, totalOrderYesterday) > 0
               ? "up"
@@ -215,7 +215,7 @@ const ChartPage = () => {
           percentageChangeInfo: `${calculatePercentageChange(
             todayIncome,
             yesterdayIncome
-          ).toFixed(2)}%`,
+          ).toFixed(1)}%`,
           trend:
             calculatePercentageChange(todayIncome, yesterdayIncome) > 0
               ? "up"
@@ -228,14 +228,14 @@ const ChartPage = () => {
             chartTableData.filter(
               (data) =>
                 new Date(data.date_time).getDate() === today.getDate() &&
-                data.status.toLowerCase() === "pending"
+                data.status === "pending"
             ).length,
             chartTableData.filter(
               (data) =>
                 new Date(data.date_time).getDate() === yesterday.getDate() &&
-                data.status.toLowerCase() === "pending"
+                data.status === "pending"
             ).length
-          ).toFixed(2)}%`,
+          ).toFixed(1)}%`,
           trend: totalPending > 0 ? "up" : "down",
         },
       ];

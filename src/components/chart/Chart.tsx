@@ -40,9 +40,9 @@ export const Chart: FC<ChartProps> = ({ totalIncome }) => {
       scales: {
         y: {
           beginAtZero: true,
-          max: 20000,
+          max: 10000,
           ticks: {
-            stepSize: 5000,
+            stepSize: 2000,
           },
         },
         x: {

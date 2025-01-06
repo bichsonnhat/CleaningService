@@ -9,12 +9,21 @@ interface ChartRowProps {
 }
 
 export const ChartRow: React.FC<ChartRowProps> = ({service_name, location, date_time, service_fee, status}) => {
-    const bgColor = status === 'Completed'.toLowerCase() ? 'bg-[#b3fcf1]' : 
-                    status === 'Processing'.toLowerCase() ? 'bg-[#cab5fc]' : 
-                    status === 'Pending'.toLowerCase() ? 'bg-[#f8e0c9]' : '';
-    const textColor = status === 'Completed'.toLowerCase() ? 'text-[#00B69B]' : 
-                    status === 'Processing'.toLowerCase() ? 'text-[#6226EF]' :
-                    status === 'Pending'.toLowerCase() ? 'text-[#FF8C00]' : '';
+    const bgColor = status === 'completed' ? 'bg-[#B6F2E9]' : 
+                    status === 'cancelled' ? 'bg-[#F8A8A0]' : 
+                    status === 'pending' ? 'bg-[#EED691]' : 
+                    status === 'inprogress' ? 'bg-[#9EC6F8]' : 
+                    status === 'requested' ? 'bg-[#F87171]' : 
+                    status === 'refunded' ? 'bg-[#60A5FA]' : 
+                    status === 'declined' ? 'bg-[#F97316]' : '';
+
+    const textColor = status === 'completed' ? 'bg-[#34AE9B]' : 
+                    status === 'cancelled' ? 'bg-[#BF544A]' : 
+                    status === 'pending' ? 'bg-[#F0BC24]' : 
+                    status === 'inprogress' ? 'bg-[#236FCF]' : 
+                    status === 'requested' ? 'bg-[#B91C1C]' : 
+                    status === 'refunded' ? 'bg-[#1D4ED8]' : 
+                    status === 'declined' ? 'bg-[#C2410C]' : '';
   return (
     <>
         <div className='flex flex-col sm:flex-row h-fit sm:h-[80px] p-[10px] gap-[10px]'>
