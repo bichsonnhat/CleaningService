@@ -68,7 +68,7 @@ const IssueRow: React.FC<IssueRowProps> = ({ issueData, onCheckboxToggle }) => {
       >
         <div className="overflow-hidden px-3 xl:px-2 py-4 w-full min-h-[48px] font-Averta-Regular xl:font-Averta-Semibold text-[15px]">
           <span className="xl:hidden font-mono font-bold">Helper: </span>
-          {issueData.booking.helper.user.fullName}
+          {issueData.booking.helper?.user?.fullName}
         </div>
       </div>
       <div

@@ -105,7 +105,9 @@ export async function GET(
         },
         where: {
           customerId: userId,
-          status: "completed",
+          status: {
+            in: ["completed", "cancelled"],
+          },
           refunds: {
             none: {},
           },

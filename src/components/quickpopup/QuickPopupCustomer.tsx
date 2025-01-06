@@ -34,9 +34,8 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
     console.log("Booking: ", data);
   };
   useEffect(() => {
-
-    const contractUrl = "https://res.cloudinary.com/dk4auce82/image/upload/v1735639521/image-upload/xdsiy7nayojazkxphrbt.pdf";
-
+    const contractUrl =
+      "https://res.cloudinary.com/dk4auce82/image/upload/v1735639521/image-upload/xdsiy7nayojazkxphrbt.pdf";
 
     if (contractUrl) {
       fetch(contractUrl)
@@ -46,12 +45,16 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
           const mimeType = blob.type;
 
           // Nếu là file PDF
-          const file = new File([blob], 'Employment Contract', { type: mimeType });
+          const file = new File([blob], "Employment Contract", {
+            type: mimeType,
+          });
 
           // Set file vào state (setIdCard sẽ nhận file)
           setContract(file);
         })
-        .catch((error) => console.error('Error fetching the identity card:', error));
+        .catch((error) =>
+          console.error("Error fetching the identity card:", error)
+        );
     }
 
     fetchBooking();
@@ -69,7 +72,7 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
 
     const fileUrl = URL.createObjectURL(file);
 
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = fileUrl;
     link.download = file.name;
 
@@ -98,43 +101,43 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
     bookingState === BookingStatus.Pending ? (
       <div className="w-[60%] h-full bg-[#ffd154] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#ff9400] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.InProgress ? (
       <div className="w-[60%] h-full bg-[#1a78f2] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#1a78f2] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Completed ? (
       <div className="w-[60%] h-full bg-[#00b69b] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#00b69b] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Cancelled ? (
       <div className="w-[60%] h-full bg-[#e01a1a] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#e01a1a] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Requested ? (
       <div className="w-[60%] h-full bg-[#F87171] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#B91C1C] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Refunded ? (
       <div className="w-[60%] h-full bg-[#60A5FA] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#1D4ED8] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Declined ? (
       <div className="w-[60%] h-full bg-[#F97316] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#C2410C] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : (
@@ -154,9 +157,10 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
         <Button
           onClick={() =>
             router.push(
-              `feedback/${booking?.feedbacks?.find(
-                (feedback) => feedback.reportedBy === false
-              )?.id
+              `feedback/${
+                booking?.feedbacks?.find(
+                  (feedback) => feedback.reportedBy === false
+                )?.id
               }`
             )
           }
@@ -389,7 +393,8 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
                     onDownload={() => handleDownload(contract)}
                   />
                 </div>
-                {bookingState == BookingStatus.Completed && (
+                {(bookingState == BookingStatus.Completed ||
+                  bookingState == BookingStatus.Cancelled) && (
                   <div className="h-[55px]">
                     <Button
                       className="w-full h-[55px] bg-[#e01a1a] text-lg text-white font-Averta-Semibold hover:bg-[#e01a1a] hover:bg-opacity-70"
@@ -495,16 +500,16 @@ const QuickPopupCustomer: React.FC<QuickPopupCustomer> = ({
         <QuickPopupFeedback
           toggle={handleToggleFeedbackPopup}
           defaultBookingId={booking.id}
-        // mutate={fetchRefund}
-        // defaultBookingId={null}
+          // mutate={fetchRefund}
+          // defaultBookingId={null}
         />
       )}
       {toggleRefund && (
         <QuickPopupReturn
           toggle={handleToggleRefundPopup}
           defaultBookingId={booking.id}
-        // mutate={fetchRefund}
-        // defaultBookingId={null}
+          // mutate={fetchRefund}
+          // defaultBookingId={null}
         />
       )}
     </div>
