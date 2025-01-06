@@ -9,7 +9,6 @@ import { Label } from "../ui/label";
 import FileDownloadCard from "../card/FileDownloadCard";
 import { useToast } from "@/hooks/use-toast";
 
-
 export type Order = {
   id: string;
   customerId: string;
@@ -80,9 +79,8 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
     console.log("Booking: ", data);
   };
   useEffect(() => {
-
-    const contractUrl = "https://res.cloudinary.com/dk4auce82/image/upload/v1735639521/image-upload/xdsiy7nayojazkxphrbt.pdf";
-
+    const contractUrl =
+      "https://res.cloudinary.com/dk4auce82/image/upload/v1735639521/image-upload/xdsiy7nayojazkxphrbt.pdf";
 
     if (contractUrl) {
       fetch(contractUrl)
@@ -92,12 +90,16 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
           const mimeType = blob.type;
 
           // Nếu là file PDF
-          const file = new File([blob], 'Employment Contract', { type: mimeType });
+          const file = new File([blob], "Employment Contract", {
+            type: mimeType,
+          });
 
           // Set file vào state (setIdCard sẽ nhận file)
           setContract(file);
         })
-        .catch((error) => console.error('Error fetching the identity card:', error));
+        .catch((error) =>
+          console.error("Error fetching the identity card:", error)
+        );
     }
     fetchBooking();
   }, []);
@@ -114,7 +116,7 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
 
     const fileUrl = URL.createObjectURL(file);
 
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = fileUrl;
     link.download = file.name;
 
@@ -188,7 +190,7 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
         disabled={
           !booking ||
           booking.feedbacks.find((feedback) => !feedback.reportedBy) ===
-          undefined
+            undefined
         }
         className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
       >
@@ -272,7 +274,7 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
                 <div className="flex flex-row justify-between p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
                   <div className="flex flex-row h-fit gap-[10px]">
                     <Image
-                      src="/images/About/Google.png"
+                      src="/images/QuickPopUp/avatar-default.png"
                       alt="avatar"
                       width={20}
                       height={20}

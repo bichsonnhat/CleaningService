@@ -74,7 +74,7 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
             <div className="flex flex-row items-center justify-between w-full">
               <div className="flex flex-row gap-[10px] w-[40%] items-center justify-start">
                 <Image
-                  src={"/images/About/Google.png"}
+                  src={"/images/QuickPopUp/avatar-default.png"}
                   alt="avatar"
                   width={20}
                   height={20}
@@ -131,7 +131,7 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
             >
               <div className="flex flex-row gap-[10px] w-[40%] items-center justify-start">
                 <Image
-                  src={"/images/About/Google.png"}
+                  src={"/images/QuickPopUp/avatar-default.png"}
                   alt="avatar"
                   width={20}
                   height={20}

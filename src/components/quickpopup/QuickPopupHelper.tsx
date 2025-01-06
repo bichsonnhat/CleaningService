@@ -53,9 +53,8 @@ const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
     console.log("Booking: ", data);
   };
   useEffect(() => {
-
-    const contractUrl = "https://res.cloudinary.com/dk4auce82/image/upload/v1735639521/image-upload/xdsiy7nayojazkxphrbt.pdf";
-
+    const contractUrl =
+      "https://res.cloudinary.com/dk4auce82/image/upload/v1735639521/image-upload/xdsiy7nayojazkxphrbt.pdf";
 
     if (contractUrl) {
       fetch(contractUrl)
@@ -65,12 +64,16 @@ const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
           const mimeType = blob.type;
 
           // Nếu là file PDF
-          const file = new File([blob], 'Employment Contract', { type: mimeType });
+          const file = new File([blob], "Employment Contract", {
+            type: mimeType,
+          });
 
           // Set file vào state (setIdCard sẽ nhận file)
           setContract(file);
         })
-        .catch((error) => console.error('Error fetching the identity card:', error));
+        .catch((error) =>
+          console.error("Error fetching the identity card:", error)
+        );
     }
 
     fetchBooking();
@@ -88,7 +91,7 @@ const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
 
     const fileUrl = URL.createObjectURL(file);
 
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = fileUrl;
     link.download = file.name;
 
@@ -104,43 +107,43 @@ const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
     bookingState === BookingStatus.Pending ? (
       <div className="w-[60%] h-full bg-[#ffd154] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#ff9400] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.InProgress ? (
       <div className="w-[60%] h-full bg-[#1a78f2] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#1a78f2] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Completed ? (
       <div className="w-[60%] h-full bg-[#00b69b] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#00b69b] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Cancelled ? (
       <div className="w-[60%] h-full bg-[#e01a1a] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#e01a1a] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Requested ? (
       <div className="w-[60%] h-full bg-[#F87171] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#B91C1C] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Refunded ? (
       <div className="w-[60%] h-full bg-[#60A5FA] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#1D4ED8] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : bookingState === BookingStatus.Declined ? (
       <div className="w-[60%] h-full bg-[#F97316] p-[13px] bg-opacity-20 rounded-lg">
         <p className="flex h-full justify-center items-center text-[#C2410C] text-xl font-bold">
-        {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
+          {bookingState.charAt(0).toUpperCase() + bookingState.slice(1)}
         </p>
       </div>
     ) : (
@@ -212,37 +215,37 @@ const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
         </AlertDialogContent>
       </AlertDialog>
     ) : // <Button className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold">
-      //   Start Working Session
-      // </Button>
-      bookingState === BookingStatus.Completed ||
-        bookingState === BookingStatus.Requested ||
-        bookingState === BookingStatus.Declined ||
-        bookingState === BookingStatus.Refunded ? (
-        booking && booking.feedbacks.some((fb) => fb.reportedBy) ? (
-          <Button
-            onClick={() => {
-              const firstValidIssue = booking.feedbacks.find(
-                (feedback) => feedback.reportedBy
-              );
-              if (firstValidIssue) {
-                router.push(`issue/${firstValidIssue.id}`);
-              }
-            }}
-            className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
-          >
-            Go to Issue
-          </Button>
-        ) : (
-          <Button
-            onClick={toggleIssuePopup}
-            className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
-          >
-            Having an Issue
-          </Button>
-        )
+    //   Start Working Session
+    // </Button>
+    bookingState === BookingStatus.Completed ||
+      bookingState === BookingStatus.Requested ||
+      bookingState === BookingStatus.Declined ||
+      bookingState === BookingStatus.Refunded ? (
+      booking && booking.feedbacks.some((fb) => fb.reportedBy) ? (
+        <Button
+          onClick={() => {
+            const firstValidIssue = booking.feedbacks.find(
+              (feedback) => feedback.reportedBy
+            );
+            if (firstValidIssue) {
+              router.push(`issue/${firstValidIssue.id}`);
+            }
+          }}
+          className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
+        >
+          Go to Issue
+        </Button>
       ) : (
-        ""
-      );
+        <Button
+          onClick={toggleIssuePopup}
+          className="w-full h-[55px] bg-[#1A78F2] text-lg text-white font-Averta-Semibold"
+        >
+          Having an Issue
+        </Button>
+      )
+    ) : (
+      ""
+    );
 
   function formatSchedule(startTime: string, endTime: string): string {
     const startDate = new Date(startTime);
@@ -339,7 +342,7 @@ const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
                 <div className="flex flex-row justify-between p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
                   <div className="flex flex-row h-fit gap-[10px]">
                     <Image
-                      src="/images/About/Google.png"
+                      src="/images/QuickPopUp/avatar-default.png"
                       alt="avatar"
                       width={20}
                       height={20}
@@ -434,7 +437,7 @@ const QuickPopupHelper: React.FC<QuickPopupHelperProps> = ({
                 </p>
                 <div className="flex flex-row gap-[10px] w-full h-fit p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
                   <Image
-                    src="/images/About/Google.png"
+                    src="/images/QuickPopUp/avatar-default.png"
                     alt="avatar"
                     width={20}
                     height={20}
