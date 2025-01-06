@@ -188,7 +188,7 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
             />
             <div className="flex flex-row self-stretch items-center mx-4">
               <p className=" font-bold font-Averta-Semibold text-base lg:text-lg mr-1">
-                {detail.booking.helper.user.fullName}
+                {detail.booking.helper?.user?.fullName}
               </p>
               <p className="text-[10px] lg:text-xs font-semibold text-neutral-600 font-Averta-Regular mt-0.5">
                 {"<helper>"}

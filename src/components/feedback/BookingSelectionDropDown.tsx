@@ -14,14 +14,14 @@ type BookingDropdownProps = {
   bookings: BookingCanFeedback[];
   defaultBooking?: BookingCanFeedback;
   onSelectBooking?: (booking: BookingCanFeedback) => void;
-  reportedBy?: boolean | false;
+  reportedBy?: boolean;
 };
 
 const BookingDropdown: React.FC<BookingDropdownProps> = ({
   bookings,
   defaultBooking,
   onSelectBooking,
-  reportedBy,
+  reportedBy = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] =
@@ -60,6 +60,8 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
     return `${startDate}/${startMonth}/${startYear}`;
   };
 
+  console.log("reportBy: ", reportedBy);
+
   return (
     <div className="relative w-full">
       {/* Dropdown Button */}
@@ -80,7 +82,7 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
                 />
                 <p className="text-[#4f6071] text-sm xl:text-base font-Averta-Semibold leading-[23px] tracking-tight">
                   {reportedBy === false
-                    ? selectedBooking.helper.user.fullName
+                    ? selectedBooking.helper?.user?.fullName
                     : selectedBooking.customer.fullName}
                 </p>
               </div>
@@ -137,7 +139,7 @@ const BookingDropdown: React.FC<BookingDropdownProps> = ({
                 />
                 <p className="text-[#4f6071] text-base font-Averta-Semibold leading-[23px] tracking-tight">
                   {reportedBy === false
-                    ? booking.helper.user.fullName
+                    ? booking.helper?.user?.fullName
                     : booking.customer.fullName}
                 </p>
               </div>
