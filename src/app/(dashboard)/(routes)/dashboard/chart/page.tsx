@@ -72,7 +72,7 @@ const ChartPage = () => {
         service_name: data.serviceCategory.name,
         location: data.location,
         date_time: formattedDateTime,
-        service_fee: data.totalPrice,
+        service_fee: parseFloat(data.totalPrice.toString()),
         status: data.status,
       };
     }).sort((a, b) => new Date(b.date_time).getTime() - new Date(a.date_time).getTime());

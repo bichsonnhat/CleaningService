@@ -76,7 +76,7 @@ const LeaveRequestRow: React.FC<LeaveRequestRowProps> = ({
               className={`flex relative gap-4 justify-between items-start px-4 py-1.5 min-h-[27px] ${statusColor} rounded-md`}
             >
               <div className="z-0 flex-1 shrink my-auto basis-0 font-Averta-Bold text-[13px]">
-                {status}
+                {status.charAt(0) + status.slice(1).toLowerCase()}
               </div>
             </div>
           </div>
