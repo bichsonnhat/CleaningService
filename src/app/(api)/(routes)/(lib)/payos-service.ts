@@ -23,7 +23,7 @@ export default async function createPaymentLink(
 
     const body: CheckoutRequestType = {
       orderCode: booking.orderNumber! + 200,
-      amount: Number(booking.totalPrice),
+      amount: Number(booking.totalPrice) * 20,
       description: `khang dat hang`,
       cancelUrl: "/payment-cancelled",
       returnUrl: "/payment-success",
