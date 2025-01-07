@@ -22,7 +22,6 @@ import { userStore } from "@/utils/store/role.store";
 import { useToast } from "@/hooks/use-toast";
 
 export function CreateLeaveRequestPopup() {
-
   const queryClient = useQueryClient();
   const userId = userStore((state) => state.id);
   const { toast } = useToast();
@@ -38,16 +37,20 @@ export function CreateLeaveRequestPopup() {
 
       console.log("Final data:", formData);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/helper_availability`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/helper_availability`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
-        const errorMessage = "Failed to create leave request because you already have a request in that time period. Please try again.";
+        const errorMessage =
+          "Failed to create leave request because you already have a request in that time period. Please try again.";
         // toast({
         //   variant: "destructive",
         //   title: errorMessage,
@@ -95,7 +98,8 @@ export function CreateLeaveRequestPopup() {
       // alert("Failed to create leave request. Please try again.");
       toast({
         variant: "destructive",
-        title: "Failed to create leave request because you already have a request in that time period. Please try again.",
+        title:
+          "Failed to create leave request because you already have a request in that time period. Please try again.",
       });
     }
   };
@@ -145,7 +149,7 @@ export function CreateLeaveRequestPopup() {
                     { id: "personal_leave", name: "Personal Leave" },
                     { id: "unavailable", name: "Unavailable" },
                   ]}
-                  placeholder="Select Service Category"
+                  placeholder="Select Reason"
                   value={field.value ?? ""}
                   onChange={field.onChange}
                   error={errors.availabilityType?.message}
