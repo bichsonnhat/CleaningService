@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
     const booking = await prisma.booking.findFirst({
       where: {
-        orderNumber: orderCode,
+        orderNumber: orderCode + 200,
       },
     });
 
