@@ -57,7 +57,8 @@ export async function PATCH(
 
     let userUpdatedInfo
 
-    if (numberOfViolations === 3) {
+    if (numberOfViolations == 3) {
+        console.log("so luong loi la 3")
         userUpdatedInfo = await prisma.user.update({
             where: {
                 id: id,

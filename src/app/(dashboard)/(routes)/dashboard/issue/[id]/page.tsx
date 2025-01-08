@@ -46,7 +46,10 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
   const [warning, setWarning] = useState(false);
   const [booking, setBooking] = useState<Booking | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [role, setRole] = useState<string | null>(null);
+  const [adminUser, setAdminUser] = useState<{
+    role: string,
+    userId: string
+  } | null>(null);
   useEffect(() => {
     const fetchDetail = async (id: string) => {
       const response = await fetch(
@@ -66,7 +69,7 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
         `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
       )
       const data = await response.json();
-      setRole(data.role);
+      setAdminUser(data);
     }
 
     fetchDetail(id);
@@ -146,7 +149,7 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
         nunmberOfViolations: (user?.numberOfViolations ?? 0) + 1,
       }
       const bodyFeedback = {
-        resolveBy: user?.id,
+        resolveBy: adminUser?.userId,
       }
       setWarning(true);
       // await Promise.all(
@@ -211,7 +214,7 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
           <p className=" px-3 py-5 ml-5 min-h-[48px] w-full font-Averta-Bold text-sm md:text-base lg:text-lg">
             {detail.title}
           </p>
-          {role === 'admin' && (
+          {adminUser?.role === 'admin' && (
             <AlertDialog>
               <AlertDialogTrigger>
                 {warning ? (
