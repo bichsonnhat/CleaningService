@@ -1,6 +1,7 @@
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 import { partialuserSchema } from "../user.schema";
+import { clerkClient } from "@clerk/nextjs/server";
 
 export async function GET(
     req: Request,
@@ -33,6 +34,9 @@ export async function PUT(
     { params }: { params: { id: string } }
 ) {
   try {
+
+    const client = await clerkClient();
+
     const { id } = params;
 
     const body = await req.json();
@@ -56,36 +60,60 @@ export async function PUT(
     }
 
     let userUpdatedInfo
-    if (data.email){
-        userUpdatedInfo = await prisma.user.update({
-            where: {
-                id: id,
-            },
-            data: {
-                fullName: data.fullName,
-                gender: data.gender,
-                email: data.email,
-                dateOfBirth: data.dateOfBirth,
-                identifyCard: data.idCard,
-                address: address,
-                phoneNumber: data.phoneNumber,
-            }
-        })
-    }
-    else{
-        userUpdatedInfo = await prisma.user.update({
-            where: {
-                id: id,
-            },
-            data: {
-                fullName: data.fullName,
-                gender: data.gender,
-                dateOfBirth: data.dateOfBirth,
-                identifyCard: data.idCard,
-                address: address,
-                phoneNumber: data.phoneNumber,
-            }
-        })
+    if (data.numberOfViolations) {
+        if (data.numberOfViolations === 3) {
+            userUpdatedInfo = await prisma.user.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    numberOfViolations: data.numberOfViolations,
+                    status: "blocked"
+                }
+            })
+            client.users.banUser(id)
+        } else {
+            userUpdatedInfo = await prisma.user.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    numberOfViolations: data.numberOfViolations,
+                }
+            })
+        }
+    } else {
+        if (data.email){
+            userUpdatedInfo = await prisma.user.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    fullName: data.fullName,
+                    gender: data.gender,
+                    email: data.email,
+                    dateOfBirth: data.dateOfBirth,
+                    identifyCard: data.idCard,
+                    address: address,
+                    phoneNumber: data.phoneNumber,
+                }
+            })
+        }
+        else{
+            userUpdatedInfo = await prisma.user.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    fullName: data.fullName,
+                    gender: data.gender,
+                    dateOfBirth: data.dateOfBirth,
+                    identifyCard: data.idCard,
+                    address: address,
+                    phoneNumber: data.phoneNumber,
+                }
+            })
+        }   
     }
 
     return NextResponse.json(userUpdatedInfo);

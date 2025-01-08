@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { GoArrowLeft } from "react-icons/go";
 import { LuArrowLeft } from "react-icons/lu";
+import { IoWarningOutline } from "react-icons/io5";
 import Image from "next/image";
 import { Feedback2 } from "@/components/feedback/FeedbackTable";
 import {
@@ -19,6 +20,7 @@ import {
 import { useRouter } from "next/navigation";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useToast } from "@/hooks/use-toast";
+import { Booking, User } from "@prisma/client";
 export type Refund = {
   id: number;
   booking_id: string;
@@ -41,6 +43,9 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
   const { toast } = useToast();
   const [detail, setDetail] = useState<Feedback2 | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [warning, setWarning] = useState(false);
+  const [booking, setBooking] = useState<Booking | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
     const fetchDetail = async (id: string) => {
       const response = await fetch(
@@ -48,11 +53,28 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
       );
       const data = await response.json();
       setDetail(data);
-      console.log("Check issue detail", data);
+      const bookingResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/${data.booking_id}`
+      )
+      const bookingData = await bookingResponse.json();
+      setBooking(bookingData);
     };
 
     fetchDetail(id);
   }, [id]);
+
+  useEffect(() => {
+    const fetchUser = async (id: string) => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/${id}`
+      );
+      const data = await response.json();
+      setUser(data);
+    }
+    if (booking) {
+      fetchUser(booking.customerId);
+    }
+  }, [booking]);
 
   const logo = [
     {
@@ -108,6 +130,38 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
       setDeleting(false);
     }
   };
+  const handleWarningUser = async () => {
+    try {
+      setWarning(true);
+      // await Promise.all(
+      //   checkedRows.map((id) => {
+      //     return fetch(
+      //       `${process.env.NEXT_PUBLIC_API_URL}/api/feedback/${id}`,
+      //       {
+      //         method: "DELETE",
+      //       }
+      //     );
+      //   })
+      // );
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${booking?.customerId}`, {
+        method: "PUT",
+        headers: {
+          application: "application/json",
+        },
+        body: JSON.stringify({nunmberOfViolations: (user?.numberOfViolations ?? 0) + 1}),
+      }).then((res) => res.json()).then((data) => console.log(data));
+
+      toast({ title: "Warning customer successfully!" });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to warning customer",
+      });
+      console.error(error);
+    } finally {
+      setWarning(false);
+    }
+  };
 
   if (!detail)
     return (
@@ -133,7 +187,42 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
           <p className=" px-3 py-5 ml-5 min-h-[48px] w-full font-Averta-Bold text-sm md:text-base lg:text-lg">
             {detail.title}
           </p>
-
+          <AlertDialog>
+            <AlertDialogTrigger>
+              {warning ? (
+                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                  <ClipLoader color="#fff" loading={true} size={30} />
+                </div>
+              ) : (
+                <div className="h-full p-6 hover:bg-slate-200">
+                  <IoWarningOutline size={25} className="h-[19px]" />
+                </div>
+              )}
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This action will warning the 
+                  customer.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <button
+                    onClick={() => handleWarningUser()}
+                    // onClick={() => {
+                    //   toast({ title: "Delete issue successfully!" });
+                    // }}
+                    className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
+                  >
+                    Warning
+                  </button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           {/* <button className="h-full p-6 hover:bg-slate-200">
             <FaRegTrashAlt className="h-[19px]" />
           </button> */}
