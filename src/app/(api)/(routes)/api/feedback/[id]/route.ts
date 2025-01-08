@@ -48,6 +48,54 @@ export async function GET(
   }
 }
 
+export async function PATCH(
+  req : Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+
+  const { id } = params;
+
+  const body = await req.json();
+  const resolveBy = body.resolveBy;
+
+  const user = await prisma.feedback.findUnique({
+      where: { id: id },
+  });
+
+  if (user === null) {
+      return NextResponse.json(
+          {
+          status: "error",
+          error: "Feedback not found",
+          },
+          { status: 404 }
+      );
+  }
+
+  let feedbackUpdatedInfo
+
+  feedbackUpdatedInfo = await prisma.feedback.update({
+      where: {
+          id: id,
+      },
+      data: {
+        resolveBy: resolveBy,
+      }
+  })
+
+  return NextResponse.json(feedbackUpdatedInfo);
+  }
+  catch (error) {
+  // Xử lý lỗi nếu có
+  console.error("Error updating customer info:", error);
+  return NextResponse.json(
+      { status: "error", error: "Failed to update customer info" },
+      { status: 500 }
+  );
+  }
+}
+
 export async function PUT(
   req: Request,
   { params }: { params: { id: string } }

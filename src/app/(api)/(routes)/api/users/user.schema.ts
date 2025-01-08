@@ -14,7 +14,6 @@ const userSchema = z
     streetName: z.string(),
     avatar: z.string(),
     idCard: z.string(),
-    numberOfViolations: z.number().optional(),
   })
   .strict();
 

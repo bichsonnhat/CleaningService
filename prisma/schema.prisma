@@ -243,6 +243,7 @@ model Feedback {
   helperRating  Int
   title         String   @db.Text
   description   String   @db.Text
+  resolveBy     String?
   created_at    DateTime @default(now()) @db.Timestamp()
   updated_at    DateTime @default(now()) @updatedAt @db.Timestamp()
 

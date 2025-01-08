@@ -28,15 +28,74 @@ export async function GET(
         );
     }
 }
+export async function PATCH(
+    req : Request,
+    { params }: { params: { id: string } }
+) {
+    try {
+
+    const client = await clerkClient();
+
+    const { id } = params;
+
+    const body = await req.json();
+    const numberOfViolations = body.nunmberOfViolations;
+
+    const user = await prisma.user.findUnique({
+        where: { id: id },
+    });
+
+    if (user === null) {
+        return NextResponse.json(
+            {
+            status: "error",
+            error: "User not found",
+            },
+            { status: 404 }
+        );
+    }
+
+    let userUpdatedInfo
+
+    if (numberOfViolations === 3) {
+        userUpdatedInfo = await prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                numberOfViolations: numberOfViolations,
+                status: "blocked",
+            }
+        })
+        await client.users.banUser(id)
+    } else {
+        userUpdatedInfo = await prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                numberOfViolations: numberOfViolations,
+            }
+        })
+    }
+
+    return NextResponse.json(userUpdatedInfo);
+    }
+    catch (error) {
+    // Xử lý lỗi nếu có
+    console.error("Error updating customer info:", error);
+    return NextResponse.json(
+        { status: "error", error: "Failed to update customer info" },
+        { status: 500 }
+    );
+    }
+}
 
 export async function PUT(
     req: Request,
     { params }: { params: { id: string } }
 ) {
   try {
-
-    const client = await clerkClient();
-
     const { id } = params;
 
     const body = await req.json();
@@ -60,61 +119,38 @@ export async function PUT(
     }
 
     let userUpdatedInfo
-    if (data.numberOfViolations) {
-        if (data.numberOfViolations === 3) {
-            userUpdatedInfo = await prisma.user.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    numberOfViolations: data.numberOfViolations,
-                    status: "blocked"
-                }
-            })
-            client.users.banUser(id)
-        } else {
-            userUpdatedInfo = await prisma.user.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    numberOfViolations: data.numberOfViolations,
-                }
-            })
-        }
-    } else {
-        if (data.email){
-            userUpdatedInfo = await prisma.user.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    fullName: data.fullName,
-                    gender: data.gender,
-                    email: data.email,
-                    dateOfBirth: data.dateOfBirth,
-                    identifyCard: data.idCard,
-                    address: address,
-                    phoneNumber: data.phoneNumber,
-                }
-            })
-        }
-        else{
-            userUpdatedInfo = await prisma.user.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    fullName: data.fullName,
-                    gender: data.gender,
-                    dateOfBirth: data.dateOfBirth,
-                    identifyCard: data.idCard,
-                    address: address,
-                    phoneNumber: data.phoneNumber,
-                }
-            })
-        }   
+    
+    if (data.email){
+        userUpdatedInfo = await prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                fullName: data.fullName,
+                gender: data.gender,
+                email: data.email,
+                dateOfBirth: data.dateOfBirth,
+                identifyCard: data.idCard,
+                address: address,
+                phoneNumber: data.phoneNumber,
+            }
+        })
     }
+    else{
+        userUpdatedInfo = await prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                fullName: data.fullName,
+                gender: data.gender,
+                dateOfBirth: data.dateOfBirth,
+                identifyCard: data.idCard,
+                address: address,
+                phoneNumber: data.phoneNumber,
+            }
+        })
+    }   
 
     return NextResponse.json(userUpdatedInfo);
   }
