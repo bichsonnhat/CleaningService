@@ -438,10 +438,10 @@ const EmployeeInfo: React.FC<HelperInfoProps> = ({ helperId, role }) => {
                                 <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
                             </button>
                             <p className="font-Averta-Bold text-4xl text-center my-auto ml-[10px]">User Info</p>
-                                {Number(helperData?.numberOfViolations) > 0 ? (
+                                {Number(helperData?.user.numberOfViolations) > 0 ? (
                                     <div className="pl-3 flex items-center gap-2">
                                         <Image src="/images/Personal/warning.svg" alt="arrow" width={20} height={30} />
-                                        <p className="font-Averta-Regular text-center my-auto mb-[18px]">You have {helperData?.numberOfViolations} {helperData?.numberOfViolations > 1 ? 'strikes' : 'strike'} </p>
+                                        <p className="font-Averta-Regular text-center my-auto mb-[18px]">You have {helperData?.user.numberOfViolations} {helperData?.user.numberOfViolations > 1 ? 'strikes' : 'strike'} </p>
                                     </div>
                                 ) : null}
                         </div>

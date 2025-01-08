@@ -8,5 +8,4 @@ type Helper = {
     completedJobs: number;
     cancelledJobs: number;
     user: Customer;
-    numberOfViolations: number;
 };
