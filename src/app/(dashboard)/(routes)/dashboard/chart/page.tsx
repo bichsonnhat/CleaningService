@@ -232,7 +232,7 @@ const ChartPage = () => {
         },
         {
           ...chartCardData[2],
-          dataInfo: `$${totalIncome.reduce((a, b) => a + b, 0)}`,
+          dataInfo: `$${totalIncome.reduce((a, b) => a + b, 0).toFixed(2)}`,
           percentageChangeInfo: `${calculatePercentageChange(
             todayIncome,
             yesterdayIncome
