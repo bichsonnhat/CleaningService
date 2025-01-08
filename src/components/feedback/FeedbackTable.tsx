@@ -39,6 +39,7 @@ export type Feedback2 = {
       };
     };
   };
+  resolveBy?: string;
 };
 
 export enum Role {

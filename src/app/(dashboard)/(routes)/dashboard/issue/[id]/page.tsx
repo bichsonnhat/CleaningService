@@ -143,10 +143,27 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
       setDeleting(false);
     }
   };
+  const handleBlacklistedUser = async () => {
+    const body = {
+      userId: booking?.helperId,
+      reason: "user has 3 warnings",
+      blacklistedBy: booking?.customerId,
+    }
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blacklisted_users`, {
+      method: "POST",
+      headers: {
+        application: "application/json",
+      },
+      body: JSON.stringify(body),
+    }).then((res) => res.json()).then((data) => console.log(data));
+  }
   const handleWarningUser = async () => {
     try {
       const bodyUser = {
         nunmberOfViolations: (user?.numberOfViolations ?? 0) + 1,
+      }
+      if (bodyUser.nunmberOfViolations == 3) {
+        handleBlacklistedUser();
       }
       const bodyFeedback = {
         resolveBy: adminUser?.userId,
@@ -179,6 +196,9 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
       }).then((res) => res.json()).then((data) => console.log(data));
 
       toast({ title: "Warning customer successfully!" });
+      setTimeout(() => {
+        router.back();
+      }, 2000);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -214,7 +234,7 @@ const IssueDetail = ({ params }: { params: { id: string } }) => {
           <p className=" px-3 py-5 ml-5 min-h-[48px] w-full font-Averta-Bold text-sm md:text-base lg:text-lg">
             {detail.title}
           </p>
-          {adminUser?.role === 'admin' && (
+          {adminUser?.role === 'admin' && !detail.resolveBy && (
             <AlertDialog>
               <AlertDialogTrigger>
                 {warning ? (

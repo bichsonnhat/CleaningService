@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Feedback2 } from "@/components/feedback/FeedbackTable";
 import { useRouter } from "next/navigation";
 import ClipLoader from "react-spinners/ClipLoader";
+import { IoWarningOutline } from "react-icons/io5";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,12 +19,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { Booking, User } from "@prisma/client";
 
 const FeedbackDetail = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const [detail, setDetail] = useState<Feedback2 | null>(null);
   const { toast } = useToast();
   const [deleting, setDeleting] = useState(false);
+  const [warning, setWarning] = useState(false);
+  const [booking, setBooking] = useState<Booking | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [adminUser, setAdminUser] = useState<{
+    role: string,
+    userId: string
+  } | null>(null);
   useEffect(() => {
     const fetchDetail = async (id: string) => {
       const response = await fetch(
@@ -31,11 +40,38 @@ const FeedbackDetail = ({ params }: { params: { id: string } }) => {
       );
       const data = await response.json();
       setDetail(data);
-      console.log("Check feedback detail", data);
+      const bookingResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/${data.booking_id}`
+      )
+      const bookingData = await bookingResponse.json();
+      setBooking(bookingData);
     };
 
+    const fetchRole = async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user-info`
+      )
+      const data = await response.json();
+      setAdminUser(data);
+    }
+
     fetchDetail(params.id);
+    fetchRole();
   }, [params.id]);
+
+  useEffect(() => {
+      const fetchUser = async (id: string) => {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/${id}`
+        );
+        const data = await response.json();
+        setUser(data);
+      }
+      if (booking) {
+        fetchUser(booking.helperId ?? "");
+      }
+    }, [booking]);
+
   const router = useRouter();
 
   const logo = [
@@ -105,7 +141,73 @@ const FeedbackDetail = ({ params }: { params: { id: string } }) => {
       setDeleting(false);
     }
   };
+  const handleBlacklistedUser = async () => {
+    const body = {
+      userId: booking?.helperId,
+      reason: "user has 3 warnings",
+      blacklistedBy: booking?.customerId,
+    }
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blacklisted_users`, {
+      method: "POST",
+      headers: {
+        application: "application/json",
+      },
+      body: JSON.stringify(body),
+    }).then((res) => res.json()).then((data) => console.log(data));
+  }
+  
+  const handleWarningUser = async () => {
+    try {
+      const bodyUser = {
+        nunmberOfViolations: (user?.numberOfViolations ?? 0) + 1,
+      }
+      if (bodyUser.nunmberOfViolations == 3) {
+        handleBlacklistedUser();
+      }
+      const bodyFeedback = {
+        resolveBy: adminUser?.userId,
+      }
+      setWarning(true);
+      // await Promise.all(
+      //   checkedRows.map((id) => {
+      //     return fetch(
+      //       `${process.env.NEXT_PUBLIC_API_URL}/api/feedback/${id}`,
+      //       {
+      //         method: "DELETE",
+      //       }
+      //     );
+      //   })
+      // );
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${booking?.helperId}`, {
+        method: "PATCH",
+        headers: {
+          application: "application/json",
+        },
+        body: JSON.stringify(bodyUser),
+      }).then((res) => res.json()).then((data) => console.log(data));
 
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feedback/${id}`, {
+        method: "PATCH",
+        headers: {
+          application: "application/json",
+        },
+        body: JSON.stringify(bodyFeedback),
+      }).then((res) => res.json()).then((data) => console.log(data));
+
+      toast({ title: "Warning helper successfully!" });
+      setTimeout(() => {
+        router.back();
+      }, 2000);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to warning helper",
+      });
+      console.error(error);
+    } finally {
+      setWarning(false);
+    }
+  };
   if (!detail)
     return (
       <div className="flex w-full h-full items-center justify-center">
@@ -146,7 +248,44 @@ const FeedbackDetail = ({ params }: { params: { id: string } }) => {
               </div>
             </div>
           </div>
-
+          {adminUser?.role === 'admin' && !detail.resolveBy && (
+            <AlertDialog>
+              <AlertDialogTrigger>
+                {warning ? (
+                  <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                    <ClipLoader color="#fff" loading={true} size={30} />
+                  </div>
+                ) : (
+                  <div className="h-full p-6 hover:bg-slate-200">
+                    <IoWarningOutline size={25} className="h-[19px]" />
+                  </div>
+                )}
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This action will warning the 
+                    helper.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction asChild>
+                    <button
+                      onClick={() => handleWarningUser()}
+                      // onClick={() => {
+                      //   toast({ title: "Delete issue successfully!" });
+                      // }}
+                      className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
+                    >
+                      Warning
+                    </button>
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            )}
           {/* <button className="h-full p-6 hover:bg-slate-200">
             <FaRegTrashAlt className="h-[19px]" />
           </button> */}

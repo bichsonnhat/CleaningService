@@ -28,7 +28,7 @@ const CustomerRow: React.FC<CustomerRowProps> = ({
       ? "bg-[#1A78F2] text-[#1A78F2]"
       : status === UserStatus.In_Active
       ? "bg-[#f5f7a7] text-[#f5f7a7]"
-      : status === UserStatus.In_Active
+      : status === UserStatus.Blocked
       ? "bg-[#EF3826] text-[#EF3826]"
       : "";
 
