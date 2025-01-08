@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/db";
-import { currentUser } from "@clerk/nextjs/server";
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import exp from "constants";
 import { randomUUID } from "crypto";
 

@@ -13,6 +13,7 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { useRouter } from 'next/navigation';
 import { LuArrowLeft } from 'react-icons/lu';
 import { useToast } from "@/hooks/use-toast";
+import { currentUser } from '@clerk/nextjs/server';
 
 const genderOptions = ["Female", "Male", "Other"]
 
@@ -313,7 +314,16 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customerId, role }) => {
                                 className={`h-full p-6 hover:bg-gray-100 border-r-[1px] ${role !== 'admin' ? 'invisible' : ''} `}>
                                 <LuArrowLeft className='h-[19px] text-neutral-300 text-xl font-bold' />
                             </button>
-                            <p className="font-Averta-Bold text-4xl text-center my-auto ml-[10px]">User Info</p>
+                            {/* <div className='flex flex-row gap-2'> */}
+                                <p className="font-Averta-Bold text-4xl text-center my-auto ml-[10px]">User Info</p>
+                                {Number(customerData?.numberOfViolations) > 0 ? (
+                                    <div className="pl-3 flex items-center gap-2">
+                                        <Image src="/images/Personal/warning.svg" alt="arrow" width={20} height={30} />
+                                        <p className="font-Averta-Regular text-center my-auto mb-[18px]">You have {customerData?.numberOfViolations} {customerData?.numberOfViolations > 1 ? 'strikes' : 'strike'} </p>
+                                    </div>
+                                ) : null}
+
+                            {/* </div> */}
                         </div>
 
                         <div className="grid mt-[50px] gap-6">

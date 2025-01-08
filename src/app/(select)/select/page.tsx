@@ -62,7 +62,7 @@ const Select = () => {
     <div className="flex flex-col w-full h-full pb-8">
       <div className="w-full h-[75px]">
         <div className="w-[5%] h-full flex items-center justify-center">
-          <button>
+          <button onClick={() => router.back()}>
             <Image
               src="/images/Select/Arrow_Right_MD.svg"
               alt="back_icon"
