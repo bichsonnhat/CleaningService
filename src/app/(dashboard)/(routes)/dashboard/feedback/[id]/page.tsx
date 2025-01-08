@@ -155,7 +155,7 @@ const FeedbackDetail = ({ params }: { params: { id: string } }) => {
       body: JSON.stringify(body),
     }).then((res) => res.json()).then((data) => console.log(data));
   }
-  
+
   const handleWarningUser = async () => {
     try {
       const bodyUser = {
@@ -248,16 +248,57 @@ const FeedbackDetail = ({ params }: { params: { id: string } }) => {
               </div>
             </div>
           </div>
-          {adminUser?.role === 'admin' && !detail.resolveBy && (
+          <div className="flex">
+            {adminUser?.role === 'admin' && !detail.resolveBy && (
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  {warning ? (
+                    <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
+                      <ClipLoader color="#fff" loading={true} size={30} />
+                    </div>
+                  ) : (
+                    <div className="h-full p-6 hover:bg-slate-200">
+                      <IoWarningOutline size={25} className="h-[19px]" />
+                    </div>
+                  )}
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This action will warning the 
+                      helper.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                      <button
+                        onClick={() => handleWarningUser()}
+                        // onClick={() => {
+                        //   toast({ title: "Delete issue successfully!" });
+                        // }}
+                        className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
+                      >
+                        Warning
+                      </button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              )}
+            {/* <button className="h-full p-6 hover:bg-slate-200">
+              <FaRegTrashAlt className="h-[19px]" />
+            </button> */}
             <AlertDialog>
               <AlertDialogTrigger>
-                {warning ? (
+                {deleting ? (
                   <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
                     <ClipLoader color="#fff" loading={true} size={30} />
                   </div>
                 ) : (
                   <div className="h-full p-6 hover:bg-slate-200">
-                    <IoWarningOutline size={25} className="h-[19px]" />
+                    <FaRegTrashAlt className="h-[19px]" />
                   </div>
                 )}
               </AlertDialogTrigger>
@@ -265,66 +306,27 @@ const FeedbackDetail = ({ params }: { params: { id: string } }) => {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This action will warning the 
-                    helper.
+                    This action cannot be undone. This action will delete the
+                    feedback.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction asChild>
                     <button
-                      onClick={() => handleWarningUser()}
+                      onClick={() => handleDeleteFeedback()}
                       // onClick={() => {
                       //   toast({ title: "Delete issue successfully!" });
                       // }}
                       className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
                     >
-                      Warning
+                      Delete
                     </button>
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-            )}
-          {/* <button className="h-full p-6 hover:bg-slate-200">
-            <FaRegTrashAlt className="h-[19px]" />
-          </button> */}
-          <AlertDialog>
-            <AlertDialogTrigger>
-              {deleting ? (
-                <div className="flex flex-row gap-2 items-center justify-center px-4 lg:px-10 h-[38px] bg-[#E11B1B] hover:bg-opacity-90 rounded-[8px] text-xs font-Averta-Bold tracking-normal leading-loose whitespace-nowrap text-center text-white">
-                  <ClipLoader color="#fff" loading={true} size={30} />
-                </div>
-              ) : (
-                <div className="h-full p-6 hover:bg-slate-200">
-                  <FaRegTrashAlt className="h-[19px]" />
-                </div>
-              )}
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This action will delete the
-                  feedback.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction asChild>
-                  <button
-                    onClick={() => handleDeleteFeedback()}
-                    // onClick={() => {
-                    //   toast({ title: "Delete issue successfully!" });
-                    // }}
-                    className="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          </div>  
         </div>
         {/* End Title */}
 
