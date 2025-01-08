@@ -21,6 +21,10 @@ const Header = () => {
       url: "/career",
     },
     {
+      name: "FAQs",
+      url: "/faqs",
+    },
+    {
       name: "Dashboard",
       url: "/dashboard/chart",
       canAccess: ["admin"],
