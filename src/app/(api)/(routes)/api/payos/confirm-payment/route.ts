@@ -6,9 +6,9 @@ export async function POST(req: Request) {
   try {
     const body: WebhookType = await req.json();
 
-    if (body.data.description == "VQRIO123") {
-      return NextResponse.json({ error: "Webhook Confirmed" }, { status: 200 });
-    }
+    // if (body.data.description == "VQRIO123") {
+    //   return NextResponse.json({ error: "Webhook Confirmed" }, { status: 200 });
+    // }
 
     const data = body.data as WebhookDataType;
 
