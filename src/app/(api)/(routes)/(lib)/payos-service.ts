@@ -22,7 +22,7 @@ export default async function createPaymentLink(
     }
 
     const body: CheckoutRequestType = {
-      orderCode: booking.orderNumber! + 200,
+      orderCode: booking.orderNumber! + 7000,
       amount: Number(booking.totalPrice) * 20,
       description: `Clean Serivce Payment`,
       cancelUrl: process.env.NEXT_PUBLIC_API_URL + "/payment-cancelled",
