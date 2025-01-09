@@ -385,7 +385,7 @@ const QuickPopupAdmin: React.FC<QuickPopupAdminProps> = ({
                 </p>
                 <div className="flex flex-row gap-[10px] w-full h-fit p-[13px] border-[#d3d8dd] border-2 rounded-lg bg-[#F4F7F9]">
                   <Image
-                    src="/images/About/Google.png"
+                    src="/images/QuickPopUp/avatar-default.png"
                     alt="avatar"
                     width={20}
                     height={20}
